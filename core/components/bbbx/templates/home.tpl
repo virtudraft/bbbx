@@ -1,0 +1,1 @@
+<div id="bbbx-panel-home-div"></div>

@@ -1,0 +1,20 @@
+.bbbx-action-btn {
+    margin-right: 8px;
+}
+
+.bbbx-btn-danger {
+    background-color: #c00000;
+    color: white;
+}
+
+.bbbx-table-console {
+    width: 100%;
+}
+
+.bbbx-table-console td {
+    vertical-align: top ;
+}
+
+.bbbx-table-console tr:nth-child(even) {
+    background: #efefef;
+}
