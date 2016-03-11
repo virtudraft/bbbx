@@ -20,10 +20,10 @@ BBBx.panel.Home = function (config) {
                                 html: '<p>' + _('bbbx.meetings_scheduled_desc') + '</p>',
                                 border: false,
                                 bodyCssClass: 'panel-desc'
-                            }, {
-                                xtype: 'bbbx-grid-scheduledmeetings',
-                                cls: 'main-wrapper',
-                                preventRender: true
+//                            }, {
+//                                xtype: 'bbbx-grid-scheduledmeetings',
+//                                cls: 'main-wrapper',
+//                                preventRender: true
                             }]
                     }, {
                         title: _('bbbx.meetings_running'),
@@ -44,10 +44,10 @@ BBBx.panel.Home = function (config) {
                                 html: '<p>' + _('bbbx.recordings_desc') + '</p>',
                                 border: false,
                                 bodyCssClass: 'panel-desc'
-//                            }, {
-//                                xtype: 'bbbx-grid-runningmeetings',
-//                                cls: 'main-wrapper',
-//                                preventRender: true
+                            }, {
+                                xtype: 'bbbx-grid-recordings',
+                                cls: 'main-wrapper',
+                                preventRender: true
                             }]
                     }
                 ]

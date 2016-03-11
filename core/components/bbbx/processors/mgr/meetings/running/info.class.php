@@ -32,10 +32,10 @@ class MeetingInfoProcessor extends modProcessor
                 ) {
                     continue;
                 }
-                $info .= '<tr><td>' . $key . '</td><td>:</td><td>' . $this->toString($val) . '</td></tr>';
+                $info .= '<tr><td>' . $key . '</td><td class="bbbx-td-colon">:</td><td class="bbbx-td-value">' . $this->toString($val) . '</td></tr>';
             }
             if (isset($messages['attendees']['attendee'])) {
-                $info .= '<tr><td>attendees</td><td>:</td><td>';
+                $info .= '<tr><td>attendees</td><td class="bbbx-td-colon">:</td><td>';
                 if (!isset($messages['attendees']['attendee'][0])) {
                     $messages['attendees']['attendee'] = array($messages['attendees']['attendee']);
                 }
@@ -43,27 +43,27 @@ class MeetingInfoProcessor extends modProcessor
                     if (empty($attendee)) {
                         continue;
                     }
-                    $info .= "<table>";
+                    $info .= '<table>';
                     $i = 0;
                     foreach ($attendee as $key => $val) {
-                        $info .= '<tr><td>' . ($i === 0 ? $idx + 1 : '') . '</td><td>' . $key . '</td><td>: ' . $this->toString($val) . "</td></tr>\n";
+                        $info .= '<tr><td>' . ($i === 0 ? $idx + 1 : '') . '</td><td>' . $key . '</td><td class="bbbx-td-colon">:</td><td class="bbbx-td-value">' . $this->toString($val) . '</td></tr>';
                         $i++;
                     }
-                    $info .= "</table><br />\n";
+                    $info .= '</table>';
                 }
                 $info .= '</td></tr>';
             }
-            $info .= '<tr><td>metadata</td><td>:</td><td>';
+            $info .= '<tr><td>metadata</td><td class="bbbx-td-colon">:</td><td>';
             foreach ($messages['metadata'] as $key => $val) {
                 $info .= '<span>' . $key . ': ' . $this->toString($val) . "</span><br />\n";
             }
             $info .= '</td></tr>';
-            $info .= '<tr><td>messageKey</td><td>:</td><td>';
+            $info .= '<tr><td>messageKey</td><td class="bbbx-td-colon">:</td><td class="bbbx-td-value">';
             foreach ($messages['messageKey'] as $key => $val) {
                 $info .= '<span>' . $key . ': ' . $this->toString($val) . "</span><br />\n";
             }
             $info .= '</td></tr>';
-            $info .= '<tr><td>message</td><td>:</td><td>';
+            $info .= '<tr><td>message</td><td class="bbbx-td-colon">:</td><td class="bbbx-td-value">';
             foreach ($messages['message'] as $key => $val) {
                 $info .= '<span>' . $key . ': ' . $this->toString($val) . "</span><br />\n";
             }

@@ -131,6 +131,65 @@ class BigBlueButton
     {
         return $this->processXmlResponseArray($this->getMeetingInfoUrl($params));
     }
+
+    /* __________________ BBB RECORDING METHODS _________________ */
+    /* The methods in the following section support the following categories of the BBB API:
+    -- getRecordings
+    -- publishRecordings
+    -- deleteRecordings
+    */
+
+    /**
+     * @param $params
+     * @return string
+     */
+    public function getRecordingsUrl(array $params)
+    {
+        foreach ($params as $k => $v) {
+            $this->setQuery($k, $v);
+        }
+        return $this->buildUrl('getRecordings', $this->getHTTPQuery());
+    }
+
+    public function getRecordings(array $params)
+    {
+        return $this->processXmlResponseArray($this->getRecordingsUrl($params));
+    }
+
+    /**
+     * @param $params
+     * @return string
+     */
+    public function getPublishRecordingsUrl(array $params)
+    {
+        foreach ($params as $k => $v) {
+            $this->setQuery($k, $v);
+        }
+        return $this->buildUrl('publishRecordings', $this->getHTTPQuery());
+    }
+
+    public function publishRecordings(array $params)
+    {
+        return $this->processXmlResponseArray($this->getPublishRecordingsUrl($params));
+    }
+
+    /**
+     * @param $params
+     * @return string
+     */
+    public function getDeleteRecordingsUrl(array $params)
+    {
+        foreach ($params as $k => $v) {
+            $this->setQuery($k, $v);
+        }
+        return $this->buildUrl('deleteRecordings', $this->getHTTPQuery());
+    }
+
+    public function deleteRecordings(array $params)
+    {
+        return $this->processXmlResponseArray($this->getDeleteRecordingsUrl($params));
+    }
+
     /**
      * @param string $key
      *

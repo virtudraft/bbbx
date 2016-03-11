@@ -57,7 +57,7 @@ BBBx.window.Meeting = function (config) {
                                 name: 'dialNumber',
                                 anchor: '100%'
                             }, {
-                                xtype: 'textfield',
+                                xtype: 'numberfield',
                                 fieldLabel: 'voiceBridge',
                                 name: 'voiceBridge',
                                 anchor: '100%'

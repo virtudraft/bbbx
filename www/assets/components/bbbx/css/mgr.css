@@ -2,6 +2,19 @@
     margin-right: 8px;
 }
 
+.bbbx-action-publish {
+    background-color: #CEF6F5;
+}
+
+.bbbx-action-unpublish {
+    background-color: #F5F6CE;
+}
+
+.bbbx-action-play {
+    background-color: #04B404;
+    color: white;
+}
+
 .bbbx-btn-danger {
     background-color: #c00000;
     color: white;
@@ -9,6 +22,7 @@
 
 .bbbx-table-console {
     width: 100%;
+    table-layout: fixed;
 }
 
 .bbbx-table-console td {
@@ -17,4 +31,12 @@
 
 .bbbx-table-console tr:nth-child(even) {
     background: #efefef;
+}
+
+.bbbx-td-colon {
+    width: 1em;
+    text-align: center;
+}
+
+.bbbx-td-value {
 }

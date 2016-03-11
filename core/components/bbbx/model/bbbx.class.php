@@ -596,9 +596,8 @@ class BBBx
             $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
             return;
         }
-        // magic array!
         $meetings = $response['meetings'];
-        if (empty($meetings)) { // The shared secret is wrong
+        if (empty($meetings)) {
             $err = 'No meetings available';
             $this->setError($err);
             $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
@@ -783,18 +782,99 @@ class BBBx
         return $response;
     }
 
-//    public function getRecordings() {
-//
-//    }
-//
-//    public function publishRecordings() {
-//
-//    }
-//
-//    public function deleteRecordings() {
-//
-//    }
-//
+    public function getRecordings($meetingID = '', $limit = 0, $start = 0) {
+        if (empty($meetingID)) {
+            $params = array();
+        } else {
+            $params = array(
+                'meetingID' => $meetingID
+            );
+        }
+        $response = $this->server->getRecordings($params);
+        if (empty($response) || (isset($response['returncode']) && $response['returncode'] == 'FAILED')) {
+            $err = 'Unable to connect to server: ' . $response['message'];
+            $this->setError($err);
+            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
+            return;
+        }
+        $recordings = $response['recordings'];
+        if (empty($recordings)) {
+            $err = 'No recordings available';
+            $this->setError($err);
+            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
+            return;
+        }
+        /**
+         * If there is only 1 (one) recording available, this returns associative
+         * array of that recording.
+         * This below rewrites the array.
+         */
+        if (!isset($recordings['recording'][0])) {
+            $recordings['recording'] = array($recordings['recording']);
+        }
+
+        return $recordings['recording'];
+    }
+
+    public function publishRecordings($recordID, $published, $ctx = 'web') {
+        if (empty($recordID)) {
+            $err = 'Unable to un/publish record(s): missing recordID';
+            $this->setError($err);
+            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
+            return;
+        }
+        if (!$this->modx->user->hasSessionContext('mgr') &&
+                !$this->modx->user->isAuthenticated($ctx)
+        ) {
+            $err = 'Unable to join to server: unauthenticated user!';
+            $this->setError($err);
+            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
+            return;
+        }
+
+        $response = $this->server->publishRecordings(array(
+            'recordID' => $recordID,
+            'publish' => $published,
+        ));
+        if (empty($response) || (isset($response['returncode']) && $response['returncode'] == 'FAILED')) {
+            $err = 'Unable to connect to server: ' . $response['message'];
+            $this->setError($err);
+            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
+            return;
+        }
+
+        return $response;
+    }
+
+    public function deleteRecordings($recordID, $ctx = 'web') {
+        if (empty($recordID)) {
+            $err = 'Unable to delete record(s): missing recordID';
+            $this->setError($err);
+            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
+            return;
+        }
+        if (!$this->modx->user->hasSessionContext('mgr') &&
+                !$this->modx->user->isAuthenticated($ctx)
+        ) {
+            $err = 'Unable to join to server: unauthenticated user!';
+            $this->setError($err);
+            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
+            return;
+        }
+
+        $response = $this->server->deleteRecordings(array(
+            'recordID' => $recordID
+        ));
+        if (empty($response) || (isset($response['returncode']) && $response['returncode'] == 'FAILED')) {
+            $err = 'Unable to connect to server: ' . $response['message'];
+            $this->setError($err);
+            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
+            return;
+        }
+
+        return $response;
+    }
+
 //    public function getDefaultConfigXML() {
 //
 //    }

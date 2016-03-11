@@ -1,9 +1,9 @@
 <?php
 
-class MeetingsRunningGetListProcessor extends modObjectProcessor {
+class RecordingsGetListProcessor extends modObjectProcessor {
 
     public $languageTopics = array('bbbx:default');
-    public $objectType = 'bbbx.MeetingsRunningGetList';
+    public $objectType = 'bbbx.RecordingsGetList';
     public $checkListPermission = false;
     public $currentIndex = 0;
 
@@ -78,17 +78,17 @@ class MeetingsRunningGetListProcessor extends modObjectProcessor {
         $limit = intval($this->getProperty('limit'));
         $start = intval($this->getProperty('start'));
 
-        $meetings = $this->modx->bbbx->getMeetings($limit, $start);
+        $records = $this->modx->bbbx->getRecordings('', $limit, $start);
         $isError = $this->modx->bbbx->getError();
         if (!empty($isError)) {
             return $isError;
         }
-        if (empty($meetings)) {
-            $meetings = array();
+        if (empty($records)) {
+            $records = array();
         }
 
-        $data['total'] = count($meetings);
-        $data['results'] = $meetings;
+        $data['total'] = count($records);
+        $data['results'] = $records;
 
         return $data;
     }
@@ -99,11 +99,52 @@ class MeetingsRunningGetListProcessor extends modObjectProcessor {
      * @return array
      */
     public function prepareRow($array) {
-        $array['joinURL'] = $this->modx->bbbx->getJoinMeetingURL($array['meetingID'], $array['moderatorPW']);
+        $array['name'] = $this->toString($array['name']);
+        if (isset($array['metadata']) &&
+                !empty($array['metadata']) &&
+                is_array($array['metadata'])
+        ) {
+            $metadata = '<table>';
+            foreach ($array['metadata'] as $k => $v) {
+                $metadata .= '<tr><td>' . $k . '</td><td class="bbbx-td-colon">:</td><td class="bbbx-td-value">' . $this->toString($v) . '</td></tr>';
+            }
+            $metadata .= '</table>';
+            $array['metadata'] = $metadata;
+        } else {
+            $array['metadata'] = '';
+        }
+
+        if (isset($array['playback']) &&
+                !empty($array['playback']) &&
+                isset($array['playback']['format']) &&
+                !empty($array['playback']['format']) &&
+                isset($array['playback']['format']['url']) &&
+                !empty($array['playback']['format']['url'])
+        ) {
+            $array['playbackURL'] = $array['playback']['format']['url'];
+        } else {
+            $array['playbackURL'] = '';
+        }
 
         return $array;
     }
 
+    private function toString($text)
+    {
+        if (is_string($text)) {
+            return $text;
+        } elseif (is_array($text)) {
+            $o = '';
+            foreach ($text as $k => $v) {
+                $o .= $k . ': ' . $this->toString($v) . "<br>\n";
+            }
+            return $o;
+        } elseif (is_object($text)) {
+            return $this->toString(json_decode(json_encode($text), true));
+        }
+        return;
+    }
+
 }
 
-return 'MeetingsRunningGetListProcessor';
+return 'RecordingsGetListProcessor';

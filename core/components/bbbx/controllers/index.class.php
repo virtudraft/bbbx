@@ -36,10 +36,10 @@ class BBBxIndexManagerController extends modExtraManagerController {
     }
 
     public function loadCustomCssJs() {
-//        $this->addJavascript($this->bbbx->config['jsUrl'] . 'mgr/widgets/window.meetinginfo.js');
         $this->addJavascript($this->bbbx->config['jsUrl'] . 'mgr/widgets/window.meeting.js');
         $this->addJavascript($this->bbbx->config['jsUrl'] . 'mgr/widgets/grid.scheduledmeetings.js');
         $this->addJavascript($this->bbbx->config['jsUrl'] . 'mgr/widgets/grid.runningmeetings.js');
+        $this->addJavascript($this->bbbx->config['jsUrl'] . 'mgr/widgets/grid.recordings.js');
         $this->addJavascript($this->bbbx->config['jsUrl'] . 'mgr/widgets/panel.home.js');
         $this->addLastJavascript($this->bbbx->config['jsUrl'] . 'mgr/sections/index.js');
     }
