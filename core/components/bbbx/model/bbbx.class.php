@@ -751,7 +751,7 @@ class BBBx
         /**
          * Check
          */
-        return $this->isMeetingRunning($meetingID);
+        return !$this->isMeetingRunning($meetingID);
     }
 
     public function isMeetingRunning($meetingID)
@@ -764,7 +764,7 @@ class BBBx
             return;
         }
 
-        return $response['running'] == 'false';
+        return $response['running'] != 'false';
     }
 
     public function getMeetingInfo($meetingID, $moderatorPW)
