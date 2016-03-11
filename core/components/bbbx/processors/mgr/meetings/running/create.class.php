@@ -25,7 +25,16 @@ class MeetingsCreateProcessor extends modObjectProcessor {
      */
     public function process() {
         $props = $this->getProperties();
-        $this->object = $this->modx->bbbx->createMeeting($props);
+        $meta = array();
+        if (isset($props['meta']) && !empty($props['meta'])) {
+            $metaProp = array_map('trim', @explode(',', $props['meta']));
+            foreach ($metaProp as $v) {
+                list($key, $val) = @explode('=', $v);
+                $meta[$key] = $val;
+            }
+        }
+        unset($props['meta']);
+        $this->object = $this->modx->bbbx->createMeeting($props, $meta);
         if (empty($this->object)) {
             return $this->failure($this->modx->lexicon($this->objectType . '_err_save'));
         }

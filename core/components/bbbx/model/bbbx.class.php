@@ -671,7 +671,7 @@ class BBBx
         return $response;
     }
 
-    public function createMeeting($params, $postFields = '')
+    public function createMeeting($params, array $meta = array(), $postFields = '')
     {
         if (!isset($params['meetingID']) || empty($params['meetingID'])) {
             $params['meetingID'] = uniqid();
@@ -679,14 +679,14 @@ class BBBx
         if (!isset($params['name']) || empty($params['name'])) {
             $params['name'] = 'BBBx-' . $params['meetingID'];
         }
-        $meta = array(
+        $meta = array_merge($meta, array(
             'origin' => 'MODX',
             'origin-url' => MODX_SITE_URL,
             'origin-name' => $this->modx->getOption('site_name'),
             'origin-extra' => 'bbbx',
             'origin-extra-version' => $this->config['version'],
             'origin-extra-author' => 'goldsky <goldsky@virtudraft.com>',
-        );
+        ));
         $response = $this->server->createMeeting($params, $meta, $postFields);
         if (empty($response) || (isset($response['returncode']) && $response['returncode'] == 'FAILED')) {
             $err = 'Unable to connect to server: ' . $response['message'];
