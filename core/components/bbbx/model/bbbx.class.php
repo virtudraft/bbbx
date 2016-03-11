@@ -714,9 +714,11 @@ class BBBx
             $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
             return;
         }
-        $params = new \BigBlueButton\Parameters\EndMeetingParameters($meetingID, $password);
 
-        return $this->bbb->getEndMeetingURL($params);
+        return $this->server->getEndMeetingURL(array(
+            'meetingID' => $meetingID,
+            'password' => $password,
+        ));
     }
 
     public function endMeeting($meetingID, $password, $ctx = 'web')
