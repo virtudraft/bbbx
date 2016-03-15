@@ -100,6 +100,19 @@ Ext.extend(BBBx.panel.Configs, MODx.FormPanel, {
         if (this.record && this.record.description) {
             descValue = this.record.description;
         }
+        var checkValue = {
+            all: true,
+            attendee: false,
+            moderator: false
+        };
+        if (this.record && this.record.applied_to && this.record.applied_to === 'attendee') {
+            checkValue['all'] = false;
+            checkValue['attendee'] = true;
+        }
+        if (this.record && this.record.applied_to && this.record.applied_to === 'moderator') {
+            checkValue['all'] = false;
+            checkValue['moderator'] = true;
+        }
         this.add({
             layout: 'column',
             border: false,
@@ -123,6 +136,27 @@ Ext.extend(BBBx.panel.Configs, MODx.FormPanel, {
                             value: descValue,
                             grow: true,
                             anchor: '100%'
+                        }, {
+                            xtype: 'radiogroup',
+                            fieldLabel: _('bbbx.applied_to'),
+                            items: [
+                                {
+                                    boxLabel: _('bbbx.all'),
+                                    name: 'applied_to',
+                                    inputValue: '',
+                                    checked: checkValue.all
+                                }, {
+                                    boxLabel: _('bbbx.attendee'),
+                                    name: 'applied_to',
+                                    inputValue: 'attendee',
+                                    checked: checkValue.attendee
+                                }, {
+                                    boxLabel: _('bbbx.moderator'),
+                                    name: 'applied_to',
+                                    inputValue: 'moderator',
+                                    checked: checkValue.moderator
+                                }
+                            ]
                         }
                     ]
                 }, {
@@ -187,7 +221,7 @@ Ext.extend(BBBx.panel.Configs, MODx.FormPanel, {
                 xtype: 'fieldset',
                 title: key,
                 collapsible: true,
-                collapsed: true,
+                collapsed: false,
                 autoHeight: true,
                 labelWidth: 250,
                 defaultType: 'textfield',
@@ -241,7 +275,7 @@ Ext.extend(BBBx.panel.Configs, MODx.FormPanel, {
             xtype: 'fieldset',
             title: 'modules',
             collapsible: true,
-            collapsed: true,
+            collapsed: false,
             autoHeight: true,
             labelWidth: 250,
             defaultType: 'textfield',

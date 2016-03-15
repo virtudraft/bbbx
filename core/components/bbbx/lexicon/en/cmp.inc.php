@@ -76,3 +76,7 @@ $_lang['bbbx.config_err_ns_name'] = 'Name field is empty.';
 $_lang['bbbx.config_err_ns_configs'] = 'Config is empty.';
 $_lang['bbbx.config_err_no_changes'] = 'There is no changes applied! Default configs will be used.';
 $_lang['bbbx.update_config'] = 'Update Config';
+$_lang['bbbx.applied_to'] = 'Applied To';
+$_lang['bbbx.all'] = 'All';
+$_lang['bbbx.attendee'] = 'Attendee';
+$_lang['bbbx.moderator'] = 'Moderator';

@@ -6,7 +6,7 @@ BBBx.grid.Configs = function (config) {
         baseParams: {
             action: 'mgr/configs/getList'
         },
-        fields: ['id', 'name', 'description'],
+        fields: ['id', 'name', 'description', 'applied_to'],
         paging: true,
         remoteSort: true,
 //        anchor: '97%',
@@ -23,6 +23,10 @@ BBBx.grid.Configs = function (config) {
                 dataIndex: 'name',
                 sortable: true,
                 renderer: this.renderName,
+            }, {
+                header: _('bbbx.applied_to'),
+                dataIndex: 'applied_to',
+                width: 60
             }
         ],
         tbar: [
