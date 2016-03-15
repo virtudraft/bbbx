@@ -263,7 +263,7 @@ Ext.extend(BBBx.grid.RunningMeetings, MODx.grid.Grid, {
             maximizable: true,
             autoScroll: true,
             height: 400,
-            width: 800,
+            width: 600,
             cls: 'modx-window modx-console',
             items: [
                 {

@@ -1,163 +1,233 @@
 BBBx.window.Meeting = function (config) {
     config = config || {};
+
+    var preloadSlides = MODx.load({
+        xtype: 'modx-combo-browser',
+        browserEl: 'modx-browser',
+        fieldLabel: 'preloadSlides',
+        name: 'preloadSlides',
+        anchor: '98%'
+    });
+    preloadSlides.on('select', function (data) {
+        var srcBrowserId = preloadSlides.browser.id;
+        var browserCmp = Ext.getCmp(srcBrowserId);
+        var source = browserCmp.tree.baseParams.source;
+        var preloadSlidesSourceIdField = this.fp.getForm().findField('preloadSlidesSourceId');
+        preloadSlidesSourceIdField.setValue(source);
+    }, this);
     Ext.applyIf(config, {
-        title: _('bbbx.meeting_update'),
+        // provided by triggers
+//        title: _('bbbx.meeting_update'),
+//        baseParams: {
+//            action: 'mgr/meetings/running/create'
+//        },
         url: BBBx.config.connectorUrl,
-        baseParams: {
-            action: 'mgr/meetings/running/update'
-        },
-        width: 800,
+        width: 600,
         autoScroll: true,
 //        fileUpload: true,
+        allowDrop: false,
         items: [
             {
-                html: '<p>' + _('bbbx.api_desc') + _('bbbx.required_field') +'</p>',
+                html: '<p>' + _('bbbx.api_desc') + _('bbbx.name_is_required') + '</p>',
                 bodyCssClass: 'panel-desc'
             }
         ],
         fields: [
             {
-                layout: 'column',
+                xtype: 'modx-tabs',
+                enableTabScroll: true,
+                defaults: {
+                    border: false,
+                    autoHeight: true,
+                    layout: 'form'
+                },
+                border: true,
                 items: [
                     {
-                        columnWidth: .5,
-                        baseCls: 'x-plain',
-                        layout: 'form',
-                        labelAlign: 'top',
+                        title: _('bbbx.basics'),
+                        defaults: {autoHeight: true},
                         items: [
                             {
                                 xtype: 'textfield',
                                 fieldLabel: 'name *',
                                 name: 'name',
-                                anchor: '100%',
+                                anchor: '98%',
                                 allowBlank: false
                             }, {
                                 xtype: 'textfield',
                                 fieldLabel: 'meetingID',
                                 name: 'meetingID',
-                                anchor: '100%'
+                                anchor: '98%'
                             }, {
                                 xtype: 'textfield',
                                 fieldLabel: 'attendeePW',
                                 name: 'attendeePW',
-                                anchor: '100%'
+                                anchor: '98%'
                             }, {
                                 xtype: 'textfield',
                                 fieldLabel: 'moderatorPW',
                                 name: 'moderatorPW',
-                                anchor: '100%'
-                            }, {
-                                xtype: 'textarea',
-                                fieldLabel: 'welcome',
-                                name: 'welcome',
-                                anchor: '100%'
-                            }, {
-                                xtype: 'textfield',
-                                fieldLabel: 'dialNumber',
-                                name: 'dialNumber',
-                                anchor: '100%'
-                            }, {
-                                xtype: 'numberfield',
-                                fieldLabel: 'voiceBridge',
-                                name: 'voiceBridge',
-                                anchor: '100%'
-                            }, {
-                                xtype: 'textfield',
-                                fieldLabel: 'webVoice',
-                                name: 'webVoice',
-                                anchor: '100%'
+                                anchor: '98%'
                             }, {
                                 xtype: 'numberfield',
                                 fieldLabel: 'maxParticipants',
                                 name: 'maxParticipants',
-                                anchor: '100%'
-                            }
-                        ]
-                    }, {
-                        columnWidth: .5,
-                        baseCls: 'x-plain',
-                        layout: 'form',
-                        labelAlign: 'top',
-                        items: [
-                            {
-                                xtype: 'textfield',
-                                fieldLabel: 'logoutURL',
-                                name: 'logoutURL',
-                                anchor: '100%'
-                            }, {
-                                xtype: 'radiogroup',
-                                fieldLabel: 'record',
-                                items: [
-                                    {
-                                        boxLabel: _('no'),
-                                        name: 'record',
-                                        inputValue: 0,
-//                                        checked: true
-                                    }, {
-                                        boxLabel: _('yes'),
-                                        name: 'record',
-                                        inputValue: 1
-                                    }
-                                ]
+                                anchor: '98%'
                             }, {
                                 xtype: 'numberfield',
                                 fieldLabel: 'duration',
                                 name: 'duration',
-                                anchor: '100%'
+                                anchor: '98%'
+                            }, {
+                                xtype: 'textfield',
+                                fieldLabel: 'logoutURL',
+                                name: 'logoutURL',
+                                anchor: '98%'
+                            }
+                        ]
+                    }, {
+                        title: _('bbbx.messages'),
+                        defaults: {autoHeight: true},
+                        items: [
+                            {
+                                xtype: 'textarea',
+                                fieldLabel: 'welcome',
+                                name: 'welcome',
+                                grow: true,
+                                anchor: '98%'
                             }, {
                                 xtype: 'textarea',
                                 fieldLabel: 'moderatorOnlyMessage',
                                 name: 'moderatorOnlyMessage',
-                                anchor: '100%'
+                                grow: true,
+                                anchor: '98%'
+                            }
+                        ]
+                    }, {
+                        title: _('bbbx.voice'),
+                        defaults: {autoHeight: true},
+                        items: [
+                            {
+                                xtype: 'textfield',
+                                fieldLabel: 'dialNumber',
+                                name: 'dialNumber',
+                                anchor: '98%'
                             }, {
-                                xtype: 'radiogroup',
-                                fieldLabel: 'autoStartRecording',
+                                xtype: 'numberfield',
+                                fieldLabel: 'voiceBridge',
+                                name: 'voiceBridge',
+                                anchor: '98%'
+                            }, {
+                                xtype: 'textfield',
+                                fieldLabel: 'webVoice',
+                                name: 'webVoice',
+                                anchor: '98%'
+                            }
+                        ]
+                    }, {
+                        title: _('bbbx.recording'),
+                        defaults: {autoHeight: true},
+                        items: [
+                            {
+                                layout: 'column',
+                                autoScroll: true,
                                 items: [
                                     {
-                                        boxLabel: _('no'),
-                                        name: 'autoStartRecording',
-                                        inputValue: 0,
+                                        columnWidth: .33,
+                                        baseCls: 'x-plain',
+                                        bodyStyle: 'padding:5px 0 5px 5px',
+                                        layout: 'form',
+                                        items: [
+                                            {
+                                                xtype: 'radiogroup',
+                                                fieldLabel: 'record',
+                                                items: [
+                                                    {
+                                                        boxLabel: _('no'),
+                                                        name: 'record',
+                                                        inputValue: 0,
 //                                        checked: true
+                                                    }, {
+                                                        boxLabel: _('yes'),
+                                                        name: 'record',
+                                                        inputValue: 1
+                                                    }
+                                                ]
+                                            }
+                                        ]
                                     }, {
-                                        boxLabel: _('yes'),
-                                        name: 'autoStartRecording',
-                                        inputValue: 1
+                                        columnWidth: .33,
+                                        baseCls: 'x-plain',
+                                        bodyStyle: 'padding:5px 0 5px 5px',
+                                        layout: 'form',
+                                        items: [
+                                            {
+                                                xtype: 'radiogroup',
+                                                fieldLabel: 'autoStartRecording',
+                                                items: [
+                                                    {
+                                                        boxLabel: _('no'),
+                                                        name: 'autoStartRecording',
+                                                        inputValue: 0,
+//                                        checked: true
+                                                    }, {
+                                                        boxLabel: _('yes'),
+                                                        name: 'autoStartRecording',
+                                                        inputValue: 1
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }, {
+                                        columnWidth: .33,
+                                        baseCls: 'x-plain',
+                                        bodyStyle: 'padding:5px 0 5px 5px',
+                                        layout: 'form',
+                                        items: [
+                                            {
+                                                xtype: 'radiogroup',
+                                                fieldLabel: 'allowStartStopRecording',
+                                                items: [
+                                                    {
+                                                        boxLabel: _('no'),
+                                                        name: 'allowStartStopRecording',
+                                                        inputValue: 0,
+//                                        checked: true
+                                                    }, {
+                                                        boxLabel: _('yes'),
+                                                        name: 'allowStartStopRecording',
+                                                        inputValue: 1
+                                                    }
+                                                ]
+                                            }
+                                        ]
                                     }
                                 ]
-                            }, {
-                                xtype: 'radiogroup',
-                                fieldLabel: 'allowStartStopRecording',
-                                items: [
-                                    {
-                                        boxLabel: _('no'),
-                                        name: 'allowStartStopRecording',
-                                        inputValue: 0,
-//                                        checked: true
-                                    }, {
-                                        boxLabel: _('yes'),
-                                        name: 'allowStartStopRecording',
-                                        inputValue: 1
-                                    }
-                                ]
-                            }, {
-//                                xtype: 'fileuploadfield',
-//                                fieldLabel: 'preloadSlides',
-//                                name: 'preloadSlides',
-//                                anchor: '100%'
-//                            }, {
-                                xtype: 'modx-combo-browser',
-                                browserEl: 'modx-browser',
-                                fieldLabel: 'preloadSlides',
-                                name: 'preloadSlides',
-                                anchor: '100%'
-                            }, {
+                            }
+                        ]
+                    }, {
+                        title: _('bbbx.preload_slides'),
+                        defaults: {autoHeight: true},
+                        items: [
+                            preloadSlides, {
+                                xtype: 'hidden',
+                                name: 'preloadSlidesSourceId'
+                            }
+                        ]
+                    }, {
+                        title: _('bbbx.meta'),
+                        defaults: {autoHeight: true},
+                        items: [
+                            {
                                 xtype: 'textarea',
                                 fieldLabel: 'meta',
                                 name: 'meta',
-                                anchor: '100%'
+                                grow: true,
+                                anchor: '98%'
                             }, {
-                                html: '<p>' + _('bbbx.meta_desc') + '</p>',
-                                bodyCssClass: 'panel-desc'
+                                xtype: 'label',
+                                cls: 'desc-under',
+                                html: _('bbbx.meta_desc'),
                             }
                         ]
                     }

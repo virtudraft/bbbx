@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model package="bbbx" baseClass="xPDOObject" platform="mysql" defaultEngine="MyISAM" version="1.1">
+    <object class="bbbxConfigs" table="configs" extends="xPDOSimpleObject">
+        <field key="name" dbtype="varchar" precision="255" phptype="string" null="false" />
+        <field key="description" dbtype="text" phptype="string" null="true" />
+        <field key="xml" dbtype="mediumtext" phptype="string" null="true" />
+        <field key="applied_to" dbtype="varchar" precision="30" phptype="string" null="true" />
+
+        <composite alias="MeetingsConfigs" class="bbbxMeetingsConfigs" local="id" foreign="config_id" cardinality="many" owner="local" />
+
+    </object>
+    <object class="bbbxMeetingUsergroups" table="meeting_usergroups" extends="xPDOSimpleObject">
+        <field key="meeting_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" />
+        <field key="usergroup_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" />
+        <field key="enroll" dbtype="varchar" precision="50" phptype="string" null="false" default="viewer" />
+        <field key="started_on" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" />
+        <field key="ended_on" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" />
+        <field key="is_forced_to_end" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+        <field key="is_canceled" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+
+        <aggregate alias="Meeting" class="bbbxMeetings" local="meeting_id" foreign="id" cardinality="one" owner="foreign" />
+
+    </object>
+    <object class="bbbxMeetingUsers" table="meeting_users" extends="xPDOSimpleObject">
+        <field key="meeting_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" />
+        <field key="user_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" />
+        <field key="enroll" dbtype="varchar" precision="50" phptype="string" null="false" default="viewer" />
+        <field key="started_on" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" />
+        <field key="ended_on" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" />
+        <field key="is_forced_to_end" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+        <field key="is_canceled" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+
+        <aggregate alias="Meeting" class="bbbxMeetings" local="meeting_id" foreign="id" cardinality="one" owner="foreign" />
+
+    </object>
+    <object class="bbbxMeetings" table="meetings" extends="xPDOSimpleObject">
+        <field key="name" dbtype="varchar" precision="255" phptype="string" null="false" />
+        <field key="meeting_id" dbtype="varchar" precision="255" phptype="string" null="true" />
+        <field key="description" dbtype="mediumtext" phptype="string" null="true" />
+        <field key="attendee_pw" dbtype="binary" precision="16" phptype="binary" null="true" />
+        <field key="moderator_pw" dbtype="binary" precision="16" phptype="binary" null="true" />
+        <field key="welcome" dbtype="text" phptype="string" null="true" />
+        <field key="dial_number" dbtype="varchar" precision="255" phptype="string" null="true" />
+        <field key="voice_bridge" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" />
+        <field key="web_voice" dbtype="varchar" precision="255" phptype="string" null="true" />
+        <field key="logout_url" dbtype="text" phptype="string" null="true" />
+        <field key="is_moderator_first" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+        <field key="user_limit" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+        <field key="started_on" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" />
+        <field key="ended_on" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" />
+        <field key="is_forced_to_end" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+        <field key="is_canceled" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+        <field key="is_recorded" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+        <field key="duration" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
+        <field key="meta" dbtype="mediumtext" phptype="string" null="true" />
+        <field key="moderator_only_message" dbtype="text" phptype="string" null="true" />
+        <field key="auto_start_recording" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+        <field key="allow_start_stop_recording" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+        <field key="document_url" dbtype="text" phptype="string" null="true" />
+        <field key="created_on" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" />
+        <field key="created_by" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" />
+        <field key="edited_on" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" />
+        <field key="edited_by" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" />
+        <field key="context_key" dbtype="varchar" precision="100" phptype="string" null="false" default="web" />
+        <field key="culture_key" dbtype="varchar" precision="50" phptype="string" null="true" default="en" />
+
+        <composite alias="MeetingsConfigs" class="bbbxMeetingsConfigs" local="id" foreign="meeting_id" cardinality="many" owner="local" />
+        <composite alias="MeetingUsers" class="bbbxMeetingUsers" local="id" foreign="meeting_id" cardinality="many" owner="local" />
+        <composite alias="MeetingUsergroups" class="bbbxMeetingUsergroups" local="id" foreign="meeting_id" cardinality="many" owner="local" />
+
+    </object>
+    <object class="bbbxMeetingsConfigs" table="meetings_configs" extends="xPDOSimpleObject">
+        <field key="meeting_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="index" />
+        <field key="config_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="index" />
+
+        <aggregate alias="Meeting" class="bbbxMeetings" local="meeting_id" foreign="id" cardinality="one" owner="foreign" />
+        <aggregate alias="Config" class="bbbxConfigs" local="config_id" foreign="id" cardinality="one" owner="foreign" />
+
+    </object>
+</model>

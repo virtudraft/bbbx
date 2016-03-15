@@ -23,6 +23,7 @@ class MeetingInfoProcessor extends modProcessor
         $messages = $this->modx->bbbx->getMeetingInfo($this->getProperty('meetingID'), $this->getProperty('moderatorPW'));
         $info = '';
         if (!empty($messages)) {
+            unset($messages['returncode']);
             $info .= '<table class="bbbx-table-console">';
             foreach ($messages as $key => $val) {
                 if ($key == 'attendees' ||

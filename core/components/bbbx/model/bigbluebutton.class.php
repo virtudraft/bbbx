@@ -191,6 +191,20 @@ class BigBlueButton
     }
 
     /**
+     * @param $params
+     * @return string
+     */
+    public function getDefaultConfigXMLUrl()
+    {
+        return $this->buildUrl('getDefaultConfigXML', $this->getHTTPQuery());
+    }
+
+    public function getDefaultConfigXML()
+    {
+        return $this->processXmlResponseArray($this->getDefaultConfigXMLUrl());
+    }
+
+    /**
      * @param string $key
      *
      * @return mixed
@@ -204,7 +218,7 @@ class BigBlueButton
      * @param string $key
      * @param mixed  $val
      *
-     * @return CreateMeetingParameters
+     * @return BigBlueButton
      */
     public function setQuery($key, $val = '')
     {
