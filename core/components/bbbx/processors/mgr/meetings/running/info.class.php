@@ -1,3 +1,4 @@
+
 <?php
 
 class MeetingInfoProcessor extends modProcessor
@@ -21,6 +22,10 @@ class MeetingInfoProcessor extends modProcessor
     public function process()
     {
         $messages = $this->modx->bbbx->getMeetingInfo($this->getProperty('meetingID'), $this->getProperty('moderatorPW'));
+        $isError = $this->modx->bbbx->getError();
+        if (!empty($isError)) {
+            return $this->failure($isError);
+        }
         $info = '';
         if (!empty($messages)) {
             unset($messages['returncode']);
