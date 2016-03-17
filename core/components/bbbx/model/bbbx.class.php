@@ -1016,7 +1016,14 @@ class BBBx
             return;
         }
         $this->server->setContentType('application/x-www-form-urlencoded');
-        $response = $this->server->setConfigXML($params);
+        try {
+            $response = $this->server->setConfigXML($params);
+        } catch (Exception $e) {
+            $err = '[setConfigXML] '.$e->getMessage();
+            $this->setError($err);
+            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
+            return;
+        }
         if (empty($response) || (isset($response['returncode']) && $response['returncode'] == 'FAILED')) {
             $err = 'Unable to connect to server: '.$response['message'];
             $this->setError($err);

@@ -22,7 +22,6 @@ class BigBlueButton
      * @var array
      */
     private $meta = array();
-
     private $contentType = 'application/xml';
 
     public function __construct($bbbServerBaseUrl, $securitySalt)
@@ -211,15 +210,15 @@ class BigBlueButton
      */
     public function setConfigXMLUrl(array $params)
     {
-        foreach ($params as $k => $v) {
-            $this->setQuery($k, $v);
-        }
-        return $this->buildUrl('setConfigXML', $this->getHTTPQuery());
+        return $this->buildUrl('setConfigXML', $this->buildHTTPQuery($params));
     }
 
     public function setConfigXML(array $params)
     {
-        return $this->processXmlResponseArray($this->setConfigXMLUrl($params));
+        $postFields = array_merge($params, array(
+            'checksum' => sha1('setConfigXML'.$this->buildHTTPQuery($params).$this->securitySalt)
+        ));
+        return $this->processXmlResponseArray($this->setConfigXMLUrl($params), $postFields);
     }
 
     /**
@@ -273,7 +272,7 @@ class BigBlueButton
     /**
      * @param string $key
      *
-     * @return mixed
+     * @return string
      */
     public function getContentType()
     {
@@ -316,7 +315,7 @@ class BigBlueButton
      *
      * @return string
      */
-    protected function buildHTTPQuery($array)
+    public function buildHTTPQuery($array)
     {
         return http_build_query(array_filter($array));
     }
