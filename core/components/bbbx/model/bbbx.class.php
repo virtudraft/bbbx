@@ -724,7 +724,7 @@ class BBBx
         ));
         $c->where(array(
             'MeetingsConfigs.meeting_id' => $meetingID,
-//            'bbbxConfigs.applied_to' => '' // moderator / attendee
+//            'bbbxConfigs.applied_to' => '' // @todo: moderator / attendee usergroup
         ));
         $config = $this->modx->getObject('bbbxConfigs', $c);
         if ($config) {
