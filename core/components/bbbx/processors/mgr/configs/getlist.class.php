@@ -9,15 +9,28 @@ class ConfigsGetListProcessor extends modObjectGetListProcessor
     public $defaultSortDirection = 'ASC';
     public $objectType           = 'bbbx.configs';
 
-    public function prepareQueryBeforeCount(xPDOQuery $c) {
+    public function prepareQueryBeforeCount(xPDOQuery $c)
+    {
         $query = $this->getProperty('query', false);
         if ($query) {
             $c->where(array(
-                'name:LIKE' => "%$query%",
+                'name:LIKE'           => "%$query%",
                 'OR:description:LIKE' => "%$query%",
             ));
         }
         return $c;
+    }
+
+    public function afterIteration(array $list)
+    {
+        $combo = $this->getProperty('combo', false);
+        if ($combo) {
+            array_unshift($list, array(
+                'id'   => '',
+                'name' => '&nbsp;'
+            ));
+        }
+        return $list;
     }
 
 }

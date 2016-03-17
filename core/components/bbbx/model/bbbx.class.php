@@ -716,6 +716,20 @@ class BBBx
         ) {
             $params['createTime'] = $_SESSION['bbbx.createTime'][$meetingID];
         }
+        $c      = $this->modx->newQuery('bbbxConfigs');
+        $c->leftJoin('bbbxMeetingsConfigs', 'MeetingsConfigs', 'MeetingsConfigs.config_id = bbbxConfigs.id');
+        $c->select(array(
+            'bbbxConfigs.id',
+            'MeetingsConfigs.config_token',
+        ));
+        $c->where(array(
+            'MeetingsConfigs.meeting_id' => $meetingID,
+//            'bbbxConfigs.applied_to' => '' // moderator / attendee
+        ));
+        $config = $this->modx->getObject('bbbxConfigs', $c);
+        if ($config) {
+            $params['configToken'] = $config->get('config_token');
+        }
         $response = $this->server->getJoinMeetingURL($params);
         if (empty($response) || (isset($response['returncode']) && $response['returncode'] == 'FAILED')) {
             $err = 'Unable to connect to server: '.$response['message'];
@@ -742,7 +756,7 @@ class BBBx
             'origin-name'          => $this->modx->getOption('site_name'),
             'origin-extra'         => 'bbbx',
             'origin-extra-version' => $this->config['version'],
-            'origin-extra-author'  => 'goldsky <goldsky@virtudraft.com>',
+            'origin-extra-author'  => 'goldsky@virtudraft.com',
         ));
         $response = $this->server->createMeeting($params, $meta, $postFields);
         if (empty($response) || (isset($response['returncode']) && $response['returncode'] == 'FAILED')) {
@@ -973,7 +987,6 @@ class BBBx
         }
 
         return $response;
-
     }
 
     public function setConfigXMLFromArray(array $input = array(), $rootName = 'root')
@@ -990,6 +1003,29 @@ class BBBx
         $xml = Array2XML::createXML($rootName, $input);
 
         return $xml->saveXML();
+    }
+
+    public function setConfigXML(array $params)
+    {
+        if (!$this->modx->user->hasSessionContext('mgr')
+        ) {
+            $err = 'Unable to join to server: unauthenticated user!';
+            $this->setError($err);
+            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
+
+            return;
+        }
+        $this->server->setContentType('application/x-www-form-urlencoded');
+        $response = $this->server->setConfigXML($params);
+        if (empty($response) || (isset($response['returncode']) && $response['returncode'] == 'FAILED')) {
+            $err = 'Unable to connect to server: '.$response['message'];
+            $this->setError($err);
+            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
+
+            return;
+        }
+
+        return $response;
     }
 
 }

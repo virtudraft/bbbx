@@ -185,23 +185,21 @@ Ext.extend(BBBx.grid.RunningMeetings, MODx.grid.Grid, {
             }];
     },
     createMeeting: function () {
-        if (typeof (this.meetingWindow) === 'undefined') {
-            this.meetingWindow = MODx.load({
-                xtype: 'bbbx-window-meeting',
-                title: _('bbbx.meeting_create'),
-                baseParams: {
-                    action: 'mgr/meetings/running/create'
-                },
-                listeners: {
-                    'success': {
-                        fn: this.refresh,
-                        scope: this
-                    }
+        var meetingWindow = MODx.load({
+            xtype: 'bbbx-window-meeting',
+            title: _('bbbx.meeting_create'),
+            baseParams: {
+                action: 'mgr/meetings/running/create'
+            },
+            listeners: {
+                'success': {
+                    fn: this.refresh,
+                    scope: this
                 }
-            });
-        }
-        this.meetingWindow.reset();
-        this.meetingWindow.show();
+            }
+        });
+        meetingWindow.reset();
+        meetingWindow.show();
     },
     joinMeeting: function () {
         var p = this.menu.record || {};

@@ -46,43 +46,66 @@ BBBx.window.Meeting = function (config) {
                     {
                         title: _('bbbx.basics'),
                         defaults: {autoHeight: true},
+                        layout: 'column',
+                        border: false,
                         items: [
                             {
-                                xtype: 'textfield',
-                                fieldLabel: 'name *',
-                                name: 'name',
-                                anchor: '98%',
-                                allowBlank: false
+                                columnWidth: .5,
+                                layout: 'form',
+                                border: false,
+                                items: [
+                                    {
+                                        xtype: 'textfield',
+                                        fieldLabel: 'name *',
+                                        name: 'name',
+                                        anchor: '98%',
+                                        allowBlank: false
+                                    }, {
+                                        xtype: 'textfield',
+                                        fieldLabel: 'attendeePW',
+                                        name: 'attendeePW',
+                                        anchor: '98%'
+                                    }, {
+                                        xtype: 'numberfield',
+                                        fieldLabel: 'maxParticipants',
+                                        name: 'maxParticipants',
+                                        anchor: '98%'
+                                    },
+                                ]
                             }, {
-                                xtype: 'textfield',
-                                fieldLabel: 'meetingID',
-                                name: 'meetingID',
-                                anchor: '98%'
+                                columnWidth: .5,
+                                layout: 'form',
+                                border: false,
+                                items: [
+                                    {
+                                        xtype: 'textfield',
+                                        fieldLabel: 'meetingID',
+                                        name: 'meetingID',
+                                        anchor: '98%'
+                                    }, {
+                                        xtype: 'textfield',
+                                        fieldLabel: 'moderatorPW',
+                                        name: 'moderatorPW',
+                                        anchor: '98%'
+                                    }, {
+                                        xtype: 'numberfield',
+                                        fieldLabel: 'duration',
+                                        name: 'duration',
+                                        anchor: '98%'
+                                    },
+                                ]
                             }, {
-                                xtype: 'textfield',
-                                fieldLabel: 'attendeePW',
-                                name: 'attendeePW',
-                                anchor: '98%'
-                            }, {
-                                xtype: 'textfield',
-                                fieldLabel: 'moderatorPW',
-                                name: 'moderatorPW',
-                                anchor: '98%'
-                            }, {
-                                xtype: 'numberfield',
-                                fieldLabel: 'maxParticipants',
-                                name: 'maxParticipants',
-                                anchor: '98%'
-                            }, {
-                                xtype: 'numberfield',
-                                fieldLabel: 'duration',
-                                name: 'duration',
-                                anchor: '98%'
-                            }, {
-                                xtype: 'textfield',
-                                fieldLabel: 'logoutURL',
-                                name: 'logoutURL',
-                                anchor: '98%'
+                                columnWidth: 1,
+                                layout: 'form',
+                                border: false,
+                                items: [
+                                    {
+                                        xtype: 'textfield',
+                                        fieldLabel: 'logoutURL',
+                                        name: 'logoutURL',
+                                        anchor: '98%'
+                                    }
+                                ]
                             }
                         ]
                     }, {
@@ -106,22 +129,38 @@ BBBx.window.Meeting = function (config) {
                     }, {
                         title: _('bbbx.voice'),
                         defaults: {autoHeight: true},
+                        layout: 'column',
+                        border: false,
                         items: [
                             {
-                                xtype: 'textfield',
-                                fieldLabel: 'dialNumber',
-                                name: 'dialNumber',
-                                anchor: '98%'
+                                columnWidth: .5,
+                                layout: 'form',
+                                border: false,
+                                items: [
+                                    {
+                                        xtype: 'textfield',
+                                        fieldLabel: 'dialNumber',
+                                        name: 'dialNumber',
+                                        anchor: '98%'
+                                    }, {
+                                        xtype: 'textfield',
+                                        fieldLabel: 'webVoice',
+                                        name: 'webVoice',
+                                        anchor: '98%'
+                                    }
+                                ]
                             }, {
-                                xtype: 'numberfield',
-                                fieldLabel: 'voiceBridge',
-                                name: 'voiceBridge',
-                                anchor: '98%'
-                            }, {
-                                xtype: 'textfield',
-                                fieldLabel: 'webVoice',
-                                name: 'webVoice',
-                                anchor: '98%'
+                                columnWidth: .5,
+                                layout: 'form',
+                                border: false,
+                                items: [
+                                    {
+                                        xtype: 'numberfield',
+                                        fieldLabel: 'voiceBridge',
+                                        name: 'voiceBridge',
+                                        anchor: '98%'
+                                    }
+                                ]
                             }
                         ]
                     }, {
@@ -228,6 +267,16 @@ BBBx.window.Meeting = function (config) {
                                 xtype: 'label',
                                 cls: 'desc-under',
                                 html: _('bbbx.meta_desc'),
+                            }
+                        ]
+                    }, {
+                        title: _('bbbx.configurations'),
+                        defaults: {autoHeight: true},
+                        items: [
+                            {
+                                xtype: 'bbbx-combo-config',
+                                name: 'config',
+                                hiddenName: 'config',
                             }
                         ]
                     }

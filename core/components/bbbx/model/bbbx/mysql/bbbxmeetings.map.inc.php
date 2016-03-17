@@ -266,7 +266,7 @@ $xpdo_meta_map['bbbxMeetings']= array (
     'MeetingsConfigs' => 
     array (
       'class' => 'bbbxMeetingsConfigs',
-      'local' => 'id',
+      'local' => 'meeting_id',
       'foreign' => 'meeting_id',
       'cardinality' => 'many',
       'owner' => 'local',

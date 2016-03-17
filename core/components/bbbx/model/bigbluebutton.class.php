@@ -23,10 +23,12 @@ class BigBlueButton
      */
     private $meta = array();
 
+    private $contentType = 'application/xml';
+
     public function __construct($bbbServerBaseUrl, $securitySalt)
     {
         $this->bbbServerBaseUrl = $bbbServerBaseUrl;
-        $this->securitySalt = $securitySalt;
+        $this->securitySalt     = $securitySalt;
     }
 
     public function getApiVersion()
@@ -134,10 +136,10 @@ class BigBlueButton
 
     /* __________________ BBB RECORDING METHODS _________________ */
     /* The methods in the following section support the following categories of the BBB API:
-    -- getRecordings
-    -- publishRecordings
-    -- deleteRecordings
-    */
+      -- getRecordings
+      -- publishRecordings
+      -- deleteRecordings
+     */
 
     /**
      * @param $params
@@ -191,7 +193,6 @@ class BigBlueButton
     }
 
     /**
-     * @param $params
      * @return string
      */
     public function getDefaultConfigXMLUrl()
@@ -202,6 +203,23 @@ class BigBlueButton
     public function getDefaultConfigXML()
     {
         return $this->processXmlResponseArray($this->getDefaultConfigXMLUrl());
+    }
+
+    /**
+     * @param $params
+     * @return string
+     */
+    public function setConfigXMLUrl(array $params)
+    {
+        foreach ($params as $k => $v) {
+            $this->setQuery($k, $v);
+        }
+        return $this->buildUrl('setConfigXML', $this->getHTTPQuery());
+    }
+
+    public function setConfigXML(array $params)
+    {
+        return $this->processXmlResponseArray($this->setConfigXMLUrl($params));
     }
 
     /**
@@ -246,8 +264,31 @@ class BigBlueButton
         /**
          * Remove prefix to assure the standard
          */
-        $key = preg_replace('/^meta_/', '', $key);
+        $key              = preg_replace('/^meta_/', '', $key);
         $this->meta[$key] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function getContentType()
+    {
+        return $this->contentType;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed  $val
+     *
+     * @return BigBlueButton
+     */
+    public function setContentType($contentType)
+    {
+        $this->contentType = $contentType;
 
         return $this;
     }
@@ -263,7 +304,7 @@ class BigBlueButton
                 /**
                  * Append prefix to apply the standard
                  */
-                $queries['meta_' . strtolower($k)] = $v;
+                $queries['meta_'.strtolower($k)] = $v;
             }
         }
 
@@ -290,7 +331,7 @@ class BigBlueButton
      */
     public function buildUrl($method = '', $params = '')
     {
-        return $this->bbbServerBaseUrl . 'api/' . $method . '?' . $params . '&checksum=' . sha1($method . $params . $this->securitySalt);
+        return $this->bbbServerBaseUrl.'api/'.$method.'?'.$params.'&checksum='.sha1($method.$params.$this->securitySalt);
     }
 
     public function processXmlResponse($url, $postFields = '')
@@ -299,7 +340,7 @@ class BigBlueButton
           A private utility method used by other public methods to process XML responses.
          */
         if (extension_loaded('curl')) {
-            $ch = curl_init() or die(curl_error());
+            $ch      = curl_init() or die(curl_error());
             $timeout = 10;
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_ENCODING, 'UTF-8');
@@ -315,8 +356,8 @@ class BigBlueButton
                 curl_setopt($ch, CURLOPT_POST, 1);
                 curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
                 curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                    'Content-type: application/xml',
-                    'Content-length: ' . strlen($postFields),
+                    'Content-type: '.$this->contentType,
+                    'Content-length: '.strlen($postFields),
                 ]);
             }
             $data = curl_exec($ch);
@@ -341,4 +382,5 @@ class BigBlueButton
 
         return json_decode(json_encode($xml), true);
     }
+
 }

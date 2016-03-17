@@ -119,6 +119,7 @@ class ConfigsCreateProcessor extends modObjectCreateProcessor
         $xml       = $array2xml->saveXML();
         $xml       = preg_replace('/>\s+</', '><', $xml);
         $xml       = str_replace('<?xml version="1.0" encoding="UTF-8"?>', '', $xml);
+        $xml       = trim($xml);
         $this->setProperty('xml', $xml);
 
         return !$this->hasErrors();

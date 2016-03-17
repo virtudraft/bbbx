@@ -43,6 +43,7 @@ class BBBxIndexManagerController extends modExtraManagerController
 
     public function loadCustomCssJs()
     {
+        $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/widgets/combo.config.js');
         $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/widgets/window.meeting.js');
         $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/widgets/grid.configs.js');
         $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/widgets/grid.scheduledmeetings.js');

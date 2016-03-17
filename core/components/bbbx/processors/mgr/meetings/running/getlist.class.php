@@ -1,22 +1,24 @@
 <?php
 
-class MeetingsRunningGetListProcessor extends modObjectProcessor {
+class MeetingsRunningGetListProcessor extends modObjectProcessor
+{
 
-    public $languageTopics = array('bbbx:default');
-    public $objectType = 'bbbx.MeetingsRunningGetList';
+    public $languageTopics      = array('bbbx:default');
+    public $objectType          = 'bbbx.MeetingsRunningGetList';
     public $checkListPermission = false;
-    public $currentIndex = 0;
+    public $currentIndex        = 0;
 
     /**
      * {@inheritDoc}
      * @return boolean
      */
-    public function initialize() {
+    public function initialize()
+    {
         $this->setDefaultProperties(array(
             'start' => 0,
             'limit' => 20,
-            'sort' => $this->defaultSortField,
-            'dir' => $this->defaultSortDirection,
+            'sort'  => $this->defaultSortField,
+            'dir'   => $this->defaultSortDirection,
             'combo' => false,
             'query' => '',
         ));
@@ -24,7 +26,8 @@ class MeetingsRunningGetListProcessor extends modObjectProcessor {
         return parent::initialize();
     }
 
-    public function process() {
+    public function process()
+    {
         $data = $this->getData();
         $list = $this->iterate($data);
         return $this->outputArray($list, $data['total']);
@@ -36,9 +39,10 @@ class MeetingsRunningGetListProcessor extends modObjectProcessor {
      * @param array $data
      * @return array
      */
-    public function iterate(array $data) {
-        $list = array();
-        $list = $this->beforeIteration($list);
+    public function iterate(array $data)
+    {
+        $list               = array();
+        $list               = $this->beforeIteration($list);
         $this->currentIndex = 0;
         foreach ($data['results'] as $object) {
             $objectArray = $this->prepareRow($object);
@@ -56,7 +60,8 @@ class MeetingsRunningGetListProcessor extends modObjectProcessor {
      * @param array $list
      * @return array
      */
-    public function beforeIteration(array $list) {
+    public function beforeIteration(array $list)
+    {
         return $list;
     }
 
@@ -65,7 +70,8 @@ class MeetingsRunningGetListProcessor extends modObjectProcessor {
      * @param array $list
      * @return array
      */
-    public function afterIteration(array $list) {
+    public function afterIteration(array $list)
+    {
         return $list;
     }
 
@@ -73,13 +79,14 @@ class MeetingsRunningGetListProcessor extends modObjectProcessor {
      * Get the data of the query
      * @return array
      */
-    public function getData() {
-        $data = array();
+    public function getData()
+    {
+        $data  = array();
         $limit = intval($this->getProperty('limit'));
         $start = intval($this->getProperty('start'));
 
         $meetings = $this->modx->bbbx->getMeetings($limit, $start);
-        $isError = $this->modx->bbbx->getError();
+        $isError  = $this->modx->bbbx->getError();
         if (!empty($isError)) {
             return $isError;
         }
@@ -87,7 +94,7 @@ class MeetingsRunningGetListProcessor extends modObjectProcessor {
             $meetings = array();
         }
 
-        $data['total'] = count($meetings);
+        $data['total']   = count($meetings);
         $data['results'] = $meetings;
 
         return $data;
@@ -98,7 +105,8 @@ class MeetingsRunningGetListProcessor extends modObjectProcessor {
      * @param $array
      * @return array
      */
-    public function prepareRow($array) {
+    public function prepareRow($array)
+    {
         $array['joinURL'] = $this->modx->bbbx->getJoinMeetingURL($array['meetingID'], $array['moderatorPW']);
 
         return $array;
