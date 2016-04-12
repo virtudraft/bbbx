@@ -16,7 +16,7 @@ BBBx.grid.ScheduledMeetings = function (config) {
             'auto_start_recording', 'allow_start_stop_recording', 'document_url',
             'created_on', 'created_by', 'edited_on', 'edited_by',
             'context_key', 'moderator_usergroups', 'viewer_usergroups',
-            'moderator_users', 'viewer_users'
+            'moderator_users', 'viewer_users', 'is_running', 'joinURL'
         ],
         paging: true,
         remoteSort: true,
@@ -45,6 +45,12 @@ BBBx.grid.ScheduledMeetings = function (config) {
                 sortable: true,
 //                width: 100
                 hidden: true
+            }, {
+                header: _('bbbx.running'),
+                dataIndex: 'is_running',
+                sortable: true,
+                width: 80,
+                fixed: true
             }
         ],
         tbar: [
@@ -106,7 +112,7 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
                 , handler: this.endMeeting
             }];
     },
-    updateMeeting: function() {
+    updateMeeting: function () {
         var r = this.menu.record || {};
         var meetingWindow = MODx.load({
             xtype: 'bbbx-window-scheduledmeeting',
@@ -166,7 +172,7 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
             params: p,
             listeners: {
                 'success': {
-                    fn: function(res){
+                    fn: function (res) {
                         var href;
                         if (res.success &&
                                 typeof (res.object) !== 'undefined' &&
@@ -191,7 +197,7 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
     },
     endMeeting: function () {
         var p = this.menu.record || {};
-        p['action'] = 'mgr/meetings/scheduled/end';
+        p['action'] = 'mgr/meetings/running/end';
         MODx.msg.confirm({
             title: _('bbbx.meeting_end'),
             text: _('bbbx.meeting_end_confirm'),
@@ -203,21 +209,22 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
         });
     },
     renderName: function (value, panel, record) {
-        var tpl = new Ext.XTemplate(
-                '<table border="0">' +
+        var html = '<table border="0">' +
                 '<tr><td>meetingName</td><td>: {name}</td></tr>' +
                 '<tr><td>meetingID</td><td>: {meeting_id}</td></tr>' +
                 '<tr><td>attendeePW</td><td>: {attendee_pw}</td></tr>' +
                 '<tr><td>moderatorPW</td><td>: {moderator_pw}</td></tr>' +
-                '<tr><td></td><td>' +
-                '<a href="{joinURL}" target="_blank" class="x-btn x-btn-small bbbx-action-btn">Join</a>' +
-                '<a href="javascript:void(0);" class="x-btn x-btn-small bbbx-btn-danger bbbx-action-btn bbbx-btn-end" data-meetingid="{meeting_id}" data-moderatorpw="{moderator_pw}">End</a>' +
-                '</td></tr>' +
-                '</table>'
-                , {compiled: true});
+                '<tr><td></td><td>';
+        if (record.data.is_running) {
+            html += '<a href="{joinURL}" target="_blank" class="x-btn x-btn-small bbbx-action-btn">Join</a>' +
+                    '<a href="javascript:void(0);" class="x-btn x-btn-small bbbx-btn-danger bbbx-action-btn bbbx-btn-end" data-meetingid="{meeting_id}" data-moderatorpw="{moderator_pw}">End</a>';
+        }
+        html += '</td></tr>' +
+                '</table>';
+        var tpl = new Ext.XTemplate(html, {compiled: true});
         return tpl.apply(record.data);
     },
-    handleButtons: function(e){
+    handleButtons: function (e) {
         var t = e.getTarget();
         var action = null, classes, record = {};
         classes = t.className.split(' ');
@@ -226,11 +233,11 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
             action = classes[actBtn + 1];
         }
 
-        if(action) {
-            if (typeof(t.dataset.meetingid) !== 'undefined') {
+        if (action) {
+            if (typeof (t.dataset.meetingid) !== 'undefined') {
                 record['meetingID'] = t.dataset.meetingid;
             }
-            if (typeof(t.dataset.meetingid) !== 'undefined') {
+            if (typeof (t.dataset.meetingid) !== 'undefined') {
                 record['moderatorPW'] = t.dataset.moderatorpw;
             }
 

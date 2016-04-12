@@ -96,6 +96,10 @@ class MeetingsScheduledGetListProcessor extends modObjectGetListProcessor
             $objectArray['moderator_users'] = @implode(',', $moderator);
             $objectArray['viewer_users']    = @implode(',', $viewer);
         }
+        $objectArray['is_running'] = $this->modx->bbbx->isMeetingRunning($objectArray['meeting_id']);
+        if ($objectArray['is_running']) {
+            $objectArray['joinURL'] = $this->modx->bbbx->getJoinMeetingURL($objectArray['meeting_id'], $objectArray['moderator_pw']);
+        }
 
         return $objectArray;
     }

@@ -822,6 +822,8 @@ class BBBx
 
             return;
         }
+        $meeting->set('create_time', $response['createTime']);
+        $meeting->save();
 
         return true;
     }
