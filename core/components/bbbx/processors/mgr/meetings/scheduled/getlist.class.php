@@ -58,6 +58,14 @@ class MeetingsScheduledGetListProcessor extends modObjectGetListProcessor
             $objectArray['ended_date'] = date('m/d/Y', $objectArray['ended_on']);
             $objectArray['ended_time'] = date('H:i', $objectArray['ended_on']);
         }
+        $ctxs = $object->getMany('MeetingContexts');
+        if ($ctxs) {
+            $data = array();
+            foreach ($ctxs as $ctx) {
+                $data[] = $ctx->get('context_key');
+            }
+            $objectArray['context_key'] = @implode(',', $data);
+        }
         $ugs = $object->getMany('MeetingUsergroups');
         if ($ugs) {
             $moderator = array();

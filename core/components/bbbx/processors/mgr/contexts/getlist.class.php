@@ -29,17 +29,24 @@ class ContextsGetListProcessor extends modContextGetListProcessor
 
     public $permission = '';
 
-    public function beforeIteration(array $list) {
-        if ($this->getProperty('combo',false)) {
-            $list[] = array(
-                'key' => '',
-                'name' => '',
-                'description' => '',
-                'parent' => 0,
-            );
+    public function prepareQueryBeforeCount(xPDOQuery $c)
+    {
+        $query = $this->getProperty('query');
+        if (!empty($query)) {
+            $c->where(array(
+                'key:LIKE'            => '%'.$query.'%',
+                'OR:name:LIKE'        => '%'.$query.'%',
+                'OR:description:LIKE' => '%'.$query.'%',
+            ));
+        }
+        $exclude = $this->getProperty('exclude');
+        if (!empty($exclude)) {
+            $c->where(array(
+                'key:NOT IN' => is_string($exclude) ? explode(',', $exclude) : $exclude,
+            ));
         }
 
-        return $list;
+        return $c;
     }
 
 }

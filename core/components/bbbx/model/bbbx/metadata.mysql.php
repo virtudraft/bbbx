@@ -4,9 +4,10 @@ $xpdo_meta_map = array (
   'xPDOSimpleObject' => 
   array (
     0 => 'bbbxConfigs',
-    1 => 'bbbxMeetingUsergroups',
-    2 => 'bbbxMeetingUsers',
-    3 => 'bbbxMeetings',
-    4 => 'bbbxMeetingsConfigs',
+    1 => 'bbbxMeetingContexts',
+    2 => 'bbbxMeetingUsergroups',
+    3 => 'bbbxMeetingUsers',
+    4 => 'bbbxMeetings',
+    5 => 'bbbxMeetingsConfigs',
   ),
 );

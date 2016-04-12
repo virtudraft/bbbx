@@ -86,10 +86,35 @@ class ScheduledMeetingsUpdateProcessor extends modObjectUpdateProcessor
             $props['document_url'] = $objectUrl;
         }
         if (empty($props['context_key'])) {
-            $props['context_key'] = 'web';
-        } else {
-            $props['context_key'] = @implode(',', $props['context_key']);
+            $props['context_key'] = array('web');
         }
+        // delete diffs
+        $c     = $this->modx->newQuery('bbbxMeetingContexts');
+        $c->where(array(
+            'meeting_id:='       => $objId,
+            'context_key:NOT IN' => $props['context_key'],
+        ));
+        $diffs = $this->modx->getCollection('bbbxMeetingUsergroups', $c);
+        if ($diffs) {
+            foreach ($diffs as $diff) {
+                $diff->remove();
+            }
+        }
+        $many = array();
+        foreach ($props['context_key'] as $key) {
+            $params = array(
+                'meeting_id'  => $objId,
+                'context_key' => $key,
+            );
+            $ck     = $this->modx->getObject('bbbxMeetingContexts', $params);
+            if (!empty($ck)) {
+                continue;
+            }
+            $ck = $this->modx->newObject('bbbxMeetingContexts');
+            $ck->fromArray($params);
+            $many[] = $ck;
+        }
+        $this->object->addMany($many);
 
         if (!empty($props['moderator_usergroups'])) {
             // delete diffs

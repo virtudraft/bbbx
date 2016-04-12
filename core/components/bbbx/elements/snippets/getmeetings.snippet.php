@@ -38,6 +38,10 @@ if (!($bbbx instanceof BBBx)) {
 }
 
 $c = $modx->newQuery('bbbxMeetings');
+$c->leftJoin('bbbxMeetingContexts', 'MeetingContexts', 'MeetingContexts.meeting_id = bbbxMeetings.id');
+$c->where(array(
+    'MeetingContexts.context_key' => $modx->context->get('key')
+));
 if (empty($scriptProperties['allDates'])) {
     $time = time();
     $c->where(array(

@@ -33,7 +33,7 @@ $xpdo_meta_map['bbbxMeetings']= array (
     'created_by' => NULL,
     'edited_on' => NULL,
     'edited_by' => NULL,
-    'context_key' => 'web',
+    'create_time' => NULL,
   ),
   'fieldMeta' => 
   array (
@@ -243,13 +243,13 @@ $xpdo_meta_map['bbbxMeetings']= array (
       'phptype' => 'integer',
       'null' => true,
     ),
-    'context_key' => 
+    'create_time' => 
     array (
-      'dbtype' => 'varchar',
-      'precision' => '100',
-      'phptype' => 'string',
+      'dbtype' => 'int',
+      'precision' => '10',
+      'attributes' => 'unsigned',
+      'phptype' => 'integer',
       'null' => true,
-      'default' => 'web',
     ),
   ),
   'composites' => 
@@ -258,6 +258,14 @@ $xpdo_meta_map['bbbxMeetings']= array (
     array (
       'class' => 'bbbxMeetingsConfigs',
       'local' => 'meeting_id',
+      'foreign' => 'meeting_id',
+      'cardinality' => 'many',
+      'owner' => 'local',
+    ),
+    'MeetingContexts' => 
+    array (
+      'class' => 'bbbxMeetingContexts',
+      'local' => 'id',
       'foreign' => 'meeting_id',
       'cardinality' => 'many',
       'owner' => 'local',

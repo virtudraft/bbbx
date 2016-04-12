@@ -86,10 +86,15 @@ class ScheduledMeetingsCreateProcessor extends modObjectCreateProcessor
             $props['document_url'] = $objectUrl;
         }
         if (empty($props['context_key'])) {
-            $props['context_key'] = 'web';
-        } else {
-            $props['context_key'] = @implode(',', $props['context_key']);
+            $props['context_key'] = array('web');
         }
+        $many = array();
+        foreach ($props['context_key'] as $key) {
+            $ck     = $this->modx->newObject('bbbxMeetingContexts');
+            $ck->set('context_key', $key);
+            $many[] = $ck;
+        }
+        $this->object->addMany($many);
 
         if (!empty($props['moderator_usergroups'])) {
             $many = array();

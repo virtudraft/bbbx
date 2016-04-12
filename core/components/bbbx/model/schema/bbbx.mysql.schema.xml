@@ -9,6 +9,13 @@
         <composite alias="MeetingsConfigs" class="bbbxMeetingsConfigs" local="id" foreign="config_id" cardinality="many" owner="local" />
 
     </object>
+    <object class="bbbxMeetingContexts" table="meeting_contexts" extends="xPDOSimpleObject">
+        <field key="meeting_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="index" />
+        <field key="context_key" dbtype="varchar" precision="50" phptype="string" null="false" />
+
+        <aggregate alias="Meeting" class="bbbxMeetings" local="meeting_id" foreign="id" cardinality="one" owner="foreign" />
+
+    </object>
     <object class="bbbxMeetingUsergroups" table="meeting_usergroups" extends="xPDOSimpleObject">
         <field key="meeting_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="index" />
         <field key="usergroup_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" />
@@ -61,9 +68,10 @@
         <field key="created_by" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" />
         <field key="edited_on" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" />
         <field key="edited_by" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" />
-        <field key="context_key" dbtype="varchar" precision="100" phptype="string" null="true" default="web" />
+        <field key="create_time" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" />
 
         <composite alias="MeetingsConfigs" class="bbbxMeetingsConfigs" local="meeting_id" foreign="meeting_id" cardinality="many" owner="local" />
+        <composite alias="MeetingContexts" class="bbbxMeetingContexts" local="id" foreign="meeting_id" cardinality="many" owner="local" />
         <composite alias="MeetingUsers" class="bbbxMeetingUsers" local="id" foreign="meeting_id" cardinality="many" owner="local" />
         <composite alias="MeetingUsergroups" class="bbbxMeetingUsergroups" local="id" foreign="meeting_id" cardinality="many" owner="local" />
 
