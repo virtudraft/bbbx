@@ -31,7 +31,7 @@ $xpdo_meta_map['bbbxMeetingsConfigs']= array (
     'config_token' => 
     array (
       'dbtype' => 'varchar',
-      'precision' => '50',
+      'precision' => '255',
       'phptype' => 'string',
       'null' => true,
     ),

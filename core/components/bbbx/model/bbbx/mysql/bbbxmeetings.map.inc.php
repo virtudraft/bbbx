@@ -17,7 +17,7 @@ $xpdo_meta_map['bbbxMeetings']= array (
     'web_voice' => NULL,
     'logout_url' => NULL,
     'is_moderator_first' => 0,
-    'user_limit' => 0,
+    'max_participants' => 0,
     'started_on' => NULL,
     'ended_on' => NULL,
     'is_forced_to_end' => 0,
@@ -34,7 +34,6 @@ $xpdo_meta_map['bbbxMeetings']= array (
     'edited_on' => NULL,
     'edited_by' => NULL,
     'context_key' => 'web',
-    'culture_key' => 'en',
   ),
   'fieldMeta' => 
   array (
@@ -60,15 +59,15 @@ $xpdo_meta_map['bbbxMeetings']= array (
     ),
     'attendee_pw' => 
     array (
-      'dbtype' => 'binary',
-      'precision' => '16',
+      'dbtype' => 'varbinary',
+      'precision' => '255',
       'phptype' => 'binary',
       'null' => true,
     ),
     'moderator_pw' => 
     array (
-      'dbtype' => 'binary',
-      'precision' => '16',
+      'dbtype' => 'varbinary',
+      'precision' => '255',
       'phptype' => 'binary',
       'null' => true,
     ),
@@ -115,7 +114,7 @@ $xpdo_meta_map['bbbxMeetings']= array (
       'null' => false,
       'default' => 0,
     ),
-    'user_limit' => 
+    'max_participants' => 
     array (
       'dbtype' => 'int',
       'precision' => '10',
@@ -249,16 +248,8 @@ $xpdo_meta_map['bbbxMeetings']= array (
       'dbtype' => 'varchar',
       'precision' => '100',
       'phptype' => 'string',
-      'null' => false,
-      'default' => 'web',
-    ),
-    'culture_key' => 
-    array (
-      'dbtype' => 'varchar',
-      'precision' => '50',
-      'phptype' => 'string',
       'null' => true,
-      'default' => 'en',
+      'default' => 'web',
     ),
   ),
   'composites' => 

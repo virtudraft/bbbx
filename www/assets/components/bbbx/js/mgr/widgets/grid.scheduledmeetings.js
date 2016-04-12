@@ -6,150 +6,71 @@ BBBx.grid.ScheduledMeetings = function (config) {
         baseParams: {
             action: 'mgr/meetings/scheduled/getList'
         },
-        fields: ['meetingID', 'meetingName',
-//            'createTime',
-            {name: 'createTime', mapping: 'createTime', type: 'date', dateFormat: 'timestamp'},
-            'createDate', 'voiceBridge', 'dialNumber',
-//            'attendeePW',
-            {name: 'attendeePW', mapping: 'attendeePW', type: 'string'},
-//             'moderatorPW',
-            {name: 'moderatorPW', mapping: 'moderatorPW', type: 'string'},
-            'hasBeenForciblyEnded', 'running', 'participantCount',
-            'listenerCount', 'voiceParticipantCount', 'videoCount', 'duration', 'hasUserJoined',
-            'joinURL', 'endURL'
+        fields: ['id', 'meeting_id', 'name', 'description', 'attendee_pw',
+            'moderator_pw', 'welcome', 'dial_number', 'voice_bridge',
+            'web_voice', 'logout_url', 'is_moderator_first', 'max_participants',
+            'started_on', 'started_date', 'started_time',
+            'ended_on', 'ended_date', 'ended_time',
+            'is_forced_to_end', 'is_canceled',
+            'is_recorded', 'duration', 'meta', 'moderator_only_message',
+            'auto_start_recording', 'allow_start_stop_recording', 'document_url',
+            'created_on', 'created_by', 'edited_on', 'edited_by',
+            'context_key', 'usergroups', 'users'
         ],
         paging: true,
         remoteSort: true,
 //        anchor: '97%',
-        autoExpandColumn: 'meetingName',
+        autoExpandColumn: 'name',
         columns: [{
                 header: _('id'),
-                dataIndex: 'meetingID',
+                dataIndex: 'meeting_id',
                 sortable: true,
                 width: 100,
                 hidden: true,
             }, {
                 header: _('name'),
-                dataIndex: 'meetingName',
+                dataIndex: 'name',
                 sortable: true,
-                renderer: this.renderName,
-            }, {
-                header: _('bbbx.createTime'),
-                dataIndex: 'createTime',
-                sortable: true,
-//                width: 100
-                hidden: true,
-            }, {
-                header: _('bbbx.createDate'),
-                dataIndex: 'createDate',
-                sortable: true,
-//                width: 100
-                hidden: true,
-            }, {
-                header: _('bbbx.voiceBridge'),
-                dataIndex: 'voiceBridge',
-                sortable: true,
-                width: 60,
-                hidden: true,
-            }, {
-                header: _('bbbx.dialNumber'),
-                dataIndex: 'dialNumber',
-                sortable: true,
-                width: 80,
-                hidden: true,
+                renderer: this.renderName
             }, {
                 header: _('bbbx.attendeePW'),
-                dataIndex: 'attendeePW',
+                dataIndex: 'attendee_pw',
                 sortable: true,
 //                width: 100
                 hidden: true,
             }, {
                 header: _('bbbx.moderatorPW'),
-                dataIndex: 'moderatorPW',
+                dataIndex: 'moderator_pw',
                 sortable: true,
 //                width: 100
-                hidden: true,
-            }, {
-                header: _('bbbx.hasBeenForciblyEnded'),
-                dataIndex: 'hasBeenForciblyEnded',
-                sortable: true,
-                width: 70,
-                fixed: true
-            }, {
-                header: _('bbbx.running'),
-                dataIndex: 'running',
-                sortable: true,
-                width: 80,
-                fixed: true
-            }, {
-                header: _('bbbx.participants'),
-                dataIndex: 'participantCount',
-                sortable: true,
-                width: 100,
-                fixed: true,
-//                hidden: true,
-            }, {
-                header: _('bbbx.listeners'),
-                dataIndex: 'listenerCount',
-                sortable: true,
-                width: 100,
-                fixed: true,
-                hidden: true,
-            }, {
-                header: _('bbbx.voices'),
-                dataIndex: 'voiceParticipantCount',
-                sortable: true,
-//                width: 100
-                fixed: true,
-                hidden: true,
-            }, {
-                header: _('bbbx.videos'),
-                dataIndex: 'videoCount',
-                sortable: true,
-//                width: 100
-                fixed: true,
-                hidden: true,
-            }, {
-                header: _('bbbx.duration'),
-                dataIndex: 'duration',
-                sortable: true,
-                width: 100,
-                fixed: true,
-                hidden: true,
-            }, {
-                header: _('bbbx.hasUserJoined'),
-                dataIndex: 'hasUserJoined',
-                sortable: false,
-                width: 100,
-                fixed: true,
-//                hidden: true,
+                hidden: true
             }
         ],
         tbar: [
             {
-//                xtype: 'textfield',
-//                emptyText: _('bbbx.search...'),
-//                listeners: {
-//                    'change': {
-//                        fn: this.search,
-//                        scope: this
-//                    },
-//                    'render': {
-//                        fn: function (cmp) {
-//                            new Ext.KeyMap(cmp.getEl(), {
-//                                key: Ext.EventObject.ENTER,
-//                                fn: function () {
-//                                    this.fireEvent('change', this);
-//                                    this.blur();
-//                                    return true;
-//                                },
-//                                scope: cmp
-//                            });
-//                        },
-//                        scope: this
-//                    }
-//                }
-//            }, {
+                xtype: 'textfield',
+                emptyText: _('bbbx.search...'),
+                listeners: {
+                    'change': {
+                        fn: this.search,
+                        scope: this
+                    },
+                    'render': {
+                        fn: function (cmp) {
+                            new Ext.KeyMap(cmp.getEl(), {
+                                key: Ext.EventObject.ENTER,
+                                fn: function () {
+                                    this.fireEvent('change', this);
+                                    this.blur();
+                                    return true;
+                                },
+                                scope: cmp
+                            });
+                        },
+                        scope: this
+                    }
+                }
+            }, {
                 text: _('bbbx.meeting_create'),
                 handler: this.createMeeting,
                 scope: this
@@ -174,6 +95,9 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
     },
     getMenu: function () {
         return [{
+                text: _('bbbx.meeting_update')
+                , handler: this.updateMeeting
+            }, {
                 text: _('bbbx.meeting_join')
                 , handler: this.joinMeeting
             }, '-', {
@@ -181,24 +105,50 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
                 , handler: this.endMeeting
             }];
     },
-    createMeeting: function () {
-        if (typeof (this.meetingWindow) === 'undefined') {
-            this.meetingWindow = MODx.load({
-                xtype: 'bbbx-window-meeting',
-                title: _('bbbx.meeting_create'),
-                baseParams: {
-                    action: 'mgr/meetings/scheduled/create'
-                },
-                listeners: {
-                    'success': {
-                        fn: this.refresh,
-                        scope: this
-                    }
+    updateMeeting: function() {
+        var r = this.menu.record || {};
+        var meetingWindow = MODx.load({
+            xtype: 'bbbx-window-scheduledmeeting',
+            title: _('bbbx.meeting_update'),
+            baseParams: {
+                action: 'mgr/meetings/scheduled/update',
+                id: r.id
+            },
+            listeners: {
+                'success': {
+                    fn: this.refresh,
+                    scope: this
                 }
-            });
-        }
-        this.meetingWindow.reset();
-        this.meetingWindow.show();
+            }
+        });
+        meetingWindow.reset();
+        meetingWindow.setValues(r);
+        // SuperBoxSelect
+        var ug = meetingWindow.fp.getForm().findField('usergroups[]');
+        ug.setValue(r.usergroups);
+        var us = meetingWindow.fp.getForm().findField('users[]');
+        us.setValue(r.users);
+        var ck = meetingWindow.fp.getForm().findField('context_key[]');
+        ck.setValue(r.context_key);
+
+        meetingWindow.show();
+    },
+    createMeeting: function () {
+        var meetingWindow = MODx.load({
+            xtype: 'bbbx-window-scheduledmeeting',
+            title: _('bbbx.meeting_create'),
+            baseParams: {
+                action: 'mgr/meetings/scheduled/create'
+            },
+            listeners: {
+                'success': {
+                    fn: this.refresh,
+                    scope: this
+                }
+            }
+        });
+        meetingWindow.reset();
+        meetingWindow.show();
     },
     joinMeeting: function () {
         var p = this.menu.record || {};
@@ -249,17 +199,13 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
     renderName: function (value, panel, record) {
         var tpl = new Ext.XTemplate(
                 '<table border="0">' +
-                '<tr><td>meetingName</td><td>: {meetingName}</td></tr>' +
-                '<tr><td>meetingID</td><td>: {meetingID}</td></tr>' +
-                '<tr><td>createTime</td><td>: {createTime}</td></tr>' +
-                '<tr><td>voiceBridge</td><td>: {voiceBridge}</td></tr>' +
-                '<tr><td>dialNumber</td><td>: {dialNumber}</td></tr>' +
-                '<tr><td>duration</td><td>: {duration}</td></tr>' +
-                '<tr><td>attendeePW</td><td>: {attendeePW}</td></tr>' +
-                '<tr><td>moderatorPW</td><td>: {moderatorPW}</td></tr>' +
+                '<tr><td>meetingName</td><td>: {name}</td></tr>' +
+                '<tr><td>meetingID</td><td>: {meeting_id}</td></tr>' +
+                '<tr><td>attendeePW</td><td>: {attendee_pw}</td></tr>' +
+                '<tr><td>moderatorPW</td><td>: {moderator_pw}</td></tr>' +
                 '<tr><td></td><td>' +
                 '<a href="{joinURL}" target="_blank" class="x-btn x-btn-small bbbx-action-btn">Join</a>' +
-                '<a href="javascript:void(0);" class="x-btn x-btn-small bbbx-btn-danger bbbx-action-btn bbbx-btn-end" data-meetingid="{meetingID}" data-moderatorpw="{moderatorPW}">End</a>' +
+                '<a href="javascript:void(0);" class="x-btn x-btn-small bbbx-btn-danger bbbx-action-btn bbbx-btn-end" data-meetingid="{meeting_id}" data-moderatorpw="{moderator_pw}">End</a>' +
                 '</td></tr>' +
                 '</table>'
                 , {compiled: true});

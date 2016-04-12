@@ -23,6 +23,7 @@ $xpdo_meta_map['bbbxMeetingUsergroups']= array (
       'attributes' => 'unsigned',
       'phptype' => 'integer',
       'null' => false,
+      'index' => 'index',
     ),
     'usergroup_id' => 
     array (

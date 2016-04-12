@@ -186,7 +186,7 @@ Ext.extend(BBBx.grid.RunningMeetings, MODx.grid.Grid, {
     },
     createMeeting: function () {
         var meetingWindow = MODx.load({
-            xtype: 'bbbx-window-meeting',
+            xtype: 'bbbx-window-runningmeeting',
             title: _('bbbx.meeting_create'),
             baseParams: {
                 action: 'mgr/meetings/running/create'

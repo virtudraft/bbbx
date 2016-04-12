@@ -23,6 +23,7 @@ $xpdo_meta_map['bbbxMeetingUsers']= array (
       'attributes' => 'unsigned',
       'phptype' => 'integer',
       'null' => false,
+      'index' => 'index',
     ),
     'user_id' => 
     array (

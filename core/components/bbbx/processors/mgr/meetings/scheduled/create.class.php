@@ -1,10 +1,11 @@
 <?php
 
-class RunningMeetingsCreateProcessor extends modObjectProcessor
+class ScheduledMeetingsCreateProcessor extends modObjectCreateProcessor
 {
 
+    public $classKey       = 'bbbxMeetings';
     public $languageTopics = array('bbbx:cmp');
-    public $objectType     = 'bbbx.RunningMeetingsCreate';
+    public $objectType     = 'bbbx.ScheduledMeetingsCreate';
 
     /**
      * {@inheritDoc}
@@ -17,6 +18,7 @@ class RunningMeetingsCreateProcessor extends modObjectProcessor
             return $this->modx->lexicon('bbbx.meeting_err_ns_name');
         }
         $this->unsetProperty('action');
+        $this->object = $this->modx->newObject($this->classKey);
 
         return true;
     }
@@ -28,8 +30,21 @@ class RunningMeetingsCreateProcessor extends modObjectProcessor
      */
     public function process()
     {
-        $props      = $this->getProperties();
-        $postFields = '';
+        $props = $this->getProperties();
+        if (empty($props['meeting_id'])) {
+            $props['meeting_id'] = uniqid();
+        }
+        if (!empty($props['started_date']) && !empty($props['started_time'])) {
+            $date                = DateTime::createFromFormat('m/d/Y H:i', $props['started_date'].' '.$props['started_time']);
+            $props['started_on'] = $date->format('U');
+        }
+        if (!empty($props['ended_date']) && !empty($props['ended_time'])) {
+            $date              = DateTime::createFromFormat('m/d/Y H:i', $props['ended_date'].' '.$props['ended_time']);
+            $props['ended_on'] = $date->format('U');
+        }
+        $props['created_on'] = time();
+        $props['created_by'] = $this->modx->user->get('id');
+
         if (isset($props['preloadSlides']) &&
                 !empty($props['preloadSlides']) &&
                 isset($props['preloadSlidesSourceId']) &&
@@ -37,7 +52,7 @@ class RunningMeetingsCreateProcessor extends modObjectProcessor
         ) {
             $mediaSource = $this->modx->getObject('sources.modMediaSource', array('id' => $props['preloadSlidesSourceId']));
             if (!$mediaSource) {
-                return 'the selected media source is unavailable';
+                return $this->failure('the selected media source is unavailable');
             }
             $mediaSource->initialize();
             $bases = $mediaSource->getBases();
@@ -46,42 +61,54 @@ class RunningMeetingsCreateProcessor extends modObjectProcessor
             } else {
                 $objectUrl = $mediaSource->getObjectUrl($props['preloadSlides']);
             }
-            $postFields .= '<modules><module name="presentation"><document url="'.$objectUrl.'"/></module></modules>';
+            $props['document_url'] = $objectUrl;
         }
-        $meta = array();
-        if (isset($props['meta']) && !empty($props['meta'])) {
-            $metaProp = array_map('trim', @explode(',', $props['meta']));
-            foreach ($metaProp as $v) {
-                list($key, $val) = @explode('=', $v);
-                $meta[$key] = $val;
+        if (empty($props['context_key'])) {
+            $props['context_key'] = 'web';
+        } else {
+            $props['context_key'] = @implode(',', $props['context_key']);
+        }
+
+        if (!empty($props['usergroups'])) {
+            $many = array();
+            foreach ($props['usergroups'] as $id) {
+                $meetingUgs = $this->modx->newObject('bbbxMeetingUsergroups');
+                $meetingUgs->set('usergroup_id', $id);
+                $many[]     = $meetingUgs;
             }
+            $this->object->addMany($many);
         }
-        unset($props['meta']);
-        if (!empty($postFields)) {
-            $postFields = '<?xml version="1.0" encoding="UTF-8"?>'.$postFields;
+        if (!empty($props['users'])) {
+            $many = array();
+            foreach ($props['users'] as $id) {
+                $meetingUsers = $this->modx->newObject('bbbxMeetingUsers');
+                $meetingUsers->set('user_id', $id);
+                $many[]       = $meetingUsers;
+            }
+            $this->object->addMany($many);
         }
-        $postFields   = trim($postFields);
-        $this->object = $this->modx->bbbx->createMeeting($props, $meta, $postFields);
-        if (empty($this->object)) {
+
+        $this->object->fromArray($props);
+        if ($this->object->save() === false) {
             return $this->failure($this->modx->lexicon($this->objectType.'_err_save'));
         }
         $configId = $this->getProperty('config');
-        $msg = '';
+        $msg      = '';
         if (!empty($configId)) {
             $config = $this->modx->getObject('bbbxConfigs', $configId);
             if ($config) {
                 $params        = array(
-                    'meeting_id' => $this->object['meetingID'],
+                    'meeting_id' => $props['meeting_id'],
                     'config_id'  => $configId,
                 );
                 $meetingConfig = $this->modx->getObject('bbbxMeetingsConfigs', $params);
                 if (!$meetingConfig) {
                     $xml          = $config->get('xml');
                     $setConfigXML = $this->modx->bbbx->setConfigXML(array(
-                        'meetingID' => $this->object['meetingID'],
+                        'meetingID' => $props['meeting_id'],
                         'configXML' => $xml,
                     ));
-                    $isError = $this->modx->bbbx->getError();
+                    $isError      = $this->modx->bbbx->getError();
                     if ($isError) {
                         $msg = $isError;
                     } else if ($setConfigXML && isset($setConfigXML['token']) && !empty($setConfigXML['token'])) {
@@ -113,9 +140,9 @@ class RunningMeetingsCreateProcessor extends modObjectProcessor
      */
     public function logManagerAction()
     {
-        $this->modx->logManagerAction($this->objectType.'_create', 'bbbxMeetings', $this->getProperty('meetingID'));
+        $this->modx->logManagerAction($this->objectType.'_create', $this->classKey, $this->object->get($this->primaryKeyField));
     }
 
 }
 
-return 'RunningMeetingsCreateProcessor';
+return 'ScheduledMeetingsCreateProcessor';
