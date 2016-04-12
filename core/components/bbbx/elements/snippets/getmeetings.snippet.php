@@ -38,8 +38,7 @@ if ($isAuthenticated) {
 foreach ($meetings as $meeting) {
     $meetingArray             = $meeting->toArray();
     // initiate meeting if it fits with the dates
-    $bbbx->initMeeting($meetingArray['meeting_id']);
-    $isMeetingRunning         = $bbbx->isMeetingRunning($meetingArray['meeting_id']);
+    $isMeetingRunning         = $bbbx->initMeeting($meetingArray['meeting_id']);
     $meetingArray['join_url'] = '';
     if ($isMeetingRunning && !empty($ugs)) {
         if (in_array(1, $ugs)) {

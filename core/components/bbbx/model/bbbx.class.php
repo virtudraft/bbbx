@@ -786,7 +786,6 @@ class BBBx
                 $meta[$key] = $val;
             }
         }
-        unset($params['meta']);
         $postFields = '';
         if (!empty($meetingArray['document_url'])) {
             $postFields .= '<modules><module name="presentation"><document url="'.$meetingArray['document_url'].'"/></module></modules>';
@@ -796,7 +795,16 @@ class BBBx
         }
         $postFields = trim($postFields);
 
-        return $this->createMeeting($params, $meta, $postFields);
+        $response = $this->createMeeting($params, $meta, $postFields);
+        if (empty($response) || (isset($response['returncode']) && $response['returncode'] == 'FAILED')) {
+            $err = 'Unable to connect to server: '.$response['message'];
+            $this->setError($err);
+            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
+
+            return;
+        }
+
+        return true;
     }
 
     public function createMeeting($params, array $meta = array(), $postFields = '')
@@ -899,7 +907,7 @@ class BBBx
             return;
         }
 
-        return $response['running'] != 'false';
+        return (isset($response['running']) && $response['running'] !== 'false' ? true : false);
     }
 
     public function getMeetingInfo($meetingID, $moderatorPW)
