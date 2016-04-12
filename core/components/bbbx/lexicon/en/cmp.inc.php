@@ -1,6 +1,8 @@
 <?php
 
 $_lang['bbbx'] = 'BBBx';
+$_lang['bbbx.about'] = 'About';
+$_lang['bbbx.about_desc'] = 'BBBx is BigBlueButton and MODx integration add on.';
 $_lang['bbbx.menu_desc'] = 'BigBlueButton manager';
 $_lang['bbbx.meetings_scheduled'] = 'Scheduled Meetings';
 $_lang['bbbx.meetings_scheduled_desc'] = 'Manage scheduled meetings for timely access. Creating one will only be saved on database and will be run on the scheduled session.';
