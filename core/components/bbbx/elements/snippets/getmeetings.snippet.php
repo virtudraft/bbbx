@@ -71,7 +71,7 @@ foreach ($meetings as $meeting) {
         if (in_array(1, $ugs)) {
             $meetingArray['join_url'] = $bbbx->getJoinMeetingURL($meetingArray['meeting_id'], $meetingArray['moderator_pw']);
         } else {
-            $meetingUgs = $meeting->getMany('bbbxMeetingUsergroups');
+            $meetingUgs = $meeting->getMany('MeetingUsergroups');
             if ($meetingUgs) {
                 foreach ($meetingUgs as $meetingUg) {
                     $meetingUgArray = $meetingUg->toArray();
