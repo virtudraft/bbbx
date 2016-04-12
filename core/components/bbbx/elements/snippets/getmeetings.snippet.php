@@ -22,7 +22,6 @@
  * @package bbbx
  * @subpackage snippet
  */
-
 $scriptProperties['allDates']      = $modx->getOption('allDates', $scriptProperties);
 $scriptProperties['tplItem']       = $modx->getOption('tplItem', $scriptProperties, 'meeting/item');
 $scriptProperties['tplWrapper']    = $modx->getOption('tplWrapper', $scriptProperties, 'meeting/wrapper');
@@ -62,6 +61,7 @@ $ugs = array();
 if ($isAuthenticated) {
     $ugs = $modx->user->getUserGroups();
 }
+$modx->log(modX::LOG_LEVEL_ERROR, __FILE__.' ');
 foreach ($meetings as $meeting) {
     $meetingArray             = $meeting->toArray();
     // initiate meeting if it fits with the dates
@@ -73,20 +73,21 @@ foreach ($meetings as $meeting) {
         } else {
             $meetingUgs = $meeting->getMany('MeetingUsergroups');
             if ($meetingUgs) {
+                $moderators = array();
                 foreach ($meetingUgs as $meetingUg) {
                     $meetingUgArray = $meetingUg->toArray();
-                    if (!in_array($meetingUgArray['usergroup_id'], $ugs)) {
-                        continue;
-                    }
                     if ($meetingUgArray['enroll'] === 'moderator') {
-                        $meetingArray['join_url'] = $bbbx->getJoinMeetingURL($meetingArray['meeting_id'], $meetingArray['moderator_pw']);
-                    } else {
-                        if (!empty($meetingArray['join_url'])) {
-                            continue;
-                        }
-                        $meetingArray['join_url'] = $bbbx->getJoinMeetingURL($meetingArray['meeting_id'], $meetingArray['attendee_pw']);
+                        $moderators[] = $meetingUgArray['usergroup_id'];
                     }
                 }
+                $isModerator = array_intersect($moderators, $ugs);
+                if (!empty($isModerator)) {
+                    $meetingArray['join_url'] = $bbbx->getJoinMeetingURL($meetingArray['meeting_id'], $meetingArray['moderator_pw']);
+                } else {
+                    $meetingArray['join_url'] = $bbbx->getJoinMeetingURL($meetingArray['meeting_id'], $meetingArray['attendee_pw']);
+                }
+            } else {
+                $meetingArray['join_url'] = $bbbx->getJoinMeetingURL($meetingArray['meeting_id'], $meetingArray['attendee_pw']);
             }
         }
     }
