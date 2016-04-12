@@ -742,6 +742,63 @@ class BBBx
         return $response;
     }
 
+    public function initMeeting($meetingID)
+    {
+        $isMeetingRunning = $this->isMeetingRunning($meetingID);
+        if ($isMeetingRunning) {
+            return true;
+        }
+        $c       = $this->modx->newQuery('bbbxMeetings');
+        $time    = time();
+        $c->where(array(
+            'meeting_id'    => $meetingID,
+            'started_on:<=' => $time,
+            'ended_on:>='   => $time,
+        ));
+        $meeting = $this->modx->getObject('bbbxMeetings', $c);
+        if (!$meeting) {
+            return false;
+        }
+        $meetingArray = $meeting->toArray();
+        $params       = array(
+            'name'                    => $meetingArray['name'],
+            'meetingID'               => $meetingArray['meeting_id'],
+            'attendeePW'              => $meetingArray['attendee_pw'],
+            'moderatorPW'             => $meetingArray['moderator_pw'],
+            'welcome'                 => $meetingArray['welcome'],
+            'dialNumber'              => $meetingArray['dial_number'],
+            'voiceBridge'             => $meetingArray['voice_bridge'],
+            'webVoice'                => $meetingArray['web_voice'],
+            'logoutURL'               => $meetingArray['logout_url'],
+            'record'                  => (!empty($meetingArray['is_recorded']) ? 'true' : 'false'),
+            'waitForModerator'        => (!empty($meetingArray['is_moderator_first']) ? 'true' : 'false'),
+            'maxParticipants'         => $meetingArray['max_participants'],
+            'duration'                => ($meetingArray['ended_on'] - $time) * 60,
+            'moderatorOnlyMessage'    => $meetingArray['moderator_only_message'],
+            'autoStartRecording'      => $meetingArray['auto_start_recording'],
+            'allowStartStopRecording' => $meetingArray['allow_start_stop_recording'],
+        );
+        $meta         = array();
+        if (isset($meetingArray['meta']) && !empty($meetingArray['meta'])) {
+            $metaProp = array_map('trim', @explode(',', $meetingArray['meta']));
+            foreach ($metaProp as $v) {
+                list($key, $val) = @explode('=', $v);
+                $meta[$key] = $val;
+            }
+        }
+        unset($params['meta']);
+        $postFields = '';
+        if (!empty($meetingArray['document_url'])) {
+            $postFields .= '<modules><module name="presentation"><document url="'.$meetingArray['document_url'].'"/></module></modules>';
+        }
+        if (!empty($postFields)) {
+            $postFields = '<?xml version="1.0" encoding="UTF-8"?>'.$postFields;
+        }
+        $postFields = trim($postFields);
+
+        return $this->createMeeting($params, $meta, $postFields);
+    }
+
     public function createMeeting($params, array $meta = array(), $postFields = '')
     {
         if (!isset($params['meetingID']) || empty($params['meetingID'])) {
