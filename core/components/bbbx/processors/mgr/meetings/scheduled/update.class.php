@@ -30,6 +30,7 @@ class ScheduledMeetingsUpdateProcessor extends modObjectUpdateProcessor
     public function process()
     {
         $props = $this->getProperties();
+        $objId = $this->object->get($this->primaryKeyField);
         if (empty($props['meeting_id'])) {
             $props['meeting_id'] = uniqid();
         }
@@ -68,11 +69,13 @@ class ScheduledMeetingsUpdateProcessor extends modObjectUpdateProcessor
             $props['context_key'] = @implode(',', $props['context_key']);
         }
 
-        if (!empty($props['usergroups'])) {
+        if (!empty($props['moderator_usergroups'])) {
             // delete diffs
             $c     = $this->modx->newQuery('bbbxMeetingUsergroups');
             $c->where(array(
-                'usergroup_id:NOT IN' => $props['usergroups']
+                'meeting_id:='        => $objId,
+                'usergroup_id:NOT IN' => $props['moderator_usergroups'],
+                'enroll:='            => 'moderator',
             ));
             $diffs = $this->modx->getCollection('bbbxMeetingUsergroups', $c);
             if ($diffs) {
@@ -81,24 +84,60 @@ class ScheduledMeetingsUpdateProcessor extends modObjectUpdateProcessor
                 }
             }
             $many = array();
-            foreach ($props['usergroups'] as $id) {
-                $meetingUgs = $this->modx->getObject('bbbxMeetingUsergroups', array(
+            foreach ($props['moderator_usergroups'] as $id) {
+                $params     = array(
+                    'meeting_id'   => $objId,
                     'usergroup_id' => $id,
-                ));
+                    'enroll'       => 'moderator',
+                );
+                $meetingUgs = $this->modx->getObject('bbbxMeetingUsergroups', $params);
                 if (!empty($meetingUgs)) {
                     continue;
                 }
                 $meetingUgs = $this->modx->newObject('bbbxMeetingUsergroups');
-                $meetingUgs->set('usergroup_id', $id);
+                $meetingUgs->fromArray($params);
                 $many[]     = $meetingUgs;
             }
             $this->object->addMany($many);
         }
-        if (!empty($props['users'])) {
+        if (!empty($props['viewer_usergroups'])) {
+            // delete diffs
+            $c     = $this->modx->newQuery('bbbxMeetingUsergroups');
+            $c->where(array(
+                'meeting_id:='        => $objId,
+                'usergroup_id:NOT IN' => $props['viewer_usergroups'],
+                'enroll:='            => 'viewer',
+            ));
+            $diffs = $this->modx->getCollection('bbbxMeetingUsergroups', $c);
+            if ($diffs) {
+                foreach ($diffs as $diff) {
+                    $diff->remove();
+                }
+            }
+            $many = array();
+            foreach ($props['viewer_usergroups'] as $id) {
+                $params     = array(
+                    'meeting_id'   => $objId,
+                    'usergroup_id' => $id,
+                    'enroll'       => 'viewer',
+                );
+                $meetingUgs = $this->modx->getObject('bbbxMeetingUsergroups', $params);
+                if (!empty($meetingUgs)) {
+                    continue;
+                }
+                $meetingUgs = $this->modx->newObject('bbbxMeetingUsergroups');
+                $meetingUgs->fromArray($params);
+                $many[]     = $meetingUgs;
+            }
+            $this->object->addMany($many);
+        }
+        if (!empty($props['moderator_users'])) {
             // delete diffs
             $c     = $this->modx->newQuery('bbbxMeetingUsers');
             $c->where(array(
-                'user_id:NOT IN' => $props['users']
+                'meeting_id:='   => $objId,
+                'user_id:NOT IN' => $props['moderator_users'],
+                'enroll:='       => 'moderator',
             ));
             $diffs = $this->modx->getCollection('bbbxMeetingUsers', $c);
             if ($diffs) {
@@ -107,15 +146,49 @@ class ScheduledMeetingsUpdateProcessor extends modObjectUpdateProcessor
                 }
             }
             $many = array();
-            foreach ($props['users'] as $id) {
-                $meetingUsers = $this->modx->getObject('bbbxMeetingUsers', array(
-                    'user_id' => $id,
-                ));
+            foreach ($props['moderator_users'] as $id) {
+                $params       = array(
+                    'meeting_id' => $objId,
+                    'user_id'    => $id,
+                    'enroll'     => 'moderator',
+                );
+                $meetingUsers = $this->modx->getObject('bbbxMeetingUsers', $params);
                 if (!empty($meetingUsers)) {
                     continue;
                 }
                 $meetingUsers = $this->modx->newObject('bbbxMeetingUsers');
-                $meetingUsers->set('user_id', $id);
+                $meetingUsers->fromArray($params);
+                $many[]       = $meetingUsers;
+            }
+            $this->object->addMany($many);
+        }
+        if (!empty($props['viewer_users'])) {
+            // delete diffs
+            $c     = $this->modx->newQuery('bbbxMeetingUsers');
+            $c->where(array(
+                'meeting_id:='   => $objId,
+                'user_id:NOT IN' => $props['viewer_users'],
+                'enroll:='       => 'viewer',
+            ));
+            $diffs = $this->modx->getCollection('bbbxMeetingUsers', $c);
+            if ($diffs) {
+                foreach ($diffs as $diff) {
+                    $diff->remove();
+                }
+            }
+            $many = array();
+            foreach ($props['viewer_users'] as $id) {
+                $params       = array(
+                    'meeting_id' => $objId,
+                    'user_id'    => $id,
+                    'enroll'     => 'viewer',
+                );
+                $meetingUsers = $this->modx->getObject('bbbxMeetingUsers', $params);
+                if (!empty($meetingUsers)) {
+                    continue;
+                }
+                $meetingUsers = $this->modx->newObject('bbbxMeetingUsers');
+                $meetingUsers->fromArray($params);
                 $many[]       = $meetingUsers;
             }
             $this->object->addMany($many);

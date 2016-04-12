@@ -61,7 +61,42 @@ BBBx.window.ScheduledMeeting = function (config) {
                                                 name: 'name',
                                                 anchor: '98%',
                                                 allowBlank: false
-                                            }, {
+                                            }
+                                        ]
+                                    }, {
+                                        columnWidth: .5,
+                                        layout: 'form',
+                                        border: false,
+                                        items: [
+                                            {
+                                                xtype: 'textfield',
+                                                fieldLabel: 'meetingID',
+                                                name: 'meeting_id',
+                                                anchor: '98%'
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }, {
+                                layout: 'form',
+                                border: false,
+                                items: [
+                                    {
+                                        xtype: 'textarea',
+                                        fieldLabel: 'description',
+                                        name: 'description',
+                                        anchor: '100%'
+                                    }
+                                ]
+                            }, {
+                                layout: 'column',
+                                items: [
+                                    {
+                                        columnWidth: .5,
+                                        layout: 'form',
+                                        border: false,
+                                        items: [
+                                            {
                                                 xtype: 'textfield',
                                                 fieldLabel: 'attendeePW',
                                                 name: 'attendee_pw',
@@ -79,11 +114,6 @@ BBBx.window.ScheduledMeeting = function (config) {
                                         border: false,
                                         items: [
                                             {
-                                                xtype: 'textfield',
-                                                fieldLabel: 'meetingID',
-                                                name: 'meeting_id',
-                                                anchor: '98%'
-                                            }, {
                                                 xtype: 'textfield',
                                                 fieldLabel: 'moderatorPW',
                                                 name: 'moderator_pw',
@@ -165,6 +195,7 @@ BBBx.window.ScheduledMeeting = function (config) {
                                     }
                                 ]
                             }, {
+                                fieldLabel: 'usergroups',
                                 layout: 'column',
                                 items: [
                                     {
@@ -173,11 +204,11 @@ BBBx.window.ScheduledMeeting = function (config) {
                                         border: false,
                                         items: [
                                             {
-                                                fieldLabel: 'usergroups',
+                                                fieldLabel: 'moderator',
                                                 xtype: 'bbbx-combo-usergroup',
                                                 preventRender: true,
-                                                name: 'usergroups[]',
-                                                hiddenName: 'usergroups[]',
+                                                name: 'moderator_usergroups[]',
+                                                hiddenName: 'moderator_usergroups[]',
                                                 anchor: '100%'
                                             }
                                         ]
@@ -187,21 +218,54 @@ BBBx.window.ScheduledMeeting = function (config) {
                                         border: false,
                                         items: [
                                             {
-                                                fieldLabel: 'users',
+                                                fieldLabel: 'viewer',
+                                                xtype: 'bbbx-combo-usergroup',
+                                                preventRender: true,
+                                                name: 'viewer_usergroups[]',
+                                                hiddenName: 'viewer_usergroups[]',
+                                                anchor: '100%'
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }, {
+                                fieldLabel: 'users',
+                                layout: 'column',
+                                items: [
+                                    {
+                                        columnWidth: .5,
+                                        layout: 'form',
+                                        border: false,
+                                        items: [
+                                            {
+                                                fieldLabel: 'moderator',
                                                 xtype: 'bbbx-combo-user',
                                                 preventRender: true,
-                                                name: 'users[]',
-                                                hiddenName: 'users[]',
+                                                name: 'moderator_users[]',
+                                                hiddenName: 'moderator_users[]',
                                                 anchor: '100%'
                                             }
                                         ]
                                     }, {
-                                        columnWidth: 1,
-                                        xtype: 'label',
-                                        cls: 'desc-under',
-                                        html: _('bbbx.user_access_desc'),
+                                        columnWidth: .5,
+                                        layout: 'form',
+                                        border: false,
+                                        items: [
+                                            {
+                                                fieldLabel: 'viewer',
+                                                xtype: 'bbbx-combo-user',
+                                                preventRender: true,
+                                                name: 'viewer_users[]',
+                                                hiddenName: 'viewer_users[]',
+                                                anchor: '100%'
+                                            }
+                                        ]
                                     }
                                 ]
+                            }, {
+                                xtype: 'label',
+                                cls: 'desc-under',
+                                html: _('bbbx.user_access_desc'),
                             }, {
                                 layout: 'column',
                                 items: [

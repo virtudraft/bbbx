@@ -15,7 +15,8 @@ BBBx.grid.ScheduledMeetings = function (config) {
             'is_recorded', 'duration', 'meta', 'moderator_only_message',
             'auto_start_recording', 'allow_start_stop_recording', 'document_url',
             'created_on', 'created_by', 'edited_on', 'edited_by',
-            'context_key', 'usergroups', 'users'
+            'context_key', 'moderator_usergroups', 'viewer_usergroups',
+            'moderator_users', 'viewer_users'
         ],
         paging: true,
         remoteSort: true,
@@ -124,12 +125,17 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
         meetingWindow.reset();
         meetingWindow.setValues(r);
         // SuperBoxSelect
-        var ug = meetingWindow.fp.getForm().findField('usergroups[]');
-        ug.setValue(r.usergroups);
-        var us = meetingWindow.fp.getForm().findField('users[]');
-        us.setValue(r.users);
-        var ck = meetingWindow.fp.getForm().findField('context_key[]');
-        ck.setValue(r.context_key);
+        var sb;
+        sb = meetingWindow.fp.getForm().findField('moderator_usergroups[]');
+        sb.setValue(r.moderator_usergroups);
+        sb = meetingWindow.fp.getForm().findField('viewer_usergroups[]');
+        sb.setValue(r.viewer_usergroups);
+        sb = meetingWindow.fp.getForm().findField('moderator_users[]');
+        sb.setValue(r.moderator_users);
+        sb = meetingWindow.fp.getForm().findField('viewer_users[]');
+        sb.setValue(r.viewer_users);
+        sb = meetingWindow.fp.getForm().findField('context_key[]');
+        sb.setValue(r.context_key);
 
         meetingWindow.show();
     },

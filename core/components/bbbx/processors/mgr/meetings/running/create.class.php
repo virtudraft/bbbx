@@ -28,7 +28,16 @@ class RunningMeetingsCreateProcessor extends modObjectProcessor
      */
     public function process()
     {
-        $props      = $this->getProperties();
+        $props = $this->getProperties();
+        $meta  = array();
+        if (isset($props['meta']) && !empty($props['meta'])) {
+            $metaProp = array_map('trim', @explode(',', $props['meta']));
+            foreach ($metaProp as $v) {
+                list($key, $val) = @explode('=', $v);
+                $meta[$key] = $val;
+            }
+        }
+        unset($props['meta']);
         $postFields = '';
         if (isset($props['preloadSlides']) &&
                 !empty($props['preloadSlides']) &&
@@ -48,25 +57,17 @@ class RunningMeetingsCreateProcessor extends modObjectProcessor
             }
             $postFields .= '<modules><module name="presentation"><document url="'.$objectUrl.'"/></module></modules>';
         }
-        $meta = array();
-        if (isset($props['meta']) && !empty($props['meta'])) {
-            $metaProp = array_map('trim', @explode(',', $props['meta']));
-            foreach ($metaProp as $v) {
-                list($key, $val) = @explode('=', $v);
-                $meta[$key] = $val;
-            }
-        }
-        unset($props['meta']);
         if (!empty($postFields)) {
             $postFields = '<?xml version="1.0" encoding="UTF-8"?>'.$postFields;
         }
-        $postFields   = trim($postFields);
+        $postFields = trim($postFields);
+
         $this->object = $this->modx->bbbx->createMeeting($props, $meta, $postFields);
         if (empty($this->object)) {
             return $this->failure($this->modx->lexicon($this->objectType.'_err_save'));
         }
         $configId = $this->getProperty('config');
-        $msg = '';
+        $msg      = '';
         if (!empty($configId)) {
             $config = $this->modx->getObject('bbbxConfigs', $configId);
             if ($config) {
@@ -81,7 +82,7 @@ class RunningMeetingsCreateProcessor extends modObjectProcessor
                         'meetingID' => $this->object['meetingID'],
                         'configXML' => $xml,
                     ));
-                    $isError = $this->modx->bbbx->getError();
+                    $isError      = $this->modx->bbbx->getError();
                     if ($isError) {
                         $msg = $isError;
                     } else if ($setConfigXML && isset($setConfigXML['token']) && !empty($setConfigXML['token'])) {

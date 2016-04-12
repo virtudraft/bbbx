@@ -69,20 +69,42 @@ class ScheduledMeetingsCreateProcessor extends modObjectCreateProcessor
             $props['context_key'] = @implode(',', $props['context_key']);
         }
 
-        if (!empty($props['usergroups'])) {
+        if (!empty($props['moderator_usergroups'])) {
             $many = array();
-            foreach ($props['usergroups'] as $id) {
+            foreach ($props['moderator_usergroups'] as $id) {
                 $meetingUgs = $this->modx->newObject('bbbxMeetingUsergroups');
                 $meetingUgs->set('usergroup_id', $id);
+                $meetingUgs->set('enroll', 'moderator');
                 $many[]     = $meetingUgs;
             }
             $this->object->addMany($many);
         }
-        if (!empty($props['users'])) {
+        if (!empty($props['viewer_usergroups'])) {
             $many = array();
-            foreach ($props['users'] as $id) {
+            foreach ($props['viewer_usergroups'] as $id) {
+                $meetingUgs = $this->modx->newObject('bbbxMeetingUsergroups');
+                $meetingUgs->set('usergroup_id', $id);
+                $meetingUgs->set('enroll', 'viewer');
+                $many[]     = $meetingUgs;
+            }
+            $this->object->addMany($many);
+        }
+        if (!empty($props['moderator_users'])) {
+            $many = array();
+            foreach ($props['moderator_users'] as $id) {
                 $meetingUsers = $this->modx->newObject('bbbxMeetingUsers');
                 $meetingUsers->set('user_id', $id);
+                $meetingUsers->set('enroll', 'moderator');
+                $many[]       = $meetingUsers;
+            }
+            $this->object->addMany($many);
+        }
+        if (!empty($props['viewer_users'])) {
+            $many = array();
+            foreach ($props['viewer_users'] as $id) {
+                $meetingUsers = $this->modx->newObject('bbbxMeetingUsers');
+                $meetingUsers->set('user_id', $id);
+                $meetingUsers->set('enroll', 'viewer');
                 $many[]       = $meetingUsers;
             }
             $this->object->addMany($many);

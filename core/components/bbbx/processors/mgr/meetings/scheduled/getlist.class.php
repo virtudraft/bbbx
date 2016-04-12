@@ -3,15 +3,16 @@
 class MeetingsScheduledGetListProcessor extends modObjectGetListProcessor
 {
 
-    public $classKey            = 'bbbxMeetings';
-    public $languageTopics      = array('bbbx:default');
-    public $objectType          = 'bbbx.MeetingsScheduledGetList';
+    public $classKey       = 'bbbxMeetings';
+    public $languageTopics = array('bbbx:default');
+    public $objectType     = 'bbbx.MeetingsScheduledGetList';
 
-    public function prepareQueryBeforeCount(xPDOQuery $c) {
-        $query = $this->getProperty('query','');
+    public function prepareQueryBeforeCount(xPDOQuery $c)
+    {
+        $query = $this->getProperty('query', '');
         if (!empty($query)) {
             $c->where(array(
-                'name:LIKE' => '%'.$query.'%',
+                'name:LIKE'           => '%'.$query.'%',
                 'OR:description:LIKE' => '%'.$query.'%',
             ));
         }
@@ -24,7 +25,8 @@ class MeetingsScheduledGetListProcessor extends modObjectGetListProcessor
      * @param xPDOObject $object
      * @return array
      */
-    public function prepareRow(xPDOObject $object) {
+    public function prepareRow(xPDOObject $object)
+    {
         $objectArray = $object->toArray();
         if (!empty($objectArray['started_on'])) {
             $objectArray['started_date'] = date('m/d/Y', $objectArray['started_on']);
@@ -36,23 +38,38 @@ class MeetingsScheduledGetListProcessor extends modObjectGetListProcessor
         }
         $ugs = $object->getMany('MeetingUsergroups');
         if ($ugs) {
-            $data = array();
+            $moderator = array();
+            $viewer    = array();
             foreach ($ugs as $ug) {
-                $data[] = $ug->get('usergroup_id');
+                $ugArray = $ug->toArray();
+                if ($ugArray['enroll'] === 'moderator') {
+                    $moderator[] = $ugArray['usergroup_id'];
+                } else {
+                    $viewer[] = $ugArray['usergroup_id'];
+                }
             }
-            $objectArray['usergroups'] = @implode(',', $data);
+            $objectArray['moderator_usergroups'] = @implode(',', $moderator);
+            $objectArray['viewer_usergroups']    = @implode(',', $viewer);
         }
         $users = $object->getMany('MeetingUsers');
         if ($users) {
-            $data = array();
+            $moderator = array();
+            $viewer    = array();
             foreach ($users as $user) {
-                $data[] = $user->get('user_id');
+                $userArray = $user->toArray();
+                if ($userArray['enroll'] === 'moderator') {
+                    $moderator[] = $userArray['user_id'];
+                } else {
+                    $viewer[] = $userArray['user_id'];
+                }
             }
-            $objectArray['users'] = @implode(',', $data);
+            $objectArray['moderator_users'] = @implode(',', $moderator);
+            $objectArray['viewer_users']    = @implode(',', $viewer);
         }
 
         return $objectArray;
     }
+
 }
 
 return 'MeetingsScheduledGetListProcessor';
