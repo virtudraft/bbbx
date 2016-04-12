@@ -61,7 +61,6 @@ $ugs = array();
 if ($isAuthenticated) {
     $ugs = $modx->user->getUserGroups();
 }
-$modx->log(modX::LOG_LEVEL_ERROR, __FILE__.' ');
 foreach ($meetings as $meeting) {
     $meetingArray             = $meeting->toArray();
     // initiate meeting if it fits with the dates
