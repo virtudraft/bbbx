@@ -64,6 +64,7 @@ class BigBlueButton
 
     public function getJoinMeetingURL(array $params)
     {
+        $this->resetQueries();
         foreach ($params as $k => $v) {
             $this->setQuery($k, $v);
         }
@@ -78,9 +79,11 @@ class BigBlueButton
      */
     public function getCreateMeetingUrl(array $params, array $meta = array())
     {
+        $this->resetQueries();
         foreach ($params as $k => $v) {
             $this->setQuery($k, $v);
         }
+        $this->resetMeta();
         foreach ($meta as $k => $v) {
             $this->setMeta($k, $v);
         }
@@ -99,6 +102,7 @@ class BigBlueButton
      */
     public function getEndMeetingURL(array $params)
     {
+        $this->resetQueries();
         foreach ($params as $k => $v) {
             $this->setQuery($k, $v);
         }
@@ -121,6 +125,7 @@ class BigBlueButton
      */
     public function getIsMeetingRunningUrl($meetingID)
     {
+        $this->resetQueries();
         $this->setQuery('meetingID', $meetingID);
         return $this->buildUrl('isMeetingRunning', $this->getHTTPQuery());
     }
@@ -140,6 +145,7 @@ class BigBlueButton
      */
     public function getMeetingInfoUrl(array $params)
     {
+        $this->resetQueries();
         foreach ($params as $k => $v) {
             $this->setQuery($k, $v);
         }
@@ -168,6 +174,7 @@ class BigBlueButton
      */
     public function getRecordingsUrl(array $params)
     {
+        $this->resetQueries();
         foreach ($params as $k => $v) {
             $this->setQuery($k, $v);
         }
@@ -185,6 +192,7 @@ class BigBlueButton
      */
     public function getPublishRecordingsUrl(array $params)
     {
+        $this->resetQueries();
         foreach ($params as $k => $v) {
             $this->setQuery($k, $v);
         }
@@ -202,6 +210,7 @@ class BigBlueButton
      */
     public function getDeleteRecordingsUrl(array $params)
     {
+        $this->resetQueries();
         foreach ($params as $k => $v) {
             $this->setQuery($k, $v);
         }
@@ -267,6 +276,31 @@ class BigBlueButton
     }
 
     /**
+     * @param string $key
+     *
+     * @return BigBlueButton
+     */
+    public function unsetQuery($key)
+    {
+        unset($this->queries[$key]);
+        if (!isset($this->queries)) {
+            $this->queries = array();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return BigBlueButton
+     */
+    public function resetQueries()
+    {
+        $this->queries = array();
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getMeta($key)
@@ -287,6 +321,31 @@ class BigBlueButton
          */
         $key              = preg_replace('/^meta_/', '', $key);
         $this->meta[$key] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return BigBlueButton
+     */
+    public function unsetMeta($key)
+    {
+        unset($this->meta[$key]);
+        if (!isset($this->meta)) {
+            $this->meta = array();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return BigBlueButton
+     */
+    public function resetMeta()
+    {
+        $this->meta = array();
 
         return $this;
     }
