@@ -9,14 +9,14 @@ BBBx.grid.ScheduledMeetings = function (config) {
         fields: ['id', 'meeting_id', 'name', 'description', 'attendee_pw',
             'moderator_pw', 'welcome', 'dial_number', 'voice_bridge',
             'web_voice', 'logout_url', 'is_moderator_first', 'max_participants',
-            'started_on', 'started_date', 'started_time',
-            'ended_on', 'ended_date', 'ended_time',
+            {name: 'started_on', type: 'date', dateFormat: 'U'}, 'started_date', 'started_time',
+            {name: 'ended_on', type: 'date', dateFormat: 'U'}, 'ended_date', 'ended_time',
             'is_forced_to_end', 'is_canceled',
             'is_recorded', 'duration', 'meta', 'moderator_only_message',
             'auto_start_recording', 'allow_start_stop_recording', 'document_url',
             'created_on', 'created_by', 'edited_on', 'edited_by',
             'context_key', 'moderator_usergroups', 'viewer_usergroups',
-            'moderator_users', 'viewer_users', 'is_running', 'joinURL'
+            'moderator_users', 'viewer_users', 'is_running', 'joinURL', 'recordings'
         ],
         paging: true,
         remoteSort: true,
@@ -38,7 +38,7 @@ BBBx.grid.ScheduledMeetings = function (config) {
                 dataIndex: 'attendee_pw',
                 sortable: true,
 //                width: 100
-                hidden: true,
+                hidden: true
             }, {
                 header: _('bbbx.moderatorPW'),
                 dataIndex: 'moderator_pw',
@@ -46,10 +46,63 @@ BBBx.grid.ScheduledMeetings = function (config) {
 //                width: 100
                 hidden: true
             }, {
+                header: _('bbbx.started_on'),
+                dataIndex: 'started_on',
+                xtype: 'datecolumn',
+                format: 'M d,Y g:i A',
+                sortable: true,
+                width: 150,
+                fixed: true
+            }, {
+                header: _('bbbx.ended_on'),
+                dataIndex: 'ended_on',
+                xtype: 'datecolumn',
+                format: 'M d,Y g:i A',
+                sortable: true,
+                width: 150,
+                fixed: true
+            }, {
                 header: _('bbbx.running'),
                 dataIndex: 'is_running',
                 sortable: true,
                 width: 80,
+                fixed: true
+            }, {
+                header: _('bbbx.recorded'),
+                dataIndex: 'is_recorded',
+                renderer: function (value, record) {
+                    if (value === 1) {
+                        return _('yes');
+                    } else {
+                        return _('no');
+                    }
+                },
+                sortable: true,
+                width: 90,
+                fixed: true
+            }, {
+                xtype: 'actioncolumn',
+                header: _('bbbx.recordings'),
+                dataIndex: 'recordings',
+                items: [
+                    {
+                        handler: function (grid, row, col) {
+                            var rec = grid.store.getAt(row);
+                            if (rec.data.recordings && rec.data.recordings.length) {
+                                grid.getRecordings(rec.data.meeting_id);
+                            }
+                        },
+                        getClass: function (v, meta, rec) {
+                            if (rec.data.recordings && rec.data.recordings.length) {
+                                this.items[0].tooltip = _('bbbx.recordings');
+                                this.items[0].altText = _('bbbx.recordings');
+                                return 'icon-bbbx-recordings icon-bbbx-actioncolumn-img';
+                            }
+                        }
+                    }
+                ],
+                sortable: true,
+                width: 100,
                 fixed: true
             }
         ],
@@ -223,6 +276,27 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
                 '</table>';
         var tpl = new Ext.XTemplate(html, {compiled: true});
         return tpl.apply(record.data);
+    },
+    getRecordings: function(meetingId) {
+        var tabs = Ext.getCmp('bbbx-tabs-scheduledmeetings');
+        if (tabs) {
+            var check = Ext.getCmp('bbbx-recordings-' + meetingId);
+            if (check) {
+                return tabs.setActiveTab(check);
+            }
+            var newTab = MODx.load({
+                xtype: 'bbbx-grid-recordings',
+                title: _('bbbx.recordings'),
+                id: 'bbbx-recordings-' + meetingId,
+                record: {
+                    meetingId: meetingId
+                },
+                closable: true
+            });
+            tabs.add(newTab);
+            tabs.setActiveTab(newTab);
+            tabs.doLayout();
+        }
     },
     handleButtons: function (e) {
         var t = e.getTarget();

@@ -22,6 +22,11 @@
  * @package bbbx
  * @subpackage snippet
  */
+$scriptProperties['limit']         = $modx->getOption('limit', $scriptProperties);
+$scriptProperties['offset']        = $modx->getOption('offset', $scriptProperties);
+$scriptProperties['totalVar']      = $modx->getOption('totalVar', $scriptProperties, 'total');
+$scriptProperties['sortBy']        = $modx->getOption('sortBy', $scriptProperties, 'id');
+$scriptProperties['sortDir']       = $modx->getOption('sortDir', $scriptProperties, 'desc');
 $scriptProperties['allDates']      = $modx->getOption('allDates', $scriptProperties);
 $scriptProperties['tplItem']       = $modx->getOption('tplItem', $scriptProperties, 'meeting/item');
 $scriptProperties['tplWrapper']    = $modx->getOption('tplWrapper', $scriptProperties, 'meeting/wrapper');
@@ -37,6 +42,9 @@ if (!($bbbx instanceof BBBx)) {
 }
 
 $c = $modx->newQuery('bbbxMeetings');
+$c->select(array(
+    'bbbxMeetings.*'
+));
 $c->leftJoin('bbbxMeetingContexts', 'MeetingContexts', 'MeetingContexts.meeting_id = bbbxMeetings.id');
 $c->where(array(
     'MeetingContexts.context_key' => $modx->context->get('key')
@@ -48,6 +56,13 @@ if (empty($scriptProperties['allDates'])) {
         'ended_on:>='   => $time,
     ));
 }
+// for getPage
+$total = $modx->getCount('bbbxMeetings', $c);
+$modx->setPlaceholder($scriptProperties['totalVar'], $total);
+if (!empty($scriptProperties['limit']) || !empty($scriptProperties['offset'])) {
+    $c->limit($scriptProperties['limit'], $scriptProperties['offset']);
+}
+$c->sortby($scriptProperties['sortBy'], $scriptProperties['sortDir']);
 $meetings = $modx->getCollection('bbbxMeetings', $c);
 if (!$meetings) {
     return;
@@ -61,6 +76,7 @@ $ugs = array();
 if ($isAuthenticated) {
     $ugs = $modx->user->getUserGroups();
 }
+//$toArray = 1; // debug
 foreach ($meetings as $meeting) {
     $meetingArray             = $meeting->toArray();
     // initiate meeting if it fits with the dates
@@ -85,19 +101,47 @@ foreach ($meetings as $meeting) {
                 } else {
                     $meetingArray['join_url'] = $bbbx->getJoinMeetingURL($meetingArray['meeting_id'], $meetingArray['attendee_pw']);
                 }
-            } else {
+            }
+            $meetingUsers = $meeting->getMany('MeetingUsers');
+            if ($meetingUsers) {
+                $moderators = array();
+                foreach ($meetingUsers as $meetingUser) {
+                    $meetingUserArray = $meetingUser->toArray();
+                    if ($meetingUserArray['enroll'] === 'moderator') {
+                        $moderators[] = $meetingUserArray['user_id'];
+                    }
+                }
+                $isModerator = array_intersect($moderators, $ugs);
+                if (!empty($isModerator)) {
+                    $meetingArray['join_url'] = $bbbx->getJoinMeetingURL($meetingArray['meeting_id'], $meetingArray['moderator_pw']);
+                } else {
+                    $meetingArray['join_url'] = $bbbx->getJoinMeetingURL($meetingArray['meeting_id'], $meetingArray['attendee_pw']);
+                }
+            }
+            if (!$meetingUgs && !$meetingUsers) {
                 $meetingArray['join_url'] = $bbbx->getJoinMeetingURL($meetingArray['meeting_id'], $meetingArray['attendee_pw']);
             }
         }
     }
-    $phs           = $bbbx->setPlaceholders($meetingArray, $scriptProperties['phsPrefix']);
-    $outputArray[] = $bbbx->processElementTags($bbbx->parseTpl($scriptProperties['tplItem'], $phs));
+    $phs = $bbbx->setPlaceholders($meetingArray, $scriptProperties['phsPrefix']);
+    if (!empty($toArray)) {
+        $outputArray[] = $phs;
+    } else {
+        $outputArray[] = $bbbx->processElementTags($bbbx->parseTpl($scriptProperties['tplItem'], $phs));
+    }
 }
-$wrapper = array(
-    'items' => @implode($scriptProperties['itemSeparator'], $outputArray)
-);
-$phs     = $bbbx->setPlaceholders($wrapper, $scriptProperties['phsPrefix']);
-$output  = $bbbx->processElementTags($bbbx->parseTpl($scriptProperties['tplWrapper'], $phs));
+if (!empty($toArray)) {
+    $wrapper = array(
+        $scriptProperties['phsPrefix'] . 'items' => $outputArray
+    );
+    $output  = '<pre>' . print_r($wrapper, 1) . '</pre>';
+} else {
+    $wrapper = array(
+        'items' => @implode($scriptProperties['itemSeparator'], $outputArray)
+    );
+    $phs     = $bbbx->setPlaceholders($wrapper, $scriptProperties['phsPrefix']);
+    $output  = $bbbx->processElementTags($bbbx->parseTpl($scriptProperties['tplWrapper'], $phs));
+}
 if (!empty($toPlaceholder)) {
     $modx->setPlaceholder($toPlaceholder, $output);
     return;

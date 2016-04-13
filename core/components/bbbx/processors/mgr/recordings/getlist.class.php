@@ -99,8 +99,8 @@ class RecordingsGetListProcessor extends modObjectProcessor {
         $data = array();
         $limit = intval($this->getProperty('limit'));
         $start = intval($this->getProperty('start'));
-
-        $records = $this->modx->bbbx->getRecordings('', $limit, $start);
+        $meetingId = $this->getProperty('meetingId', null);
+        $records = $this->modx->bbbx->getRecordings($meetingId, $limit, $start);
         $isError = $this->modx->bbbx->getError();
         if (!empty($isError)) {
             return $isError;

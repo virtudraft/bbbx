@@ -54,9 +54,16 @@ BBBx.panel.Home = function (config) {
                                 border: false,
                                 bodyCssClass: 'panel-desc'
                             }, {
-                                xtype: 'bbbx-grid-scheduledmeetings',
-                                cls: 'main-wrapper',
-                                preventRender: true
+                                xtype: 'modx-tabs',
+                                id: 'bbbx-tabs-scheduledmeetings',
+                                defaults: {border: false, autoHeight: true},
+                                border: false,
+                                items: [{
+                                        title: _('bbbx.meetings'),
+                                        xtype: 'bbbx-grid-scheduledmeetings',
+                                        cls: 'main-wrapper',
+                                        preventRender: true
+                                    }]
                             }]
                     }, {
                         title: _('bbbx.meetings_running'),

@@ -1,10 +1,11 @@
 BBBx.grid.Recordings = function (config) {
     config = config || {};
     Ext.applyIf(config, {
-        id: 'bbbx-grid-recordings',
+//        id: 'bbbx-grid-recordings',
         url: BBBx.config.connectorUrl,
         baseParams: {
-            action: 'mgr/recordings/getList'
+            action: 'mgr/recordings/getList',
+            meetingId: config.record && config.record.meetingId ? config.record.meetingId : ''
         },
         fields: ['recordID', 'meetingID', 'name', 'published', 'state',
             'startTime', 'endTime', 'metadata', 'playbackURL'

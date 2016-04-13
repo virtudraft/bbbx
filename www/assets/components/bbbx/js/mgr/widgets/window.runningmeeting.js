@@ -5,7 +5,7 @@ BBBx.window.RunningMeeting = function (config) {
         browserEl: 'modx-browser',
         fieldLabel: 'preloadSlides',
         name: 'preloadSlides',
-        anchor: '98%'
+        anchor: '100%'
     });
     preloadSlides.on('select', function (data) {
         var srcBrowserId = preloadSlides.browser.id;
@@ -59,19 +59,14 @@ BBBx.window.RunningMeeting = function (config) {
                                                 xtype: 'textfield',
                                                 fieldLabel: 'name *',
                                                 name: 'name',
-                                                anchor: '98%',
+                                                anchor: '100%',
                                                 allowBlank: false
                                             }, {
                                                 xtype: 'textfield',
                                                 fieldLabel: 'attendeePW',
                                                 name: 'attendeePW',
-                                                anchor: '98%'
-                                            }, {
-                                                xtype: 'numberfield',
-                                                fieldLabel: 'maxParticipants',
-                                                name: 'maxParticipants',
-                                                anchor: '98%'
-                                            },
+                                                anchor: '100%'
+                                            }
                                         ]
                                     }, {
                                         columnWidth: .5,
@@ -82,18 +77,46 @@ BBBx.window.RunningMeeting = function (config) {
                                                 xtype: 'textfield',
                                                 fieldLabel: 'meetingID',
                                                 name: 'meetingID',
-                                                anchor: '98%'
+                                                anchor: '100%'
                                             }, {
                                                 xtype: 'textfield',
                                                 fieldLabel: 'moderatorPW',
                                                 name: 'moderatorPW',
-                                                anchor: '98%'
-                                            }, {
+                                                anchor: '100%'
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }, {
+                                xtype: 'label',
+                                cls: 'desc-under',
+                                html: _('bbbx.password_desc'),
+                            }, {
+                                layout: 'column',
+                                items: [
+                                    {
+                                        columnWidth: .5,
+                                        layout: 'form',
+                                        border: false,
+                                        items: [
+                                            {
+                                                xtype: 'numberfield',
+                                                fieldLabel: 'maxParticipants',
+                                                name: 'maxParticipants',
+                                                anchor: '100%'
+                                            }
+                                        ]
+                                    }, {
+                                        columnWidth: .5,
+                                        layout: 'form',
+                                        border: false,
+                                        items: [
+                                            {
                                                 xtype: 'numberfield',
                                                 fieldLabel: 'duration',
                                                 name: 'duration',
-                                                anchor: '98%'
-                                            },
+                                                anchor: '100%'
+                                            }
                                         ]
                                     }
                                 ]
@@ -105,7 +128,7 @@ BBBx.window.RunningMeeting = function (config) {
                                         xtype: 'textfield',
                                         fieldLabel: 'logoutURL',
                                         name: 'logoutURL',
-                                        anchor: '98%'
+                                        anchor: '100%'
                                     }
                                 ]
                             }
@@ -119,13 +142,13 @@ BBBx.window.RunningMeeting = function (config) {
                                 fieldLabel: 'welcome',
                                 name: 'welcome',
                                 grow: true,
-                                anchor: '98%'
+                                anchor: '100%'
                             }, {
                                 xtype: 'textarea',
                                 fieldLabel: 'moderatorOnlyMessage',
                                 name: 'moderatorOnlyMessage',
                                 grow: true,
-                                anchor: '98%'
+                                anchor: '100%'
                             }
                         ]
                     }, {
@@ -143,12 +166,12 @@ BBBx.window.RunningMeeting = function (config) {
                                         xtype: 'textfield',
                                         fieldLabel: 'dialNumber',
                                         name: 'dialNumber',
-                                        anchor: '98%'
+                                        anchor: '100%'
                                     }, {
                                         xtype: 'textfield',
                                         fieldLabel: 'webVoice',
                                         name: 'webVoice',
-                                        anchor: '98%'
+                                        anchor: '100%'
                                     }
                                 ]
                             }, {
@@ -160,7 +183,7 @@ BBBx.window.RunningMeeting = function (config) {
                                         xtype: 'numberfield',
                                         fieldLabel: 'voiceBridge',
                                         name: 'voiceBridge',
-                                        anchor: '98%'
+                                        anchor: '100%'
                                     }
                                 ]
                             }
@@ -181,13 +204,13 @@ BBBx.window.RunningMeeting = function (config) {
                                         items: [
                                             {
                                                 xtype: 'radiogroup',
+                                                name: 'record',
                                                 fieldLabel: 'record',
                                                 items: [
                                                     {
                                                         boxLabel: _('no'),
                                                         name: 'record',
-                                                        inputValue: 0,
-//                                        checked: true
+                                                        inputValue: 0
                                                     }, {
                                                         boxLabel: _('yes'),
                                                         name: 'record',
@@ -204,13 +227,13 @@ BBBx.window.RunningMeeting = function (config) {
                                         items: [
                                             {
                                                 xtype: 'radiogroup',
+                                                name: 'autoStartRecording',
                                                 fieldLabel: 'autoStartRecording',
                                                 items: [
                                                     {
                                                         boxLabel: _('no'),
                                                         name: 'autoStartRecording',
-                                                        inputValue: 0,
-//                                        checked: true
+                                                        inputValue: 0
                                                     }, {
                                                         boxLabel: _('yes'),
                                                         name: 'autoStartRecording',
@@ -227,13 +250,13 @@ BBBx.window.RunningMeeting = function (config) {
                                         items: [
                                             {
                                                 xtype: 'radiogroup',
+                                                name: 'allowStartStopRecording',
                                                 fieldLabel: 'allowStartStopRecording',
                                                 items: [
                                                     {
                                                         boxLabel: _('no'),
                                                         name: 'allowStartStopRecording',
-                                                        inputValue: 0,
-//                                        checked: true
+                                                        inputValue: 0
                                                     }, {
                                                         boxLabel: _('yes'),
                                                         name: 'allowStartStopRecording',
@@ -264,7 +287,7 @@ BBBx.window.RunningMeeting = function (config) {
                                 fieldLabel: 'meta',
                                 name: 'meta',
                                 grow: true,
-                                anchor: '98%'
+                                anchor: '100%'
                             }, {
                                 xtype: 'label',
                                 cls: 'desc-under',

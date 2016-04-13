@@ -665,7 +665,6 @@ class BBBx
         if (!isset($response['returncode']) || $response['returncode'] == 'FAILED') {
             $err = 'Unable to connect to server: '.$response['message'];
             $this->setError($err);
-            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
 
             return;
         }
@@ -673,7 +672,6 @@ class BBBx
         if (empty($meetings)) {
             $err = 'No meetings available';
             $this->setError($err);
-            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
 
             return;
         }
@@ -753,7 +751,6 @@ class BBBx
         if (empty($response) || (isset($response['returncode']) && $response['returncode'] == 'FAILED')) {
             $err = 'Unable to connect to server: '.$response['message'];
             $this->setError($err);
-            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
 
             return;
         }
@@ -763,8 +760,8 @@ class BBBx
 
     public function initMeeting($meetingID)
     {
-        $isMeetingRunning = $this->isMeetingRunning($meetingID);
-        if ($isMeetingRunning) {
+        $meetingInfo = $this->getMeetingInfo($meetingID);
+        if ($meetingInfo) {
             return true;
         }
         $c       = $this->modx->newQuery('bbbxMeetings');
@@ -779,6 +776,10 @@ class BBBx
             return false;
         }
         $meetingArray = $meeting->toArray();
+        $duration = 0;
+        if (!empty($meetingArray['ended_on'])) {
+            $duration = ($meetingArray['ended_on'] - $time) * 60;
+        }
         $params       = array(
             'name'                    => $meetingArray['name'],
             'meetingID'               => $meetingArray['meeting_id'],
@@ -792,10 +793,10 @@ class BBBx
             'record'                  => (!empty($meetingArray['is_recorded']) ? 'true' : 'false'),
             'waitForModerator'        => (!empty($meetingArray['is_moderator_first']) ? 'true' : 'false'),
             'maxParticipants'         => $meetingArray['max_participants'],
-            'duration'                => ($meetingArray['ended_on'] - $time) * 60,
+            'duration'                => $duration,
             'moderatorOnlyMessage'    => $meetingArray['moderator_only_message'],
-            'autoStartRecording'      => $meetingArray['auto_start_recording'],
-            'allowStartStopRecording' => $meetingArray['allow_start_stop_recording'],
+            'autoStartRecording'      => (!empty($meetingArray['auto_start_recording']) ? 'true' : 'false'),
+            'allowStartStopRecording' => (!empty($meetingArray['allow_start_stop_recording']) ? 'true' : 'false'),
         );
         $meta         = array();
         if (isset($meetingArray['meta']) && !empty($meetingArray['meta'])) {
@@ -818,7 +819,6 @@ class BBBx
         if (empty($response) || (isset($response['returncode']) && $response['returncode'] == 'FAILED')) {
             $err = 'Unable to connect to server: '.$response['message'];
             $this->setError($err);
-            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
 
             return;
         }
@@ -848,7 +848,6 @@ class BBBx
         if (empty($response) || (isset($response['returncode']) && $response['returncode'] == 'FAILED')) {
             $err = 'Unable to connect to server: '.$response['message'];
             $this->setError($err);
-            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
 
             return;
         }
@@ -906,7 +905,6 @@ class BBBx
         if (empty($response) || (isset($response['returncode']) && $response['returncode'] == 'FAILED')) {
             $err = 'Unable to connect to server: '.$response['message'];
             $this->setError($err);
-            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
 
             return;
         }
@@ -923,7 +921,6 @@ class BBBx
         if (empty($response) || (isset($response['returncode']) && $response['returncode'] == 'FAILED')) {
             $err = 'Unable to connect to server: '.$response['message'];
             $this->setError($err);
-            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
 
             return;
         }
@@ -931,7 +928,13 @@ class BBBx
         return (isset($response['running']) && $response['running'] !== 'false' ? true : false);
     }
 
-    public function getMeetingInfo($meetingID, $moderatorPW)
+    /**
+     *
+     * @param type $meetingID
+     * @param type $moderatorPW
+     * @return type
+     */
+    public function getMeetingInfo($meetingID, $moderatorPW = '')
     {
         $response = $this->server->getMeetingInfo(array(
             'meetingID'   => $meetingID,
@@ -940,7 +943,6 @@ class BBBx
         if (empty($response) || (isset($response['returncode']) && $response['returncode'] == 'FAILED')) {
             $err = 'Unable to connect to server: '.$response['message'];
             $this->setError($err);
-            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
 
             return;
         }
@@ -961,16 +963,11 @@ class BBBx
         if (empty($response) || (isset($response['returncode']) && $response['returncode'] == 'FAILED')) {
             $err = 'Unable to connect to server: '.$response['message'];
             $this->setError($err);
-            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
 
             return;
         }
         $recordings = $response['recordings'];
         if (empty($recordings)) {
-            $err = 'No recordings available';
-            $this->setError($err);
-            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
-
             return;
         }
         /*
@@ -1011,7 +1008,6 @@ class BBBx
         if (empty($response) || (isset($response['returncode']) && $response['returncode'] == 'FAILED')) {
             $err = 'Unable to connect to server: '.$response['message'];
             $this->setError($err);
-            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
 
             return;
         }
@@ -1044,7 +1040,6 @@ class BBBx
         if (empty($response) || (isset($response['returncode']) && $response['returncode'] == 'FAILED')) {
             $err = 'Unable to connect to server: '.$response['message'];
             $this->setError($err);
-            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
 
             return;
         }
@@ -1067,7 +1062,6 @@ class BBBx
         if (empty($response) || (isset($response['returncode']) && $response['returncode'] == 'FAILED')) {
             $err = 'Unable to connect to server: '.$response['message'];
             $this->setError($err);
-            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
 
             return;
         }
@@ -1113,7 +1107,6 @@ class BBBx
         if (empty($response) || (isset($response['returncode']) && $response['returncode'] == 'FAILED')) {
             $err = 'Unable to connect to server: '.$response['message'];
             $this->setError($err);
-            $this->modx->log(modX::LOG_LEVEL_ERROR, $err, '', __METHOD__, __FILE__, __LINE__);
 
             return;
         }

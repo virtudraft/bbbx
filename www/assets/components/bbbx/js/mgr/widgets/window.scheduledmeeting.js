@@ -5,7 +5,7 @@ BBBx.window.ScheduledMeeting = function (config) {
         browserEl: 'modx-browser',
         fieldLabel: 'preloadSlides',
         name: 'preloadSlides',
-        anchor: '98%'
+        anchor: '100%'
     });
     preloadSlides.on('select', function (data) {
         var srcBrowserId = preloadSlides.browser.id;
@@ -59,7 +59,7 @@ BBBx.window.ScheduledMeeting = function (config) {
                                                 xtype: 'textfield',
                                                 fieldLabel: 'name *',
                                                 name: 'name',
-                                                anchor: '98%',
+                                                anchor: '100%',
                                                 allowBlank: false
                                             }
                                         ]
@@ -72,7 +72,7 @@ BBBx.window.ScheduledMeeting = function (config) {
                                                 xtype: 'textfield',
                                                 fieldLabel: 'meetingID',
                                                 name: 'meeting_id',
-                                                anchor: '98%'
+                                                anchor: '100%'
                                             }
                                         ]
                                     }
@@ -100,13 +100,8 @@ BBBx.window.ScheduledMeeting = function (config) {
                                                 xtype: 'textfield',
                                                 fieldLabel: 'attendeePW',
                                                 name: 'attendee_pw',
-                                                anchor: '98%'
-                                            }, {
-                                                xtype: 'numberfield',
-                                                fieldLabel: 'maxParticipants',
-                                                name: 'max_participants',
-                                                anchor: '98%'
-                                            },
+                                                anchor: '100%'
+                                            }
                                         ]
                                     }, {
                                         columnWidth: .5,
@@ -117,13 +112,41 @@ BBBx.window.ScheduledMeeting = function (config) {
                                                 xtype: 'textfield',
                                                 fieldLabel: 'moderatorPW',
                                                 name: 'moderator_pw',
-                                                anchor: '98%'
-                                            }, {
+                                                anchor: '100%'
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }, {
+                                xtype: 'label',
+                                cls: 'desc-under',
+                                html: _('bbbx.password_desc'),
+                            }, {
+                                layout: 'column',
+                                items: [
+                                    {
+                                        columnWidth: .5,
+                                        layout: 'form',
+                                        border: false,
+                                        items: [
+                                            {
                                                 xtype: 'numberfield',
-                                                fieldLabel: 'duration',
-                                                name: 'duration',
-                                                anchor: '98%'
-                                            },
+                                                fieldLabel: 'maxParticipants',
+                                                name: 'max_participants',
+                                                anchor: '100%'
+                                            }
+                                        ]
+                                    }, {
+                                        columnWidth: .5,
+                                        layout: 'form',
+                                        border: false,
+                                        items: [
+//                                            {
+//                                                xtype: 'numberfield',
+//                                                fieldLabel: 'duration',
+//                                                name: 'duration',
+//                                                anchor: '100%'
+//                                            }
                                         ]
                                     }
                                 ]
@@ -276,6 +299,7 @@ BBBx.window.ScheduledMeeting = function (config) {
                                         items: [
                                             {
                                                 xtype: 'radiogroup',
+                                                name: 'is_moderator_first',
                                                 fieldLabel: _('bbbx.is_moderator_first'),
                                                 items: [
                                                     {
@@ -325,13 +349,13 @@ BBBx.window.ScheduledMeeting = function (config) {
                                 fieldLabel: 'welcome',
                                 name: 'welcome',
                                 grow: true,
-                                anchor: '98%'
+                                anchor: '100%'
                             }, {
                                 xtype: 'textarea',
                                 fieldLabel: 'moderatorOnlyMessage',
                                 name: 'moderator_only_message',
                                 grow: true,
-                                anchor: '98%'
+                                anchor: '100%'
                             }
                         ]
                     }, {
@@ -349,12 +373,12 @@ BBBx.window.ScheduledMeeting = function (config) {
                                         xtype: 'textfield',
                                         fieldLabel: 'dialNumber',
                                         name: 'dial_number',
-                                        anchor: '98%'
+                                        anchor: '100%'
                                     }, {
                                         xtype: 'textfield',
                                         fieldLabel: 'webVoice',
                                         name: 'web_voice',
-                                        anchor: '98%'
+                                        anchor: '100%'
                                     }
                                 ]
                             }, {
@@ -366,7 +390,7 @@ BBBx.window.ScheduledMeeting = function (config) {
                                         xtype: 'numberfield',
                                         fieldLabel: 'voiceBridge',
                                         name: 'voice_bridge',
-                                        anchor: '98%'
+                                        anchor: '100%'
                                     }
                                 ]
                             }
@@ -387,6 +411,7 @@ BBBx.window.ScheduledMeeting = function (config) {
                                         items: [
                                             {
                                                 xtype: 'radiogroup',
+                                                name: 'is_recorded',
                                                 fieldLabel: 'record',
                                                 items: [
                                                     {
@@ -409,6 +434,7 @@ BBBx.window.ScheduledMeeting = function (config) {
                                         items: [
                                             {
                                                 xtype: 'radiogroup',
+                                                name: 'auto_start_recording',
                                                 fieldLabel: 'autoStartRecording',
                                                 items: [
                                                     {
@@ -431,6 +457,7 @@ BBBx.window.ScheduledMeeting = function (config) {
                                         items: [
                                             {
                                                 xtype: 'radiogroup',
+                                                name: 'allow_start_stop_recording',
                                                 fieldLabel: 'allowStartStopRecording',
                                                 items: [
                                                     {
@@ -467,7 +494,7 @@ BBBx.window.ScheduledMeeting = function (config) {
                                 fieldLabel: 'meta',
                                 name: 'meta',
                                 grow: true,
-                                anchor: '98%'
+                                anchor: '100%'
                             }, {
                                 xtype: 'label',
                                 cls: 'desc-under',

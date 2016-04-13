@@ -40,3 +40,18 @@
 
 .bbbx-td-value {
 }
+
+#bbbx-tabs-scheduledmeetings {
+    overflow: hidden;
+}
+
+.icon-bbbx-actioncolumn-img {
+    width: 16px;
+    height: 16px;
+    margin-top: 6px;
+}
+
+.icon-bbbx-recordings {
+    background-image: url(../icons/control_pause_record.png) !important;
+    background-repeat: no-repeat;
+}

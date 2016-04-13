@@ -20,4 +20,7 @@
         `]]
         `]]
     </td>
+    <td>
+        [[!bbbx.getRecordings? &meetingId=`[[+bbbx.meeting.meeting_id]]`]]
+    </td>
 </tr>
