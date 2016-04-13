@@ -267,6 +267,7 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
                 '<tr><td>meetingID</td><td>: {meeting_id}</td></tr>' +
                 '<tr><td>attendeePW</td><td>: {attendee_pw}</td></tr>' +
                 '<tr><td>moderatorPW</td><td>: {moderator_pw}</td></tr>' +
+                '<tr><td>contexts</td><td>: {context_key}</td></tr>' +
                 '<tr><td></td><td>';
         if (record.data.is_running) {
             html += '<a href="{joinURL}" target="_blank" class="x-btn x-btn-small bbbx-action-btn">Join</a>' +

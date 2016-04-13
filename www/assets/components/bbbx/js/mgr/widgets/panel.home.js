@@ -93,19 +93,23 @@ BBBx.panel.Home = function (config) {
                         title: _('bbbx.configurations'),
                         defaults: {autoHeight: true},
                         items: [{
-                                html: '<p>' + _('bbbx.configurations_desc') + '</p>',
-                                border: false,
-                                bodyCssClass: 'panel-desc'
-                            }, {
                                 xtype: 'modx-tabs',
                                 id: 'bbbx-configurations-tabs',
                                 preventRender: true,
                                 items: [
                                     {
                                         title: _('bbbx.custom_configs'),
-                                        xtype: 'bbbx-grid-configs',
-                                        cls: 'main-wrapper',
-                                        preventRender: true
+                                        items: [
+                                            {
+                                                html: '<p>' + _('bbbx.configurations_desc') + '</p>',
+                                                border: false,
+                                                bodyCssClass: 'panel-desc'
+                                            }, {
+                                                xtype: 'bbbx-grid-configs',
+                                                cls: 'main-wrapper',
+                                                preventRender: true
+                                            }
+                                        ]
                                     }
                                 ]
 //                            }, {
