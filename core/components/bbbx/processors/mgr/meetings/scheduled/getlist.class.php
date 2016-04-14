@@ -25,9 +25,11 @@
 class MeetingsScheduledGetListProcessor extends modObjectGetListProcessor
 {
 
-    public $classKey       = 'bbbxMeetings';
-    public $languageTopics = array('bbbx:default');
-    public $objectType     = 'bbbx.MeetingsScheduledGetList';
+    public $defaultSortField     = 'id';
+    public $defaultSortDirection = 'DESC';
+    public $classKey             = 'bbbxMeetings';
+    public $languageTopics       = array('bbbx:default');
+    public $objectType           = 'bbbx.MeetingsScheduledGetList';
 
     public function prepareQueryBeforeCount(xPDOQuery $c)
     {
