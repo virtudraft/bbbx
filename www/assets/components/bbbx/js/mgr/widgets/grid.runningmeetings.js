@@ -282,13 +282,16 @@ Ext.extend(BBBx.grid.RunningMeetings, MODx.grid.Grid, {
             listeners: {
                 'success': {
                     fn: function (res) {
-                        this.console.getComponent('body').el.dom.innerHTML = res.message;
+                        if (res.success) {
+                            this.console.getComponent('body').el.dom.innerHTML = res.message;
+                        } else {
+                            this.console.hide();
+                        }
                     },
                     scope: this
                 },
                 'failure': {
                     fn: function (res) {
-                        alert('Error occured!');
                     },
                     scope: this
                 }
