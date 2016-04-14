@@ -1116,13 +1116,14 @@ class BBBx
 
             return;
         }
-        $c       = $this->modx->newQuery('bbbxMeetings');
+
+        $c = $this->modx->newQuery('bbbxMeetings');
         $c->select(array(
             'bbbxMeetings.*'
         ));
         $c->leftJoin('bbbxMeetingsContexts', 'MeetingsContexts', 'MeetingsContexts.meeting_id = bbbxMeetings.id');
         $c->where(array(
-            'bbbxMeetings.meeting_id'      => $meetingId,
+            'bbbxMeetings.meeting_id' => $meetingId,
         ));
         if (!empty($ctx)) {
             $c->where(array(
