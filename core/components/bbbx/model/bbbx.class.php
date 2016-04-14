@@ -773,7 +773,7 @@ class BBBx
         }
         $meetingInfo = $this->getMeetingInfo($meetingID);
         if ($meetingInfo) {
-            return true;
+            return $meetingInfo;
         }
         $meetingArray = $meeting->toArray();
         $duration     = 0;
@@ -1192,6 +1192,8 @@ class BBBx
         if ($isModerator) {
             return 'moderator';
         } else if ($isViewer) {
+            return 'viewer';
+        } else if (!$meetingUsers) {
             return 'viewer';
         }
 
