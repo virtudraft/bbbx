@@ -285,6 +285,12 @@ Ext.extend(BBBx.grid.RunningMeetings, MODx.grid.Grid, {
                         this.console.getComponent('body').el.dom.innerHTML = res.message;
                     },
                     scope: this
+                },
+                'failure': {
+                    fn: function (res) {
+                        alert('Error occured!');
+                    },
+                    scope: this
                 }
             }
         });
