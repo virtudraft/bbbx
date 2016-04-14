@@ -22,28 +22,17 @@
  * @package bbbx
  * @subpackage build
  */
-$action = $modx->newObject('modAction');
-$action->fromArray(array(
-    'id'          => 1,
-    'namespace'   => 'bbbx',
-    'parent'      => 0,
-    'controller'  => 'index',
-    'haslayout'   => true,
-    'lang_topics' => 'bbbx:default',
-    'assets'      => '',
-        ), '', true, true);
-
 $menu = $modx->newObject('modMenu');
 $menu->fromArray(array(
     'text'        => 'bbbx',
     'parent'      => 'components',
-    'description' => 'bbbx_desc',
+    'action'      => 'index',
+    'description' => 'bbbx.menu_desc',
     'icon'        => 'images/icons/plugin.gif',
     'menuindex'   => 0,
     'params'      => '',
     'handler'     => '',
+    'namespace'   => 'bbbx',
         ), '', true, true);
-$menu->addOne($action);
-unset($menus);
 
 return $menu;
