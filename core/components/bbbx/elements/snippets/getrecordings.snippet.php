@@ -27,7 +27,7 @@ $scriptProperties['tplItem']       = $modx->getOption('tplItem', $scriptProperti
 $scriptProperties['tplWrapper']    = $modx->getOption('tplWrapper', $scriptProperties, 'recording/wrapper');
 $scriptProperties['phsPrefix']     = $modx->getOption('phsPrefix', $scriptProperties, 'bbbx.recording.');
 $scriptProperties['itemSeparator'] = $modx->getOption('itemSeparator', $scriptProperties, "\n");
-$scriptProperties['contextKey']    = $modx->getOption('contextKey', $scriptProperties, $modx->context->get('key'));
+$scriptProperties['contextKey']    = $modx->getOption('contextKey', $scriptProperties);
 $scriptProperties['authUser']      = $modx->getOption('authUser', $scriptProperties);
 $toPlaceholder                     = $modx->getOption('toPlaceholder', $scriptProperties);
 
