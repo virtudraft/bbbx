@@ -22,23 +22,25 @@
  * @package bbbx
  * @subpackage processor
  */
-class RecordingsGetListProcessor extends modObjectProcessor {
+class RecordingsGetListProcessor extends modObjectProcessor
+{
 
-    public $languageTopics = array('bbbx:default');
-    public $objectType = 'bbbx.RecordingsGetList';
+    public $languageTopics      = array('bbbx:default');
+    public $objectType          = 'bbbx.RecordingsGetList';
     public $checkListPermission = false;
-    public $currentIndex = 0;
+    public $currentIndex        = 0;
 
     /**
      * {@inheritDoc}
      * @return boolean
      */
-    public function initialize() {
+    public function initialize()
+    {
         $this->setDefaultProperties(array(
             'start' => 0,
             'limit' => 20,
-            'sort' => $this->defaultSortField,
-            'dir' => $this->defaultSortDirection,
+            'sort'  => $this->defaultSortField,
+            'dir'   => $this->defaultSortDirection,
             'combo' => false,
             'query' => '',
         ));
@@ -46,7 +48,8 @@ class RecordingsGetListProcessor extends modObjectProcessor {
         return parent::initialize();
     }
 
-    public function process() {
+    public function process()
+    {
         $data = $this->getData();
         $list = $this->iterate($data);
         return $this->outputArray($list, $data['total']);
@@ -58,9 +61,10 @@ class RecordingsGetListProcessor extends modObjectProcessor {
      * @param array $data
      * @return array
      */
-    public function iterate(array $data) {
-        $list = array();
-        $list = $this->beforeIteration($list);
+    public function iterate(array $data)
+    {
+        $list               = array();
+        $list               = $this->beforeIteration($list);
         $this->currentIndex = 0;
         foreach ($data['results'] as $object) {
             $objectArray = $this->prepareRow($object);
@@ -78,7 +82,8 @@ class RecordingsGetListProcessor extends modObjectProcessor {
      * @param array $list
      * @return array
      */
-    public function beforeIteration(array $list) {
+    public function beforeIteration(array $list)
+    {
         return $list;
     }
 
@@ -87,7 +92,8 @@ class RecordingsGetListProcessor extends modObjectProcessor {
      * @param array $list
      * @return array
      */
-    public function afterIteration(array $list) {
+    public function afterIteration(array $list)
+    {
         return $list;
     }
 
@@ -95,13 +101,14 @@ class RecordingsGetListProcessor extends modObjectProcessor {
      * Get the data of the query
      * @return array
      */
-    public function getData() {
-        $data = array();
-        $limit = intval($this->getProperty('limit'));
-        $start = intval($this->getProperty('start'));
+    public function getData()
+    {
+        $data      = array();
+        $limit     = intval($this->getProperty('limit'));
+        $start     = intval($this->getProperty('start'));
         $meetingId = $this->getProperty('meetingId', null);
-        $records = $this->modx->bbbx->getRecordings($meetingId, $limit, $start);
-        $isError = $this->modx->bbbx->getError();
+        $records   = $this->modx->bbbx->getRecordings($meetingId, $limit, $start);
+        $isError   = $this->modx->bbbx->getError();
         if (!empty($isError)) {
             return $isError;
         }
@@ -109,7 +116,7 @@ class RecordingsGetListProcessor extends modObjectProcessor {
             $records = array();
         }
 
-        $data['total'] = count($records);
+        $data['total']   = count($records);
         $data['results'] = $records;
 
         return $data;
@@ -120,7 +127,8 @@ class RecordingsGetListProcessor extends modObjectProcessor {
      * @param $array
      * @return array
      */
-    public function prepareRow($array) {
+    public function prepareRow($array)
+    {
         $array['name'] = $this->toString($array['name']);
         if (isset($array['metadata']) &&
                 !empty($array['metadata']) &&
@@ -128,7 +136,7 @@ class RecordingsGetListProcessor extends modObjectProcessor {
         ) {
             $metadata = '<table>';
             foreach ($array['metadata'] as $k => $v) {
-                $metadata .= '<tr><td>' . $k . '</td><td class="bbbx-td-colon">:</td><td class="bbbx-td-value">' . $this->toString($v) . '</td></tr>';
+                $metadata .= '<tr><td>'.$k.'</td><td class="bbbx-td-colon">:</td><td class="bbbx-td-value">'.$this->toString($v).'</td></tr>';
             }
             $metadata .= '</table>';
             $array['metadata'] = $metadata;
@@ -158,7 +166,7 @@ class RecordingsGetListProcessor extends modObjectProcessor {
         } elseif (is_array($text)) {
             $o = '';
             foreach ($text as $k => $v) {
-                $o .= $k . ': ' . $this->toString($v) . "<br>\n";
+                $o .= $k.': '.$this->toString($v)."<br>\n";
             }
             return $o;
         } elseif (is_object($text)) {

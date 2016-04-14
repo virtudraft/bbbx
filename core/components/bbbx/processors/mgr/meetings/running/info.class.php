@@ -44,7 +44,7 @@ class MeetingInfoProcessor extends modProcessor
     public function process()
     {
         $messages = $this->modx->bbbx->getMeetingInfo($this->getProperty('meetingID'), $this->getProperty('moderatorPW'));
-        $isError = $this->modx->bbbx->getError();
+        $isError  = $this->modx->bbbx->getError();
         if (!empty($isError)) {
             return $this->failure($isError);
         }
@@ -60,7 +60,7 @@ class MeetingInfoProcessor extends modProcessor
                 ) {
                     continue;
                 }
-                $info .= '<tr><td>' . $key . '</td><td class="bbbx-td-colon">:</td><td class="bbbx-td-value">' . $this->toString($val) . '</td></tr>';
+                $info .= '<tr><td>'.$key.'</td><td class="bbbx-td-colon">:</td><td class="bbbx-td-value">'.$this->toString($val).'</td></tr>';
             }
             if (isset($messages['attendees']['attendee'])) {
                 $info .= '<tr><td>attendees</td><td class="bbbx-td-colon">:</td><td>';
@@ -74,7 +74,7 @@ class MeetingInfoProcessor extends modProcessor
                     $info .= '<table>';
                     $i = 0;
                     foreach ($attendee as $key => $val) {
-                        $info .= '<tr><td>' . ($i === 0 ? $idx + 1 : '') . '</td><td>' . $key . '</td><td class="bbbx-td-colon">:</td><td class="bbbx-td-value">' . $this->toString($val) . '</td></tr>';
+                        $info .= '<tr><td>'.($i === 0 ? $idx + 1 : '').'</td><td>'.$key.'</td><td class="bbbx-td-colon">:</td><td class="bbbx-td-value">'.$this->toString($val).'</td></tr>';
                         $i++;
                     }
                     $info .= '</table>';
@@ -83,17 +83,17 @@ class MeetingInfoProcessor extends modProcessor
             }
             $info .= '<tr><td>metadata</td><td class="bbbx-td-colon">:</td><td>';
             foreach ($messages['metadata'] as $key => $val) {
-                $info .= '<span>' . $key . ': ' . $this->toString($val) . "</span><br />\n";
+                $info .= '<span>'.$key.': '.$this->toString($val)."</span><br />\n";
             }
             $info .= '</td></tr>';
             $info .= '<tr><td>messageKey</td><td class="bbbx-td-colon">:</td><td class="bbbx-td-value">';
             foreach ($messages['messageKey'] as $key => $val) {
-                $info .= '<span>' . $key . ': ' . $this->toString($val) . "</span><br />\n";
+                $info .= '<span>'.$key.': '.$this->toString($val)."</span><br />\n";
             }
             $info .= '</td></tr>';
             $info .= '<tr><td>message</td><td class="bbbx-td-colon">:</td><td class="bbbx-td-value">';
             foreach ($messages['message'] as $key => $val) {
-                $info .= '<span>' . $key . ': ' . $this->toString($val) . "</span><br />\n";
+                $info .= '<span>'.$key.': '.$this->toString($val)."</span><br />\n";
             }
             $info .= '</td></tr>';
             $info .= "</table>";
@@ -112,7 +112,7 @@ class MeetingInfoProcessor extends modProcessor
         } elseif (is_array($text)) {
             $o = '';
             foreach ($text as $k => $v) {
-                $o .= $k . ': ' . $this->toString($v) . "<br>\n";
+                $o .= $k.': '.$this->toString($v)."<br>\n";
             }
             return $o;
         } elseif (is_object($text)) {

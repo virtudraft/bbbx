@@ -38,7 +38,7 @@ $xpdo_meta_map['bbbxMeetingsConfigs']= array (
   ),
   'aggregates' => 
   array (
-    'Meeting' => 
+    'Meetings' => 
     array (
       'class' => 'bbbxMeetings',
       'local' => 'meeting_id',
@@ -46,7 +46,7 @@ $xpdo_meta_map['bbbxMeetingsConfigs']= array (
       'cardinality' => 'one',
       'owner' => 'foreign',
     ),
-    'Config' => 
+    'Configs' => 
     array (
       'class' => 'bbbxConfigs',
       'local' => 'config_id',

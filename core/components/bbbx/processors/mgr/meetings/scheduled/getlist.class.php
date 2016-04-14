@@ -60,7 +60,7 @@ class MeetingsScheduledGetListProcessor extends modObjectGetListProcessor
             $objectArray['ended_date'] = date('m/d/Y', $objectArray['ended_on']);
             $objectArray['ended_time'] = date('H:i', $objectArray['ended_on']);
         }
-        $ctxs = $object->getMany('MeetingContexts');
+        $ctxs = $object->getMany('MeetingsContexts');
         if ($ctxs) {
             $data = array();
             foreach ($ctxs as $ctx) {
@@ -68,7 +68,7 @@ class MeetingsScheduledGetListProcessor extends modObjectGetListProcessor
             }
             $objectArray['context_key'] = @implode(',', $data);
         }
-        $ugs = $object->getMany('MeetingUsergroups');
+        $ugs = $object->getMany('MeetingsUsergroups');
         if ($ugs) {
             $moderator = array();
             $viewer    = array();
@@ -83,7 +83,7 @@ class MeetingsScheduledGetListProcessor extends modObjectGetListProcessor
             $objectArray['moderator_usergroups'] = @implode(',', $moderator);
             $objectArray['viewer_usergroups']    = @implode(',', $viewer);
         }
-        $users = $object->getMany('MeetingUsers');
+        $users = $object->getMany('MeetingsUsers');
         if ($users) {
             $moderator = array();
             $viewer    = array();

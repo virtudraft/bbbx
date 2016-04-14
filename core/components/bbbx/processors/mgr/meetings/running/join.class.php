@@ -22,15 +22,18 @@
  * @package bbbx
  * @subpackage processor
  */
-class MeetingsJoinProcessor extends modObjectProcessor {
+class MeetingsJoinProcessor extends modObjectProcessor
+{
+
     public $languageTopics = array('bbbx:cmp');
-    public $objectType = 'bbbx.MeetingsJoin';
+    public $objectType     = 'bbbx.MeetingsJoin';
 
     /**
      * {@inheritDoc}
      * @return boolean
      */
-    public function initialize() {
+    public function initialize()
+    {
         $meetingID = $this->getProperty('meetingID', false);
         if (empty($meetingID)) {
             return $this->modx->lexicon('bbbx.meeting_err_ns_meetingID');
@@ -49,11 +52,12 @@ class MeetingsJoinProcessor extends modObjectProcessor {
      * {@inheritDoc}
      * @return mixed
      */
-    public function process() {
+    public function process()
+    {
         $props = $this->getProperties();
-        $href = $this->modx->bbbx->getJoinMeetingURL($props['meetingID'], $props['moderatorPW']);
+        $href  = $this->modx->bbbx->getJoinMeetingURL($props['meetingID'], $props['moderatorPW']);
         if (empty($href)) {
-            return $this->failure($this->modx->lexicon($this->objectType . '_err_join'));
+            return $this->failure($this->modx->lexicon($this->objectType.'_err_join'));
         }
         $this->object = array(
             'href' => $href

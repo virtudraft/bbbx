@@ -46,9 +46,9 @@ $c = $modx->newQuery('bbbxMeetings');
 $c->select(array(
     'bbbxMeetings.*'
 ));
-$c->leftJoin('bbbxMeetingContexts', 'MeetingContexts', 'MeetingContexts.meeting_id = bbbxMeetings.id');
+$c->leftJoin('bbbxMeetingsContexts', 'MeetingsContexts', 'MeetingsContexts.meeting_id = bbbxMeetings.id');
 $c->where(array(
-    'MeetingContexts.context_key' => $scriptProperties['contextKey']
+    'MeetingsContexts.context_key' => $scriptProperties['contextKey']
 ));
 if (empty($scriptProperties['allDates'])) {
     $time = time();
@@ -66,6 +66,7 @@ if (!empty($scriptProperties['limit']) || !empty($scriptProperties['offset'])) {
 $c->sortby($scriptProperties['sortBy'], $scriptProperties['sortDir']);
 $meetings = $modx->getCollection('bbbxMeetings', $c);
 if (!$meetings) {
+    $modx->log(modX::LOG_LEVEL_ERROR, __LINE__.': [bbbx.getMeetings] Unable to get meetings');
     return;
 }
 $outputArray     = array();
@@ -82,7 +83,8 @@ foreach ($meetings as $meeting) {
     $meetingArray = $meeting->toArray();
     $permission   = $bbbx->getUserPermissionToMeeting($meetingArray['meeting_id'], $scriptProperties['contextKey']);
     // initiate meeting if it fits with the dates
-    $isRunning = $bbbx->initMeeting($meetingArray['meeting_id']);
+    $isRunning    = $bbbx->initMeeting($meetingArray['meeting_id']);
+
     $meetingArray['is_running'] = '';
     $meetingArray['join_url']   = '';
     if ($isRunning) {

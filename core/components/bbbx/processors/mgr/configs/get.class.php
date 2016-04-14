@@ -39,7 +39,7 @@ class ConfigsGetProcessor extends modObjectGetProcessor
     public function cleanup()
     {
         $objectArray = $this->object->toArray();
-        $xmlArray = json_decode(json_encode(new SimpleXMLElement($objectArray['xml'])), true);
+        $xmlArray    = json_decode(json_encode(new SimpleXMLElement($objectArray['xml'])), true);
         unset($objectArray['xml']);
         $objectArray = array_merge($objectArray, $xmlArray);
 

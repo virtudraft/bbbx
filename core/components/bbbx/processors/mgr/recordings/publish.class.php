@@ -22,15 +22,18 @@
  * @package bbbx
  * @subpackage processor
  */
-class RecordingsPublishProcessor extends modObjectProcessor {
+class RecordingsPublishProcessor extends modObjectProcessor
+{
+
     public $languageTopics = array('bbbx:cmp');
-    public $objectType = 'bbbx.RecordingsPublish';
+    public $objectType     = 'bbbx.RecordingsPublish';
 
     /**
      * {@inheritDoc}
      * @return boolean
      */
-    public function initialize() {
+    public function initialize()
+    {
         $recordID = $this->getProperty('recordID', false);
         if (empty($recordID)) {
             return $this->modx->lexicon('bbbx.meeting_err_ns_recordID');
@@ -45,11 +48,12 @@ class RecordingsPublishProcessor extends modObjectProcessor {
      * {@inheritDoc}
      * @return mixed
      */
-    public function process() {
-        $props = $this->getProperties();
+    public function process()
+    {
+        $props        = $this->getProperties();
         $this->object = $this->modx->bbbx->publishRecordings($props['recordID'], $props['published']);
         if (empty($this->object)) {
-            return $this->failure($this->modx->lexicon($this->objectType . '_err_end'));
+            return $this->failure($this->modx->lexicon($this->objectType.'_err_end'));
         }
         $this->logManagerAction();
         return $this->cleanup();
@@ -59,7 +63,8 @@ class RecordingsPublishProcessor extends modObjectProcessor {
      * Return the success message
      * @return array
      */
-    public function cleanup() {
+    public function cleanup()
+    {
         return $this->success('', $this->object);
     }
 
@@ -67,8 +72,9 @@ class RecordingsPublishProcessor extends modObjectProcessor {
      * Log the removal manager action
      * @return void
      */
-    public function logManagerAction() {
-        $this->modx->logManagerAction($this->objectType . '_publish', 'bbbxRecordings', $this->getProperty('href'));
+    public function logManagerAction()
+    {
+        $this->modx->logManagerAction($this->objectType.'_publish', 'bbbxRecordings', $this->getProperty('href'));
     }
 
 }

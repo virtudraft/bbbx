@@ -29,13 +29,14 @@ class UsergroupsGetListProcessor extends modUserGroupGetListProcessor
 
     public $permission = '';
 
-    public function beforeIteration(array $list) {
-        if ($this->getProperty('combo',false)) {
+    public function beforeIteration(array $list)
+    {
+        if ($this->getProperty('combo', false)) {
             $list[] = array(
-                'id' => '',
-                'name' => '',
+                'id'          => '',
+                'name'        => '',
                 'description' => '',
-                'parent' => 0,
+                'parent'      => 0,
             );
         }
         return $list;

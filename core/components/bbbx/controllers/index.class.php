@@ -22,7 +22,6 @@
  * @package bbbx
  * @subpackage controller
  */
-
 require_once dirname(dirname(__FILE__)).'/model/bbbx.class.php';
 
 class BBBxIndexManagerController extends modExtraManagerController

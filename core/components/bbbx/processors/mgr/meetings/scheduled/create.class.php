@@ -90,7 +90,7 @@ class ScheduledMeetingsCreateProcessor extends modObjectCreateProcessor
         }
         $many = array();
         foreach ($props['context_key'] as $key) {
-            $ck     = $this->modx->newObject('bbbxMeetingContexts');
+            $ck     = $this->modx->newObject('bbbxMeetingsContexts');
             $ck->set('context_key', $key);
             $many[] = $ck;
         }
@@ -99,7 +99,7 @@ class ScheduledMeetingsCreateProcessor extends modObjectCreateProcessor
         if (!empty($props['moderator_usergroups'])) {
             $many = array();
             foreach ($props['moderator_usergroups'] as $id) {
-                $meetingUgs = $this->modx->newObject('bbbxMeetingUsergroups');
+                $meetingUgs = $this->modx->newObject('bbbxMeetingsUsergroups');
                 $meetingUgs->set('usergroup_id', $id);
                 $meetingUgs->set('enroll', 'moderator');
                 $many[]     = $meetingUgs;
@@ -109,7 +109,7 @@ class ScheduledMeetingsCreateProcessor extends modObjectCreateProcessor
         if (!empty($props['viewer_usergroups'])) {
             $many = array();
             foreach ($props['viewer_usergroups'] as $id) {
-                $meetingUgs = $this->modx->newObject('bbbxMeetingUsergroups');
+                $meetingUgs = $this->modx->newObject('bbbxMeetingsUsergroups');
                 $meetingUgs->set('usergroup_id', $id);
                 $meetingUgs->set('enroll', 'viewer');
                 $many[]     = $meetingUgs;
@@ -119,20 +119,20 @@ class ScheduledMeetingsCreateProcessor extends modObjectCreateProcessor
         if (!empty($props['moderator_users'])) {
             $many = array();
             foreach ($props['moderator_users'] as $id) {
-                $meetingUsers = $this->modx->newObject('bbbxMeetingUsers');
-                $meetingUsers->set('user_id', $id);
-                $meetingUsers->set('enroll', 'moderator');
-                $many[]       = $meetingUsers;
+                $meetingsUsers = $this->modx->newObject('bbbxMeetingsUsers');
+                $meetingsUsers->set('user_id', $id);
+                $meetingsUsers->set('enroll', 'moderator');
+                $many[]        = $meetingsUsers;
             }
             $this->object->addMany($many);
         }
         if (!empty($props['viewer_users'])) {
             $many = array();
             foreach ($props['viewer_users'] as $id) {
-                $meetingUsers = $this->modx->newObject('bbbxMeetingUsers');
-                $meetingUsers->set('user_id', $id);
-                $meetingUsers->set('enroll', 'viewer');
-                $many[]       = $meetingUsers;
+                $meetingsUsers = $this->modx->newObject('bbbxMeetingsUsers');
+                $meetingsUsers->set('user_id', $id);
+                $meetingsUsers->set('enroll', 'viewer');
+                $many[]        = $meetingsUsers;
             }
             $this->object->addMany($many);
         }

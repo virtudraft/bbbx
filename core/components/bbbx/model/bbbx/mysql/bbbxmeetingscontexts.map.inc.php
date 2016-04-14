@@ -1,8 +1,8 @@
 <?php
-$xpdo_meta_map['bbbxMeetingContexts']= array (
+$xpdo_meta_map['bbbxMeetingsContexts']= array (
   'package' => 'bbbx',
   'version' => '1.1',
-  'table' => 'meeting_contexts',
+  'table' => 'meetings_contexts',
   'extends' => 'xPDOSimpleObject',
   'fields' => 
   array (
@@ -30,7 +30,7 @@ $xpdo_meta_map['bbbxMeetingContexts']= array (
   ),
   'aggregates' => 
   array (
-    'Meeting' => 
+    'Meetings' => 
     array (
       'class' => 'bbbxMeetings',
       'local' => 'meeting_id',

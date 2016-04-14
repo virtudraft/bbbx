@@ -44,6 +44,11 @@ class BigBlueButton
      * @var array
      */
     private $meta = array();
+
+    /**
+     *
+     * @var string
+     */
     private $contentType = 'application/xml';
 
     public function __construct($bbbServerBaseUrl, $securitySalt)

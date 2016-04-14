@@ -705,11 +705,11 @@ class BBBx
 
             return;
         }
-        $profile  = $this->modx->user->getOne('Profile');
-        $fullName = $profile->get('fullname');
-        $userName = !empty($fullName) ? $fullName : $this->modx->user->get('username');
-        $photo    = $profile->get('photo');
-        $params   = array(
+        $profile     = $this->modx->user->getOne('Profile');
+        $fullName    = $profile->get('fullname');
+        $userName    = !empty($fullName) ? $fullName : $this->modx->user->get('username');
+        $photo       = $profile->get('photo');
+        $params      = array(
             'meetingID' => $meetingID,
             'fullName'  => $userName,
             'password'  => $password,
@@ -1120,24 +1120,24 @@ class BBBx
         $c->select(array(
             'bbbxMeetings.*'
         ));
-        $c->leftJoin('bbbxMeetingContexts', 'MeetingContexts', 'MeetingContexts.meeting_id = bbbxMeetings.id');
+        $c->leftJoin('bbbxMeetingsContexts', 'MeetingsContexts', 'MeetingsContexts.meeting_id = bbbxMeetings.id');
         $c->where(array(
-            'bbbxMeetings.meeting_id'     => $meetingId,
-            'MeetingContexts.context_key' => $ctx,
+            'bbbxMeetings.meeting_id'      => $meetingId,
+            'MeetingsContexts.context_key' => $ctx,
         ));
         $meeting = $this->modx->getObject('bbbxMeetings', $c);
         if (!$meeting) {
             return false;
         }
 
-        $ugs          = $this->modx->user->getUserGroups();
-        $userId       = $this->modx->user->get('id');
-        $isModerator  = array();
-        $isViewer     = array();
-        $meetingUgs   = $meeting->getMany('MeetingUsergroups');
-        $meetingUsers = $meeting->getMany('MeetingUsers');
+        $ugs           = $this->modx->user->getUserGroups();
+        $userId        = $this->modx->user->get('id');
+        $isModerator   = array();
+        $isViewer      = array();
+        $meetingUgs    = $meeting->getMany('MeetingsUsergroups');
+        $meetingsUsers = $meeting->getMany('MeetingsUsers');
 
-        if (!$meetingUgs && !$meetingUsers) {
+        if (!$meetingUgs && !$meetingsUsers) {
             return 'moderator'; // no permission is applied
         }
 
@@ -1158,10 +1158,10 @@ class BBBx
             }
         }
         if (!$isModerator) {
-            if ($meetingUsers) {
+            if ($meetingsUsers) {
                 $moderators = array();
                 $viewers    = array();
-                foreach ($meetingUsers as $meetingUser) {
+                foreach ($meetingsUsers as $meetingUser) {
                     $meetingUserArray = $meetingUser->toArray();
                     if ($meetingUserArray['enroll'] === 'moderator') {
                         $moderators[] = $meetingUserArray['user_id'];
@@ -1179,7 +1179,7 @@ class BBBx
             return 'moderator';
         } else if ($isViewer) {
             return 'viewer';
-        } else if (!$meetingUsers) {
+        } else if (!$meetingsUsers) {
             return 'viewer';
         }
 

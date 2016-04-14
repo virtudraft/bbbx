@@ -253,25 +253,25 @@ $xpdo_meta_map['bbbxMeetings']= array (
       'cardinality' => 'many',
       'owner' => 'local',
     ),
-    'MeetingContexts' => 
+    'MeetingsContexts' => 
     array (
-      'class' => 'bbbxMeetingContexts',
+      'class' => 'bbbxMeetingsContexts',
       'local' => 'id',
       'foreign' => 'meeting_id',
       'cardinality' => 'many',
       'owner' => 'local',
     ),
-    'MeetingUsers' => 
+    'MeetingsUsers' => 
     array (
-      'class' => 'bbbxMeetingUsers',
+      'class' => 'bbbxMeetingsUsers',
       'local' => 'id',
       'foreign' => 'meeting_id',
       'cardinality' => 'many',
       'owner' => 'local',
     ),
-    'MeetingUsergroups' => 
+    'MeetingsUsergroups' => 
     array (
-      'class' => 'bbbxMeetingUsergroups',
+      'class' => 'bbbxMeetingsUsergroups',
       'local' => 'id',
       'foreign' => 'meeting_id',
       'cardinality' => 'many',
