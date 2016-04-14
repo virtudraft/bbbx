@@ -683,16 +683,6 @@ class BBBx
         if (!isset($meetings['meeting'][0])) {
             $meetings['meeting'] = array($meetings['meeting']);
         }
-        foreach ($meetings['meeting'] as $v) {
-            if (isset($v['meetingID']) &&
-                    !empty($v['meetingID']) &&
-                    isset($_SESSION['bbbx.createTime'][$v['meetingID']])
-            ) {
-                unset($_SESSION['bbbx.createTime'][$v['meetingID']]);
-                $_SESSION['bbbx.createTime'][$v['meetingID']] = $v['createTime'];
-            }
-        }
-        unset($_SESSION['bbbx.createTime']);
 
         return $meetings['meeting'];
     }
@@ -726,13 +716,11 @@ class BBBx
             'userID'    => $this->modx->user->get('id'),
             'avatarURL' => (!empty($photo) ? MODX_SITE_URL.$photo : ''),
         );
-        if (isset($_SESSION['bbbx.createTime']) &&
-                !empty($_SESSION['bbbx.createTime']) &&
-                isset($_SESSION['bbbx.createTime'][$meetingID]) &&
-                !empty($_SESSION['bbbx.createTime'][$meetingID])
-        ) {
-            $params['createTime'] = $_SESSION['bbbx.createTime'][$meetingID];
+        $meetingInfo = $this->getMeetingInfo($meetingID);
+        if ($meetingInfo) {
+            $params['createTime'] = $meetingInfo['createTime'];
         }
+
         $c      = $this->modx->newQuery('bbbxConfigs');
         $c->leftJoin('bbbxMeetingsConfigs', 'MeetingsConfigs', 'MeetingsConfigs.config_id = bbbxConfigs.id');
         $c->select(array(
@@ -822,8 +810,6 @@ class BBBx
 
             return;
         }
-        $meeting->set('create_time', $response['createTime']);
-        $meeting->save();
 
         return true;
     }

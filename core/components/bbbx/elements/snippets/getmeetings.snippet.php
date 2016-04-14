@@ -82,9 +82,11 @@ foreach ($meetings as $meeting) {
     $meetingArray = $meeting->toArray();
     $permission   = $bbbx->getUserPermissionToMeeting($meetingArray['meeting_id'], $scriptProperties['contextKey']);
     // initiate meeting if it fits with the dates
-    $meetingArray['is_running'] = $bbbx->initMeeting($meetingArray['meeting_id']);
+    $isRunning = $bbbx->initMeeting($meetingArray['meeting_id']);
+    $meetingArray['is_running'] = '';
     $meetingArray['join_url']   = '';
-    if ($meetingArray['is_running']) {
+    if ($isRunning) {
+        $meetingArray['is_running'] = 1;
         if (!empty($ugs)) {
             if (in_array(1, $ugs)) {
                 $meetingArray['join_url'] = $bbbx->getJoinMeetingURL($meetingArray['meeting_id'], $meetingArray['moderator_pw']);

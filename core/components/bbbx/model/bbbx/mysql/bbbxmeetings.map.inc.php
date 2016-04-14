@@ -33,7 +33,6 @@ $xpdo_meta_map['bbbxMeetings']= array (
     'created_by' => NULL,
     'edited_on' => NULL,
     'edited_by' => NULL,
-    'create_time' => NULL,
   ),
   'fieldMeta' => 
   array (
@@ -236,14 +235,6 @@ $xpdo_meta_map['bbbxMeetings']= array (
       'null' => true,
     ),
     'edited_by' => 
-    array (
-      'dbtype' => 'int',
-      'precision' => '10',
-      'attributes' => 'unsigned',
-      'phptype' => 'integer',
-      'null' => true,
-    ),
-    'create_time' => 
     array (
       'dbtype' => 'int',
       'precision' => '10',
