@@ -22,202 +22,76 @@
  * @package bbbx
  * @subpackage build
  */
-$settings['bbbx.core_path'] = $modx->newObject('modSystemSetting');
-$settings['bbbx.core_path']->fromArray(array(
+$settings = array();
+
+$setting    = $modx->newObject('modSystemSetting');
+$setting->fromArray(array(
     'key'       => 'bbbx.core_path',
     'value'     => '{core_path}components/bbbx/',
     'xtype'     => 'textfield',
     'namespace' => 'bbbx',
     'area'      => 'URL',
         ), '', true, true);
+$settings[] = $setting;
 
-$settings['bbbx.assets_url'] = $modx->newObject('modSystemSetting');
-$settings['bbbx.assets_url']->fromArray(array(
+$setting    = $modx->newObject('modSystemSetting');
+$setting->fromArray(array(
     'key'       => 'bbbx.assets_url',
     'value'     => '{assets_url}components/bbbx/',
     'xtype'     => 'textfield',
     'namespace' => 'bbbx',
     'area'      => 'URL',
         ), '', true, true);
+$settings[] = $setting;
 
-$settings['bbbx.server_url'] = $modx->newObject('modSystemSetting');
-$settings['bbbx.server_url']->fromArray(array(
+$setting    = $modx->newObject('modSystemSetting');
+$setting->fromArray(array(
     'key'       => 'bbbx.server_url',
     'value'     => 'http://test-install.blindsidenetworks.com/bigbluebutton/',
     'xtype'     => 'textfield',
     'namespace' => 'bbbx',
     'area'      => 'system',
         ), '', true, true);
+$settings[] = $setting;
 
-$settings['bbbx.shared_secret'] = $modx->newObject('modSystemSetting');
-$settings['bbbx.shared_secret']->fromArray(array(
+$setting    = $modx->newObject('modSystemSetting');
+$setting->fromArray(array(
     'key'       => 'bbbx.shared_secret',
     'value'     => '8cd8ef52e8e101574e400365b55e11a6',
     'xtype'     => 'textfield',
     'namespace' => 'bbbx',
     'area'      => 'system',
         ), '', true, true);
+$settings[] = $setting;
 
-$settings['bbbx.recording_default'] = $modx->newObject('modSystemSetting');
-$settings['bbbx.recording_default']->fromArray(array(
-    'key'       => 'bbbx.recording_default',
-    'value'     => 1,
-    'xtype'     => 'combo-boolean',
-    'namespace' => 'bbbx',
-    'area'      => 'Recording',
-        ), '', true, true);
-
-$settings['bbbx.recording_editable'] = $modx->newObject('modSystemSetting');
-$settings['bbbx.recording_editable']->fromArray(array(
-    'key'       => 'bbbx.recording_editable',
-    'value'     => 1,
-    'xtype'     => 'combo-boolean',
-    'namespace' => 'bbbx',
-    'area'      => 'Recording',
-        ), '', true, true);
-
-$settings['bbbx.recording_icons_enabled'] = $modx->newObject('modSystemSetting');
-$settings['bbbx.recording_icons_enabled']->fromArray(array(
-    'key'       => 'bbbx.recording_icons_enabled',
-    'value'     => 1,
-    'xtype'     => 'combo-boolean',
-    'namespace' => 'bbbx',
-    'area'      => 'Recording',
-        ), '', true, true);
-
-$settings['bbbx.recordingtagging_default'] = $modx->newObject('modSystemSetting');
-$settings['bbbx.recordingtagging_default']->fromArray(array(
-    'key'       => 'bbbx.recordingtagging_default',
-    'value'     => 0,
-    'xtype'     => 'combo-boolean',
-    'namespace' => 'bbbx',
-    'area'      => 'Recording',
-        ), '', true, true);
-
-$settings['bbbx.recordingtagging_editable'] = $modx->newObject('modSystemSetting');
-$settings['bbbx.recordingtagging_editable']->fromArray(array(
-    'key'       => 'bbbx.recordingtagging_editable',
-    'value'     => 1,
-    'xtype'     => 'combo-boolean',
-    'namespace' => 'bbbx',
-    'area'      => 'Recording',
-        ), '', true, true);
-
-$settings['bbbx.recordingready_enabled'] = $modx->newObject('modSystemSetting');
-$settings['bbbx.recordingready_enabled']->fromArray(array(
-    'key'       => 'bbbx.recordingready_enabled',
-    'value'     => 0,
-    'xtype'     => 'combo-boolean',
-    'namespace' => 'bbbx',
-    'area'      => 'Recording',
-        ), '', true, true);
-
-$settings['bbbx.recording_ui_html_default'] = $modx->newObject('modSystemSetting');
-$settings['bbbx.recording_ui_html_default']->fromArray(array(
-    'key'       => 'bbbx.recording_ui_html_default',
-    'value'     => 0,
-    'xtype'     => 'combo-boolean',
-    'namespace' => 'bbbx',
-    'area'      => 'Recording',
-        ), '', true, true);
-
-$settings['bbbx.recording_ui_html_editable'] = $modx->newObject('modSystemSetting');
-$settings['bbbx.recording_ui_html_editable']->fromArray(array(
-    'key'       => 'bbbx.recording_ui_html_editable',
-    'value'     => 0,
-    'xtype'     => 'combo-boolean',
-    'namespace' => 'bbbx',
-    'area'      => 'Recording',
-        ), '', true, true);
-
-$settings['bbbx.waitformoderator_default'] = $modx->newObject('modSystemSetting');
-$settings['bbbx.waitformoderator_default']->fromArray(array(
-    'key'       => 'bbbx.waitformoderator_default',
-    'value'     => 0,
-    'xtype'     => 'combo-boolean',
-    'namespace' => 'bbbx',
-    'area'      => 'User',
-        ), '', true, true);
-
-$settings['bbbx.waitformoderator_editable'] = $modx->newObject('modSystemSetting');
-$settings['bbbx.waitformoderator_editable']->fromArray(array(
-    'key'       => 'bbbx.waitformoderator_editable',
-    'value'     => 1,
-    'xtype'     => 'combo-boolean',
-    'namespace' => 'bbbx',
-    'area'      => 'User',
-        ), '', true, true);
-
-$settings['bbbx.waitformoderator_ping_interval'] = $modx->newObject('modSystemSetting');
-$settings['bbbx.waitformoderator_ping_interval']->fromArray(array(
+$setting    = $modx->newObject('modSystemSetting');
+$setting->fromArray(array(
     'key'       => 'bbbx.waitformoderator_ping_interval',
     'value'     => 10,
     'xtype'     => 'textfield',
     'namespace' => 'bbbx',
     'area'      => 'User',
         ), '', true, true);
+$settings[] = $setting;
 
-$settings['bbbx.waitformoderator_cache_ttl'] = $modx->newObject('modSystemSetting');
-$settings['bbbx.waitformoderator_cache_ttl']->fromArray(array(
+$setting    = $modx->newObject('modSystemSetting');
+$setting->fromArray(array(
     'key'       => 'bbbx.waitformoderator_cache_ttl',
     'value'     => 60,
     'xtype'     => 'textfield',
     'namespace' => 'bbbx',
     'area'      => 'User',
         ), '', true, true);
+$settings[] = $setting;
 
-$settings['bbbx.userlimit_default'] = $modx->newObject('modSystemSetting');
-$settings['bbbx.userlimit_default']->fromArray(array(
-    'key'       => 'bbbx.userlimit_default',
-    'value'     => 0,
-    'xtype'     => 'textfield',
-    'namespace' => 'bbbx',
-    'area'      => 'User',
-        ), '', true, true);
-
-$settings['bbbx.userlimit_editable'] = $modx->newObject('modSystemSetting');
-$settings['bbbx.userlimit_editable']->fromArray(array(
-    'key'       => 'bbbx.userlimit_editable',
-    'value'     => 0,
-    'xtype'     => 'combo-boolean',
-    'namespace' => 'bbbx',
-    'area'      => 'User',
-        ), '', true, true);
-
-$settings['bbbx.moderator_default'] = $modx->newObject('modSystemSetting');
-$settings['bbbx.moderator_default']->fromArray(array(
+$setting    = $modx->newObject('modSystemSetting');
+$setting->fromArray(array(
     'key'       => 'bbbx.moderator_default',
     'value'     => 'Administrator',
     'xtype'     => 'textfield',
     'namespace' => 'bbbx',
     'area'      => 'User',
         ), '', true, true);
-
-$settings['bbbx.voicebridge_editable'] = $modx->newObject('modSystemSetting');
-$settings['bbbx.voicebridge_editable']->fromArray(array(
-    'key'       => 'bbbx.voicebridge_editable',
-    'value'     => 0,
-    'xtype'     => 'combo-boolean',
-    'namespace' => 'bbbx',
-    'area'      => 'Voice Bridge',
-        ), '', true, true);
-
-$settings['bbbx.preuploadpresentation_enabled'] = $modx->newObject('modSystemSetting');
-$settings['bbbx.preuploadpresentation_enabled']->fromArray(array(
-    'key'       => 'bbbx.preuploadpresentation_enabled',
-    'value'     => 1,
-    'xtype'     => 'combo-boolean',
-    'namespace' => 'bbbx',
-    'area'      => 'file',
-        ), '', true, true);
-
-$settings['bbbx.sendnotifications_enabled'] = $modx->newObject('modSystemSetting');
-$settings['bbbx.sendnotifications_enabled']->fromArray(array(
-    'key'       => 'bbbx.sendnotifications_enabled',
-    'value'     => 1,
-    'xtype'     => 'combo-boolean',
-    'namespace' => 'bbbx',
-    'area'      => 'system',
-        ), '', true, true);
+$settings[] = $setting;
 
 return $settings;

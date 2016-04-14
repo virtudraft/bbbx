@@ -38,28 +38,30 @@ function getSnippetContent($filename)
 
 $snippets = array();
 
-$snippets[0] = $modx->newObject('modSnippet');
-$snippets[0]->fromArray(array(
+$snippet    = $modx->newObject('modSnippet');
+$snippet->fromArray(array(
     'id'                  => 0,
     'property_preprocess' => 1,
     'name'                => 'bbbx.getMeetings',
     'description'         => 'Get scheduled meetings',
     'snippet'             => getSnippetContent($sources['source_core'].'/elements/snippets/getmeetings.snippet.php'),
         ), '', true, true);
-$properties  = include $sources['properties'].'bbbx.getmeetings.snippet.properties.php';
-$snippets[0]->setProperties($properties);
+$properties = include $sources['properties'].'bbbx.getmeetings.snippet.properties.php';
+$snippet->setProperties($properties);
 unset($properties);
+$snippets[] = $snippet;
 
-$snippets[0] = $modx->newObject('modSnippet');
-$snippets[0]->fromArray(array(
+$snippet    = $modx->newObject('modSnippet');
+$snippet->fromArray(array(
     'id'                  => 0,
     'property_preprocess' => 1,
     'name'                => 'bbbx.getRecordings',
     'description'         => 'Get recordings for identified meetings',
     'snippet'             => getSnippetContent($sources['source_core'].'/elements/snippets/getrecordings.snippet.php'),
         ), '', true, true);
-$properties  = include $sources['properties'].'bbbx.getrecordings.snippet.properties.php';
-$snippets[0]->setProperties($properties);
+$properties = include $sources['properties'].'bbbx.getrecordings.snippet.properties.php';
+$snippet->setProperties($properties);
 unset($properties);
+$snippets[] = $snippet;
 
 return $snippets;
