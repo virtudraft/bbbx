@@ -16,7 +16,8 @@ BBBx.grid.ScheduledMeetings = function (config) {
             'auto_start_recording', 'allow_start_stop_recording', 'document_url',
             'created_on', 'created_by', 'edited_on', 'edited_by',
             'context_key', 'moderator_usergroups', 'viewer_usergroups',
-            'moderator_users', 'viewer_users', 'is_running', 'joinURL', 'recordings'
+            'moderator_users', 'viewer_users', 'is_created', 'is_running',
+            'joinURL', 'recordings'
         ],
         paging: true,
         remoteSort: true,
@@ -154,16 +155,54 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
         this.refresh();
     },
     getMenu: function () {
-        return [{
-                text: _('bbbx.meeting_update')
-                , handler: this.updateMeeting
-            }, {
-                text: _('bbbx.meeting_join')
-                , handler: this.joinMeeting
-            }, '-', {
-                text: _('bbbx.meeting_end')
-                , handler: this.endMeeting
-            }];
+        var r = this.menu.record || {};
+        var menu = [];
+        menu.push({
+            text: _('bbbx.meeting_update'),
+            handler: this.updateMeeting
+        });
+
+        var startedOn = new Date(r.started_on).getTime();
+        var endedOn = new Date(r.ended_on).getTime();
+        var now = new Date().getTime();
+
+        if (r.is_created) {
+            menu.push({
+                text: _('bbbx.meeting_join'),
+                handler: this.joinMeeting
+            });
+        } else if (startedOn <= now && endedOn >= now) {
+            menu.push({
+                text: _('bbbx.meeting_start'),
+                handler: this.startMeeting
+            });
+        }
+        if (r.is_running) {
+            menu.push('-', {
+                text: _('bbbx.meeting_end'),
+                handler: this.endMeeting
+            });
+        } else {
+            menu.push('-', {
+                text: _('bbbx.meeting_remove'),
+                handler: this.removeMeeting
+            });
+        }
+
+        return menu;
+    },
+    removeMeeting: function () {
+        var p = this.menu.record || {};
+        p['action'] = 'mgr/meetings/scheduled/remove';
+        MODx.msg.confirm({
+            title: _('bbbx.meeting_remove'),
+            text: _('bbbx.meeting_remove_confirm'),
+            url: BBBx.config.connectorUrl,
+            params: p,
+            listeners: {
+                'success': {fn: this.refresh, scope: this}
+            }
+        });
     },
     updateMeeting: function () {
         var r = this.menu.record || {};
@@ -248,14 +287,30 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
             }
         });
     },
-    endMeeting: function () {
+    startMeeting: function () {
         var p = this.menu.record || {};
-        p['action'] = 'mgr/meetings/running/end';
+        p['action'] = 'mgr/meetings/scheduled/start';
+        MODx.msg.confirm({
+            title: _('bbbx.meeting_start'),
+            text: _('bbbx.meeting_start_confirm'),
+            url: BBBx.config.connectorUrl,
+            params: p,
+            listeners: {
+                'success': {fn: this.refresh, scope: this}
+            }
+        });
+    },
+    endMeeting: function () {
+        var r = this.menu.record || {};
         MODx.msg.confirm({
             title: _('bbbx.meeting_end'),
             text: _('bbbx.meeting_end_confirm'),
             url: BBBx.config.connectorUrl,
-            params: p,
+            params: {
+                action: 'mgr/meetings/running/end',
+                meetingID: r.meeting_id,
+                moderatorPW: r.moderator_pw
+            },
             listeners: {
                 'success': {fn: this.refresh, scope: this}
             }

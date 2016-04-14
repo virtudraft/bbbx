@@ -22,20 +22,23 @@
  * @package bbbx
  * @subpackage processor
  */
-class MeetingEndProcessor extends modObjectProcessor {
+class MeetingsScheduledJoinProcessor extends modObjectProcessor
+{
+
     public $languageTopics = array('bbbx:cmp');
-    public $objectType = 'bbbx.MeetingEnd';
+    public $objectType     = 'bbbx.MeetingsScheduledJoin';
 
     /**
      * {@inheritDoc}
      * @return boolean
      */
-    public function initialize() {
-        $meetingID = $this->getProperty('meetingID', false);
+    public function initialize()
+    {
+        $meetingID = $this->getProperty('meeting_id', false);
         if (empty($meetingID)) {
             return $this->modx->lexicon('bbbx.meeting_err_ns_meetingID');
         }
-        $moderatorPW = $this->getProperty('moderatorPW', false);
+        $moderatorPW = $this->getProperty('moderator_pw', false);
         if (empty($moderatorPW)) {
             return $this->modx->lexicon('bbbx.meeting_err_ns_moderatorPW');
         }
@@ -49,32 +52,19 @@ class MeetingEndProcessor extends modObjectProcessor {
      * {@inheritDoc}
      * @return mixed
      */
-    public function process() {
+    public function process()
+    {
         $props = $this->getProperties();
-        $this->object = $this->modx->bbbx->endMeeting($props['meetingID'], $props['moderatorPW']);
-        if (empty($this->object)) {
-            return $this->failure($this->modx->lexicon($this->objectType . '_err_end'));
+        $href  = $this->modx->bbbx->getJoinMeetingURL($props['meeting_id'], $props['moderator_pw']);
+        if (empty($href)) {
+            return $this->failure($this->modx->lexicon($this->objectType.'_err_join'));
         }
-        $this->logManagerAction();
-        return $this->cleanup();
-    }
-
-    /**
-     * Return the success message
-     * @return array
-     */
-    public function cleanup() {
+        $this->object = array(
+            'href' => $href
+        );
         return $this->success('', $this->object);
-    }
-
-    /**
-     * Log the removal manager action
-     * @return void
-     */
-    public function logManagerAction() {
-        $this->modx->logManagerAction($this->objectType . '_end', 'bbbxMeetings', $this->getProperty('meetingID'));
     }
 
 }
 
-return 'MeetingEndProcessor';
+return 'MeetingsScheduledJoinProcessor';
