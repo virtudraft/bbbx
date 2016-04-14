@@ -1110,7 +1110,7 @@ class BBBx
     {
         if ($this->modx->user->hasSessionContext('mgr')) {
             return true;
-        } else if (!$this->modx->user->isAuthenticated($ctx)) {
+        } else if (!empty($ctx) && !$this->modx->user->isAuthenticated($ctx)) {
             $err = 'Unable to join to server: unauthenticated user!';
             $this->setError($err);
 
@@ -1123,8 +1123,12 @@ class BBBx
         $c->leftJoin('bbbxMeetingsContexts', 'MeetingsContexts', 'MeetingsContexts.meeting_id = bbbxMeetings.id');
         $c->where(array(
             'bbbxMeetings.meeting_id'      => $meetingId,
-            'MeetingsContexts.context_key' => $ctx,
         ));
+        if (!empty($ctx)) {
+            $c->where(array(
+                'MeetingsContexts.context_key' => $ctx,
+            ));
+        }
         $meeting = $this->modx->getObject('bbbxMeetings', $c);
         if (!$meeting) {
             return false;

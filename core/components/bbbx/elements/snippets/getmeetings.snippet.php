@@ -28,6 +28,7 @@ $scriptProperties['totalVar']      = $modx->getOption('totalVar', $scriptPropert
 $scriptProperties['sortBy']        = $modx->getOption('sortBy', $scriptProperties, 'id');
 $scriptProperties['sortDir']       = $modx->getOption('sortDir', $scriptProperties, 'desc');
 $scriptProperties['allDates']      = $modx->getOption('allDates', $scriptProperties);
+$scriptProperties['where']         = $modx->getOption('where', $scriptProperties);
 $scriptProperties['tplItem']       = $modx->getOption('tplItem', $scriptProperties, 'meeting/item');
 $scriptProperties['tplWrapper']    = $modx->getOption('tplWrapper', $scriptProperties, 'meeting/wrapper');
 $scriptProperties['phsPrefix']     = $modx->getOption('phsPrefix', $scriptProperties, 'bbbx.meeting.');
@@ -47,15 +48,20 @@ $c->select(array(
     'bbbxMeetings.*'
 ));
 $c->leftJoin('bbbxMeetingsContexts', 'MeetingsContexts', 'MeetingsContexts.meeting_id = bbbxMeetings.id');
-$c->where(array(
-    'MeetingsContexts.context_key' => $scriptProperties['contextKey']
-));
+if (!empty($scriptProperties['contextKey'])) {
+    $c->where(array(
+        'MeetingsContexts.context_key' => $scriptProperties['contextKey']
+    ));
+}
 if (empty($scriptProperties['allDates'])) {
     $time = time();
     $c->where(array(
         'started_on:<=' => $time,
         'ended_on:>='   => $time,
     ));
+}
+if (!empty($scriptProperties['where'])) {
+    $c->where(json_decode($scriptProperties['where'], true));
 }
 // for getPage
 $total = $modx->getCount('bbbxMeetings', $c);

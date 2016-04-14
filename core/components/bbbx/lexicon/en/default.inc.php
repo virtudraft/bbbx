@@ -44,4 +44,3 @@ $_lang['setting_bbbx.recording_ui_html_default'] = 'Recording UI as html is enab
 $_lang['setting_bbbx.recording_ui_html_default_desc'] = 'If enabled the recording table is shown in plain HTML by default. Default: No';
 $_lang['setting_bbbx.recording_ui_html_editable'] = 'Recording UI as html feature can be edited';
 $_lang['setting_bbbx.recording_ui_html_editable_desc'] = 'If enabled the recording UI as html value by default can be edited when the recording is added or updated. Default: No';
-
