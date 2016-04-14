@@ -252,6 +252,12 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
             }
         });
         meetingWindow.reset();
+
+        // SuperBoxSelect
+        var sb;
+        sb = meetingWindow.fp.getForm().findField('moderator_usergroups[]');
+        sb.setValue(BBBx.config.default.moderator);
+
         meetingWindow.show();
     },
     joinMeeting: function () {

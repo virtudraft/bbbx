@@ -33,6 +33,22 @@ class BBBxIndexManagerController extends modExtraManagerController
     public function initialize()
     {
         $this->bbbx = new BBBx($this->modx);
+        $moderators = $this->modx->getOption('bbbx.moderator_default');
+        $moderators = array_map('trim', @explode(',', $moderators));
+        $ugs = $this->modx->getCollection('modUserGroup', array(
+            'name:IN' => $moderators,
+        ));
+        $mods = array();
+        if ($ugs) {
+            foreach ($ugs as $ug) {
+                $mods[] = $ug->get('id');
+            }
+        }
+        $this->bbbx->setConfigs(array(
+            'default' => array(
+                'moderator' => (string) @implode(',', $mods),
+            )
+        ));
         $this->addCss($this->bbbx->config['cssUrl'].'mgr.css');
         $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/bbbx.js');
         $this->addHtml('<script type="text/javascript">
