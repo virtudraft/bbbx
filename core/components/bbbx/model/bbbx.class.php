@@ -822,6 +822,13 @@ class BBBx
         if (!isset($params['name']) || empty($params['name'])) {
             $params['name'] = 'BBBx-'.$params['meetingID'];
         }
+        $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        if (!isset($params['attendeePW']) || empty($params['attendeePW'])) {
+            $params['attendeePW'] = substr(str_shuffle($chars), 0, 20);
+        }
+        if (!isset($params['moderatorPW']) || empty($params['moderatorPW'])) {
+            $params['moderatorPW'] = substr(str_shuffle($chars), 0, 20);
+        }
         $meta     = array_merge($meta, array(
             'origin'               => 'MODX',
             'origin-url'           => MODX_SITE_URL,

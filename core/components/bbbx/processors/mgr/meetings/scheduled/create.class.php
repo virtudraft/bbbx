@@ -137,6 +137,14 @@ class ScheduledMeetingsCreateProcessor extends modObjectCreateProcessor
             $this->object->addMany($many);
         }
 
+        $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        if (!isset($props['attendee_pw']) || empty($props['attendee_pw'])) {
+            $props['attendee_pw'] = substr(str_shuffle($chars), 0, 20);
+        }
+        if (!isset($props['moderator_pw']) || empty($props['moderator_pw'])) {
+            $props['moderator_pw'] = substr(str_shuffle($chars), 0, 20);
+        }
+
         $this->object->fromArray($props);
         if ($this->object->save() === false) {
             return $this->failure($this->modx->lexicon($this->objectType.'_err_save'));
