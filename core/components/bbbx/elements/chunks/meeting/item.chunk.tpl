@@ -6,21 +6,52 @@
         [[+bbbx.meeting.description]]
     </td>
     <td>
-        [[+bbbx.meeting.started_on:date=`%b %m, %Y %r`]]
+        [[+bbbx.meeting.started_on:date=`%a, %b %d, %Y %r`]]
     </td>
     <td>
-        [[+bbbx.meeting.ended_on:date=`%b %m, %Y %r`]]
+        [[+bbbx.meeting.ended_on:date=`%a, %b %d, %Y %r`]]
     </td>
     <td>
+        [[+bbbx.meeting.is_running:notempty=`
+
         [[+modx.user.id:is=`0`:then=`
-        Please login
+        <a
+            class="btn btn-success btn-sm"
+            href="login"
+            target="_blank"
+            >Login</a>
         `:else=`
+
         [[+bbbx.meeting.join_url:notempty=`
-        <a href="[[+bbbx.meeting.join_url]]" target="_blank">Join</a>
+        <a
+            class="btn btn-success btn-sm"
+            href="[[+bbbx.meeting.join_url]]"
+            target="_blank"
+            >Join</a>
         `]]
+
+        `]]
+
         `]]
     </td>
     <td>
-        [[!bbbx.getRecordings? &meetingId=`[[+bbbx.meeting.meeting_id]]`]]
+        [[!bbbx.getRecordings?
+        &meetingId=`[[+bbbx.meeting.meeting_id]]`
+        &toPlaceholder=`recordings.[[+bbbx.meeting.meeting_id]]`
+        ]]
+
+        [[+recordings.[[+bbbx.meeting.meeting_id]]:notempty=`
+
+        [[+modx.user.id:is=`0`:then=`
+        <a
+            class="btn btn-success btn-sm"
+            href="login"
+            target="_blank"
+            >Login</a>
+        `:else=`
+        [[+recordings.[[+bbbx.meeting.meeting_id]]]]
+        `]]
+
+        `]]
     </td>
 </tr>

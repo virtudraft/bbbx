@@ -27,6 +27,9 @@ $scriptProperties['tplItem']       = $modx->getOption('tplItem', $scriptProperti
 $scriptProperties['tplWrapper']    = $modx->getOption('tplWrapper', $scriptProperties, 'recording/wrapper');
 $scriptProperties['phsPrefix']     = $modx->getOption('phsPrefix', $scriptProperties, 'bbbx.recording.');
 $scriptProperties['itemSeparator'] = $modx->getOption('itemSeparator', $scriptProperties, "\n");
+$scriptProperties['contextKey']    = $modx->getOption('contextKey', $scriptProperties, $modx->context->get('key'));
+$scriptProperties['authUser']      = $modx->getOption('authUser', $scriptProperties);
+$toPlaceholder                     = $modx->getOption('toPlaceholder', $scriptProperties);
 
 $defaultCorePath = $modx->getOption('core_path').'components/bbbx/';
 $corePath        = $modx->getOption('bbbx.core_path', null, $defaultCorePath);
@@ -35,7 +38,12 @@ $bbbx            = $modx->getService('bbbx', 'BBBx', $corePath.'model/', $script
 if (!($bbbx instanceof BBBx)) {
     return;
 }
-
+if ($scriptProperties['authUser']) {
+    $isPermitted = $bbbx->getUserPermissionToMeeting($scriptProperties['meetingId'], $scriptProperties['contextKey']);
+    if (!$isPermitted) {
+        return;
+    }
+}
 $recordings = $bbbx->getRecordings($scriptProperties['meetingId']);
 if (!$recordings) {
     return;
@@ -54,9 +62,9 @@ foreach ($recordings as $recording) {
 }
 if (!empty($toArray)) {
     $wrapper = array(
-        $scriptProperties['phsPrefix'] . 'items' => $outputArray
+        $scriptProperties['phsPrefix'].'items' => $outputArray
     );
-    $output  = '<pre>' . print_r($wrapper, 1) . '</pre>';
+    $output  = '<pre>'.print_r($wrapper, 1).'</pre>';
 } else {
     $wrapper = array(
         'items' => @implode($scriptProperties['itemSeparator'], $outputArray)

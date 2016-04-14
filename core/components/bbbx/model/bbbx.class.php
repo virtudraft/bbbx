@@ -760,10 +760,6 @@ class BBBx
 
     public function initMeeting($meetingID)
     {
-        $meetingInfo = $this->getMeetingInfo($meetingID);
-        if ($meetingInfo) {
-            return true;
-        }
         $c       = $this->modx->newQuery('bbbxMeetings');
         $time    = time();
         $c->where(array(
@@ -775,12 +771,16 @@ class BBBx
         if (!$meeting) {
             return false;
         }
+        $meetingInfo = $this->getMeetingInfo($meetingID);
+        if ($meetingInfo) {
+            return true;
+        }
         $meetingArray = $meeting->toArray();
-        $duration = 0;
+        $duration     = 0;
         if (!empty($meetingArray['ended_on'])) {
             $duration = ($meetingArray['ended_on'] - $time) * 60;
         }
-        $params       = array(
+        $params = array(
             'name'                    => $meetingArray['name'],
             'meetingID'               => $meetingArray['meeting_id'],
             'attendeePW'              => $meetingArray['attendee_pw'],
@@ -798,7 +798,7 @@ class BBBx
             'autoStartRecording'      => (!empty($meetingArray['auto_start_recording']) ? 'true' : 'false'),
             'allowStartStopRecording' => (!empty($meetingArray['allow_start_stop_recording']) ? 'true' : 'false'),
         );
-        $meta         = array();
+        $meta   = array();
         if (isset($meetingArray['meta']) && !empty($meetingArray['meta'])) {
             $metaProp = array_map('trim', @explode(',', $meetingArray['meta']));
             foreach ($metaProp as $v) {
@@ -1112,6 +1112,90 @@ class BBBx
         }
 
         return $response;
+    }
+
+    /**
+     * Check user permission to the meeting
+     * @param int       $meetingId  BBB's meetingID, NOT the auto increment ID
+     * @param string    $ctx        context key, default: web
+     * @return boolean|string
+     */
+    public function getUserPermissionToMeeting($meetingId, $ctx = 'web')
+    {
+        if ($this->modx->user->hasSessionContext('mgr')) {
+            return true;
+        } else if (!$this->modx->user->isAuthenticated($ctx)) {
+            $err = 'Unable to join to server: unauthenticated user!';
+            $this->setError($err);
+
+            return;
+        }
+        $c       = $this->modx->newQuery('bbbxMeetings');
+        $c->select(array(
+            'bbbxMeetings.*'
+        ));
+        $c->leftJoin('bbbxMeetingContexts', 'MeetingContexts', 'MeetingContexts.meeting_id = bbbxMeetings.id');
+        $c->where(array(
+            'bbbxMeetings.meeting_id'     => $meetingId,
+            'MeetingContexts.context_key' => $ctx,
+        ));
+        $meeting = $this->modx->getObject('bbbxMeetings', $c);
+        if (!$meeting) {
+            return false;
+        }
+
+        $ugs          = $this->modx->user->getUserGroups();
+        $userId       = $this->modx->user->get('id');
+        $isModerator  = array();
+        $isViewer     = array();
+        $meetingUgs   = $meeting->getMany('MeetingUsergroups');
+        $meetingUsers = $meeting->getMany('MeetingUsers');
+
+        if (!$meetingUgs && !$meetingUsers) {
+            return 'moderator'; // no permission is applied
+        }
+
+        if ($meetingUgs) {
+            $moderators = array();
+            $viewers    = array();
+            foreach ($meetingUgs as $meetingUg) {
+                $meetingUgArray = $meetingUg->toArray();
+                if ($meetingUgArray['enroll'] === 'moderator') {
+                    $moderators[] = $meetingUgArray['usergroup_id'];
+                } else if ($meetingUgArray['enroll'] === 'viewer') {
+                    $viewers[] = $meetingUgArray['usergroup_id'];
+                }
+            }
+            $isModerator = array_intersect($moderators, $ugs);
+            if (!$isModerator) {
+                $isViewer = array_intersect($viewers, $ugs);
+            }
+        }
+        if (!$isModerator) {
+            if ($meetingUsers) {
+                $moderators = array();
+                $viewers    = array();
+                foreach ($meetingUsers as $meetingUser) {
+                    $meetingUserArray = $meetingUser->toArray();
+                    if ($meetingUserArray['enroll'] === 'moderator') {
+                        $moderators[] = $meetingUserArray['user_id'];
+                    } else if ($meetingUserArray['enroll'] === 'viewer') {
+                        $viewers[] = $meetingUserArray['user_id'];
+                    }
+                }
+                $isModerator = in_array($userId, $moderators);
+                if (!$isModerator && !$isViewer) {
+                    $isViewer = in_array($userId, $viewers);
+                }
+            }
+        }
+        if ($isModerator) {
+            return 'moderator';
+        } else if ($isViewer) {
+            return 'viewer';
+        }
+
+        return false;
     }
 
 }

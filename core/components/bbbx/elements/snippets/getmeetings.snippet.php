@@ -32,6 +32,7 @@ $scriptProperties['tplItem']       = $modx->getOption('tplItem', $scriptProperti
 $scriptProperties['tplWrapper']    = $modx->getOption('tplWrapper', $scriptProperties, 'meeting/wrapper');
 $scriptProperties['phsPrefix']     = $modx->getOption('phsPrefix', $scriptProperties, 'bbbx.meeting.');
 $scriptProperties['itemSeparator'] = $modx->getOption('itemSeparator', $scriptProperties, "\n");
+$scriptProperties['contextKey']    = $modx->getOption('contextKey', $scriptProperties, $modx->context->get('key'));
 
 $defaultCorePath = $modx->getOption('core_path').'components/bbbx/';
 $corePath        = $modx->getOption('bbbx.core_path', null, $defaultCorePath);
@@ -47,7 +48,7 @@ $c->select(array(
 ));
 $c->leftJoin('bbbxMeetingContexts', 'MeetingContexts', 'MeetingContexts.meeting_id = bbbxMeetings.id');
 $c->where(array(
-    'MeetingContexts.context_key' => $modx->context->get('key')
+    'MeetingContexts.context_key' => $scriptProperties['contextKey']
 ));
 if (empty($scriptProperties['allDates'])) {
     $time = time();
@@ -78,48 +79,21 @@ if ($isAuthenticated) {
 }
 //$toArray = 1; // debug
 foreach ($meetings as $meeting) {
-    $meetingArray             = $meeting->toArray();
+    $meetingArray = $meeting->toArray();
+    $permission   = $bbbx->getUserPermissionToMeeting($meetingArray['meeting_id'], $scriptProperties['contextKey']);
     // initiate meeting if it fits with the dates
-    $isMeetingRunning         = $bbbx->initMeeting($meetingArray['meeting_id']);
-    $meetingArray['join_url'] = '';
-    if ($isMeetingRunning && !empty($ugs)) {
-        if (in_array(1, $ugs)) {
-            $meetingArray['join_url'] = $bbbx->getJoinMeetingURL($meetingArray['meeting_id'], $meetingArray['moderator_pw']);
-        } else {
-            $meetingUgs = $meeting->getMany('MeetingUsergroups');
-            if ($meetingUgs) {
-                $moderators = array();
-                foreach ($meetingUgs as $meetingUg) {
-                    $meetingUgArray = $meetingUg->toArray();
-                    if ($meetingUgArray['enroll'] === 'moderator') {
-                        $moderators[] = $meetingUgArray['usergroup_id'];
-                    }
-                }
-                $isModerator = array_intersect($moderators, $ugs);
-                if (!empty($isModerator)) {
+    $meetingArray['is_running'] = $bbbx->initMeeting($meetingArray['meeting_id']);
+    $meetingArray['join_url']   = '';
+    if ($meetingArray['is_running']) {
+        if (!empty($ugs)) {
+            if (in_array(1, $ugs)) {
+                $meetingArray['join_url'] = $bbbx->getJoinMeetingURL($meetingArray['meeting_id'], $meetingArray['moderator_pw']);
+            } else {
+                if ($permission === 'moderator') {
                     $meetingArray['join_url'] = $bbbx->getJoinMeetingURL($meetingArray['meeting_id'], $meetingArray['moderator_pw']);
-                } else {
+                } else if ($permission === 'viewer') {
                     $meetingArray['join_url'] = $bbbx->getJoinMeetingURL($meetingArray['meeting_id'], $meetingArray['attendee_pw']);
                 }
-            }
-            $meetingUsers = $meeting->getMany('MeetingUsers');
-            if ($meetingUsers) {
-                $moderators = array();
-                foreach ($meetingUsers as $meetingUser) {
-                    $meetingUserArray = $meetingUser->toArray();
-                    if ($meetingUserArray['enroll'] === 'moderator') {
-                        $moderators[] = $meetingUserArray['user_id'];
-                    }
-                }
-                $isModerator = array_intersect($moderators, $ugs);
-                if (!empty($isModerator)) {
-                    $meetingArray['join_url'] = $bbbx->getJoinMeetingURL($meetingArray['meeting_id'], $meetingArray['moderator_pw']);
-                } else {
-                    $meetingArray['join_url'] = $bbbx->getJoinMeetingURL($meetingArray['meeting_id'], $meetingArray['attendee_pw']);
-                }
-            }
-            if (!$meetingUgs && !$meetingUsers) {
-                $meetingArray['join_url'] = $bbbx->getJoinMeetingURL($meetingArray['meeting_id'], $meetingArray['attendee_pw']);
             }
         }
     }
@@ -132,9 +106,9 @@ foreach ($meetings as $meeting) {
 }
 if (!empty($toArray)) {
     $wrapper = array(
-        $scriptProperties['phsPrefix'] . 'items' => $outputArray
+        $scriptProperties['phsPrefix'].'items' => $outputArray
     );
-    $output  = '<pre>' . print_r($wrapper, 1) . '</pre>';
+    $output  = '<pre>'.print_r($wrapper, 1).'</pre>';
 } else {
     $wrapper = array(
         'items' => @implode($scriptProperties['itemSeparator'], $outputArray)
