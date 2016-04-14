@@ -249,7 +249,7 @@ Ext.extend(BBBx.grid.RunningMeetings, MODx.grid.Grid, {
     },
     infoMeeting: function () {
         var p = this.menu.record || {};
-        this.console = MODx.load({
+        var win = MODx.load({
             xtype: 'window',
             title: _('bbbx.info'),
             modal: Ext.isIE ? false : true,
@@ -271,7 +271,7 @@ Ext.extend(BBBx.grid.RunningMeetings, MODx.grid.Grid, {
                 }
             ]
         });
-        this.console.show(Ext.getBody());
+        win.show(Ext.getBody());
         MODx.Ajax.request({
             url: BBBx.config.connectorUrl,
             params: {
@@ -283,15 +283,16 @@ Ext.extend(BBBx.grid.RunningMeetings, MODx.grid.Grid, {
                 'success': {
                     fn: function (res) {
                         if (res.success) {
-                            this.console.getComponent('body').el.dom.innerHTML = res.message;
+                            win.getComponent('body').el.dom.innerHTML = res.message;
                         } else {
-                            this.console.hide();
+                            win.hide();
                         }
                     },
                     scope: this
                 },
                 'failure': {
                     fn: function (res) {
+                        win.hide();
                     },
                     scope: this
                 }

@@ -178,7 +178,10 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
             });
         }
         if (r.is_running) {
-            menu.push('-', {
+            menu.push({
+                text: _('bbbx.meeting_info')
+                , handler: this.infoMeeting
+            }, '-', {
                 text: _('bbbx.meeting_end'),
                 handler: this.endMeeting
             });
@@ -322,6 +325,59 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
             }
         });
     },
+    infoMeeting: function () {
+        var p = this.menu.record || {};
+        var win = MODx.load({
+            xtype: 'window',
+            title: _('bbbx.info'),
+            modal: Ext.isIE ? false : true,
+            closeAction: 'hide',
+            // shadow: true,
+            resizable: false,
+            collapsible: false,
+            closable: true,
+            maximizable: true,
+            autoScroll: true,
+            height: 400,
+            width: 600,
+            cls: 'modx-window modx-console',
+            items: [
+                {
+                    xtype: 'panel',
+                    itemId: 'body',
+                    cls: 'x-panel-bwrap modx-console-text'
+                }
+            ]
+        });
+        win.show(Ext.getBody());
+        MODx.Ajax.request({
+            url: BBBx.config.connectorUrl,
+            params: {
+                action: 'mgr/meetings/running/info',
+                meetingID: p.meeting_id,
+                moderatorPW: p.moderator_pw
+            },
+            listeners: {
+                'success': {
+                    fn: function (res) {
+                        if (res.success) {
+                            win.getComponent('body').el.dom.innerHTML = res.message;
+                        } else {
+                            win.hide();
+                        }
+                    },
+                    scope: this
+                },
+                'failure': {
+                    fn: function (res) {
+                        win.hide();
+                    },
+                    scope: this
+                }
+            }
+        });
+        return true;
+    },
     renderName: function (value, panel, record) {
         var html = '<table border="0">' +
                 '<tr><td>meetingName</td><td>: {name}</td></tr>' +
@@ -331,7 +387,8 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
                 '<tr><td>contexts</td><td>: {context_key}</td></tr>' +
                 '<tr><td></td><td>';
         if (record.data.is_running) {
-            html += '<a href="{joinURL}" target="_blank" class="x-btn x-btn-small bbbx-action-btn">Join</a>' +
+            html += '<a href="javascript:void(0);" class="x-btn x-btn-small bbbx-action-btn bbbx-action-info" data-meetingid="{meeting_id}" data-moderatorpw="{moderator_pw}">' + _('bbbx.info') + '</a>' +
+                    '<a href="{joinURL}" target="_blank" class="x-btn x-btn-small bbbx-action-btn">Join</a>' +
                     '<a href="javascript:void(0);" class="x-btn x-btn-small bbbx-btn-danger bbbx-action-btn bbbx-btn-end" data-meetingid="{meeting_id}" data-moderatorpw="{moderator_pw}">End</a>';
         }
         html += '</td></tr>' +
@@ -339,7 +396,7 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
         var tpl = new Ext.XTemplate(html, {compiled: true});
         return tpl.apply(record.data);
     },
-    getRecordings: function(meetingId) {
+    getRecordings: function (meetingId) {
         var tabs = Ext.getCmp('bbbx-tabs-scheduledmeetings');
         if (tabs) {
             var check = Ext.getCmp('bbbx-recordings-' + meetingId);
@@ -371,10 +428,10 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
 
         if (action) {
             if (typeof (t.dataset.meetingid) !== 'undefined') {
-                record['meetingID'] = t.dataset.meetingid;
+                record['meeting_id'] = t.dataset.meetingid;
             }
             if (typeof (t.dataset.meetingid) !== 'undefined') {
-                record['moderatorPW'] = t.dataset.moderatorpw;
+                record['moderator_pw'] = t.dataset.moderatorpw;
             }
 
             var size = 0, key;
@@ -390,6 +447,9 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
             switch (action) {
                 case 'bbbx-btn-join':
                     this.joinMeeting();
+                    break;
+                case 'bbbx-action-info':
+                    this.infoMeeting();
                     break;
                 case 'bbbx-btn-end':
                     this.endMeeting();
