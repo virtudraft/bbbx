@@ -351,6 +351,10 @@ BBBx.window.ScheduledMeeting = function (config) {
                                 grow: true,
                                 anchor: '100%'
                             }, {
+                                xtype: 'label',
+                                cls: 'desc-under',
+                                html: _('bbbx.welcome_desc')
+                            }, {
                                 xtype: 'textarea',
                                 fieldLabel: 'moderatorOnlyMessage',
                                 name: 'moderator_only_message',

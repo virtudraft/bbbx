@@ -37,6 +37,7 @@ $_lang['bbbx.videos'] = 'Videos';
 $_lang['bbbx.duration'] = 'Duration';
 $_lang['bbbx.hasUserJoined'] = 'User Joined';
 $_lang['bbbx.welcome'] = 'Welcome message';
+$_lang['bbbx.welcome_desc'] = 'A welcome message that gets displayed on the chat window when the participant joins. You can include keywords (%%CONFNAME%%, %%DIALNUM%%, %%CONFNUM%%) which will be substituted automatically. ';
 $_lang['bbbx.meta'] = 'Meta Data';
 $_lang['bbbx.meta_desc'] = 'Additional metadata. For multiple values, use comma, eg: presenter=joe, category=education';
 $_lang['bbbx.refresh'] = 'Refresh';
