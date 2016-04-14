@@ -39,7 +39,8 @@
         &meetingId=`[[+bbbx.meeting.meeting_id]]`
         &toPlaceholder=`recordings.[[+bbbx.meeting.meeting_id]]`
         ]]
-
+        [[- for some reason, "+bbbx.meeting.meeting_id" needs to be called before -]]
+        <!-- [[+bbbx.meeting.meeting_id]] -->
         [[+recordings.[[+bbbx.meeting.meeting_id]]:isnot:``:then=`
 
         [[+modx.user.id:is=`0`:then=`
