@@ -40,7 +40,7 @@
         &toPlaceholder=`recordings.[[+bbbx.meeting.meeting_id]]`
         ]]
 
-        [[+recordings.[[+bbbx.meeting.meeting_id]]:notempty=`
+        [[+recordings.[[+bbbx.meeting.meeting_id]]:isnot:``:then=`
 
         [[+modx.user.id:is=`0`:then=`
         <a
@@ -52,6 +52,6 @@
         [[+recordings.[[+bbbx.meeting.meeting_id]]]]
         `]]
 
-        `]]
+        `:else=``]]
     </td>
 </tr>
