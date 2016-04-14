@@ -96,7 +96,7 @@ class ScheduledMeetingsUpdateProcessor extends modObjectUpdateProcessor
             'meeting_id:='       => $objId,
             'context_key:NOT IN' => $props['context_key'],
         ));
-        $diffs = $this->modx->getCollection('bbbxMeetingsUsergroups', $c);
+        $diffs = $this->modx->getCollection('bbbxMeetingsContexts', $c);
         if ($diffs) {
             foreach ($diffs as $diff) {
                 $diff->remove();
