@@ -58,6 +58,9 @@ class ScheduledMeetingsUpdateProcessor extends modObjectUpdateProcessor
         if (empty($props['meeting_id'])) {
             $props['meeting_id'] = uniqid();
         }
+        // try to end existing meeting first
+        $this->modx->bbbx->endMeeting($this->object->get('meeting_id'), $this->object->get('moderator_pw'));
+
         if (!empty($props['started_date']) && !empty($props['started_time'])) {
             $date                = DateTime::createFromFormat('m/d/Y H:i', $props['started_date'].' '.$props['started_time']);
             $props['started_on'] = $date->format('U');

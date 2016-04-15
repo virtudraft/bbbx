@@ -16,7 +16,7 @@ BBBx.grid.ScheduledMeetings = function (config) {
             'auto_start_recording', 'allow_start_stop_recording', 'document_url',
             'created_on', 'created_by', 'edited_on', 'edited_by',
             'context_key', 'moderator_usergroups', 'viewer_usergroups',
-            'moderator_users', 'viewer_users', 'is_created', 'is_running',
+            'moderator_users', 'viewer_users', 'is_created', 'can_create', 'is_running',
             'joinURL', 'recordings'
         ],
         paging: true,
@@ -65,6 +65,11 @@ BBBx.grid.ScheduledMeetings = function (config) {
             }, {
                 header: _('bbbx.running'),
                 dataIndex: 'is_running',
+                renderer: function (value, record) {
+                    if (value === true) {
+                        return '<img src="' + BBBx.config.assetsUrl + 'icons/emotion_mah_playlist.png"/>';
+                    }
+                },
                 sortable: true,
                 width: 80,
                 fixed: true
@@ -80,7 +85,8 @@ BBBx.grid.ScheduledMeetings = function (config) {
                 },
                 sortable: true,
                 width: 90,
-                fixed: true
+                fixed: true,
+                hidden: true
             }, {
                 xtype: 'actioncolumn',
                 header: _('bbbx.recordings'),
@@ -157,11 +163,12 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
     getMenu: function () {
         var r = this.menu.record || {};
         var menu = [];
-        menu.push({
-            text: _('bbbx.meeting_update'),
-            handler: this.updateMeeting
-        });
-
+        if (!r.is_created) {
+            menu.push({
+                text: _('bbbx.meeting_update'),
+                handler: this.updateMeeting
+            });
+        }
         var startedOn = new Date(r.started_on).getTime();
         var endedOn = new Date(r.ended_on).getTime();
         var now = new Date().getTime();
@@ -177,7 +184,7 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
                 handler: this.startMeeting
             });
         }
-        if (r.is_running) {
+        if (r.is_created) {
             menu.push({
                 text: _('bbbx.meeting_info')
                 , handler: this.infoMeeting
@@ -379,17 +386,22 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
         return true;
     },
     renderName: function (value, panel, record) {
+        var createDate = record.data.is_created ? record.data.is_created.createDate : '';
         var html = '<table border="0">' +
                 '<tr><td>meetingName</td><td>: {name}</td></tr>' +
                 '<tr><td>meetingID</td><td>: {meeting_id}</td></tr>' +
                 '<tr><td>attendeePW</td><td>: {attendee_pw}</td></tr>' +
                 '<tr><td>moderatorPW</td><td>: {moderator_pw}</td></tr>' +
                 '<tr><td>contexts</td><td>: {context_key}</td></tr>' +
+                '<tr><td>record</td><td>: ' + (record.data.is_recorded ? _('yes') : _('no')) + '</td></tr>' +
+                '<tr><td>createDate</td><td>: ' + createDate + '</td></tr>' +
                 '<tr><td></td><td>';
-        if (record.data.is_running) {
+        if (record.data.is_created) {
             html += '<a href="javascript:void(0);" class="x-btn x-btn-small bbbx-action-btn bbbx-action-info" data-meetingid="{meeting_id}" data-moderatorpw="{moderator_pw}">' + _('bbbx.info') + '</a>' +
                     '<a href="{joinURL}" target="_blank" class="x-btn x-btn-small bbbx-action-btn">Join</a>' +
-                    '<a href="javascript:void(0);" class="x-btn x-btn-small bbbx-btn-danger bbbx-action-btn bbbx-btn-end" data-meetingid="{meeting_id}" data-moderatorpw="{moderator_pw}">End</a>';
+                    '<a href="javascript:void(0);" class="x-btn x-btn-small bbbx-btn-danger bbbx-action-btn bbbx-btn-end" data-meetingid="{meeting_id}" data-moderatorpw="{moderator_pw}">' + _('bbbx.end') + '</a>';
+        } else if (record.data.can_create) {
+            html += '<a href="javascript:void(0);" class="x-btn x-btn-small bbbx-action-play bbbx-action-btn bbbx-btn-start" data-meetingid="{meeting_id}" data-moderatorpw="{moderator_pw}">' + _('bbbx.meeting_start') + '</a>';
         }
         html += '</td></tr>' +
                 '</table>';
@@ -445,6 +457,9 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
             this.menu.record = record;
 
             switch (action) {
+                case 'bbbx-btn-start':
+                    this.startMeeting();
+                    break;
                 case 'bbbx-btn-join':
                     this.joinMeeting();
                     break;

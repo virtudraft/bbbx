@@ -811,7 +811,7 @@ class BBBx
             return;
         }
 
-        return true;
+        return $response;
     }
 
     public function createMeeting($params, array $meta = array(), $postFields = '')

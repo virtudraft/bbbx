@@ -55,3 +55,8 @@
     background-image: url(../icons/control_pause_record.png) !important;
     background-repeat: no-repeat;
 }
+
+.icon-bbbx-playlist {
+    background-image: url(../icons/emotion_mah_playlist.png) !important;
+    background-repeat: no-repeat;
+}
