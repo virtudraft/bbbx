@@ -42,6 +42,9 @@
         <composite alias="MeetingsContexts" class="bbbxMeetingsContexts" local="id" foreign="meeting_id" cardinality="many" owner="local" />
         <composite alias="MeetingsUsers" class="bbbxMeetingsUsers" local="id" foreign="meeting_id" cardinality="many" owner="local" />
         <composite alias="MeetingsUsergroups" class="bbbxMeetingsUsergroups" local="id" foreign="meeting_id" cardinality="many" owner="local" />
+        <composite alias="MeetingsJoins" class="bbbxMeetingsJoins" local="id" foreign="meeting_id" cardinality="many" owner="local" />
+        <composite alias="NotifyUsergroups" class="bbbxNotifyUsergroups" local="id" foreign="meeting_id" cardinality="many" owner="local" />
+        <composite alias="NotifyUsers" class="bbbxNotifyUsers" local="id" foreign="meeting_id" cardinality="many" owner="local" />
 
     </object>
     <object class="bbbxMeetingsConfigs" table="meetings_configs" extends="xPDOSimpleObject">
@@ -56,6 +59,14 @@
     <object class="bbbxMeetingsContexts" table="meetings_contexts" extends="xPDOSimpleObject">
         <field key="meeting_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="index" />
         <field key="context_key" dbtype="varchar" precision="50" phptype="string" null="false" />
+
+        <aggregate alias="Meetings" class="bbbxMeetings" local="meeting_id" foreign="id" cardinality="one" owner="foreign" />
+
+    </object>
+    <object class="bbbxMeetingsJoins" table="meetings_joins" extends="xPDOSimpleObject">
+        <field key="meeting_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="index" />
+        <field key="class_key" dbtype="varchar" precision="255" phptype="string" null="false" />
+        <field key="object_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
 
         <aggregate alias="Meetings" class="bbbxMeetings" local="meeting_id" foreign="id" cardinality="one" owner="foreign" />
 
@@ -81,6 +92,31 @@
         <field key="is_forced_to_end" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
         <field key="is_canceled" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
 
+        <aggregate alias="Meetings" class="bbbxMeetings" local="meeting_id" foreign="id" cardinality="one" owner="foreign" />
+
+    </object>
+    <object class="bbbxNotifyUsergroups" table="notify_usergroups" extends="xPDOSimpleObject">
+        <field key="meeting_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="index" />
+        <field key="usergroup_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" />
+
+        <composite alias="NotifyUsers" class="bbbxNotifyUsers" local="id" foreign="usergroup_id" cardinality="many" owner="local" />
+        <aggregate alias="Meetings" class="bbbxMeetings" local="meeting_id" foreign="id" cardinality="one" owner="foreign" />
+
+    </object>
+    <object class="bbbxNotifyUsers" table="notify_users" extends="xPDOSimpleObject">
+        <field key="meeting_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="index" />
+        <field key="usergroup_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" />
+        <field key="user_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" />
+        <field key="name" dbtype="varchar" precision="255" phptype="string" null="true" />
+        <field key="email" dbtype="varchar" precision="255" phptype="string" null="true" />
+        <field key="is_sent" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+        <field key="sent_on" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" />
+        <field key="is_yes" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+        <field key="is_no" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+        <field key="is_maybe" dbtype="tinyint" precision="1" attributes="unsigned" phptype="integer" null="false" default="0" />
+        <field key="replied_on" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" />
+
+        <aggregate alias="NotifyUsergroups" class="bbbxNotifyUsergroups" local="usergroup_id" foreign="id" cardinality="one" owner="foreign" />
         <aggregate alias="Meetings" class="bbbxMeetings" local="meeting_id" foreign="id" cardinality="one" owner="foreign" />
 
     </object>
