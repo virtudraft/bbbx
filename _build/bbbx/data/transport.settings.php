@@ -94,4 +94,84 @@ $setting->fromArray(array(
         ), '', true, true);
 $settings[] = $setting;
 
+$setting    = $modx->newObject('modSystemSetting');
+$setting->fromArray(array(
+    'key'       => 'bbbx.email.notify.from_email',
+    'value'     => 'no-reply@example.com',
+    'xtype'     => 'textfield',
+    'namespace' => 'bbbx',
+    'area'      => 'Notification',
+        ), '', true, true);
+$settings[] = $setting;
+
+$setting    = $modx->newObject('modSystemSetting');
+$setting->fromArray(array(
+    'key'       => 'bbbx.email.notify.from_name',
+    'value'     => '',
+    'xtype'     => 'textfield',
+    'namespace' => 'bbbx',
+    'area'      => 'Notification',
+        ), '', true, true);
+$settings[] = $setting;
+
+$setting    = $modx->newObject('modSystemSetting');
+$setting->fromArray(array(
+    'key'       => 'bbbx.email.notify.subject',
+    'value'     => 'Web Conference Schedule',
+    'xtype'     => 'textfield',
+    'namespace' => 'bbbx',
+    'area'      => 'Notification',
+        ), '', true, true);
+$settings[] = $setting;
+
+$setting    = $modx->newObject('modSystemSetting');
+$setting->fromArray(array(
+    'key'       => 'bbbx.email.notify.body',
+    'value'     => 'email/notify/body',
+    'xtype'     => 'textfield',
+    'namespace' => 'bbbx',
+    'area'      => 'Notification',
+        ), '', true, true);
+$settings[] = $setting;
+
+$setting    = $modx->newObject('modSystemSetting');
+$setting->fromArray(array(
+    'key'       => 'bbbx.email.notify.meetingPrefix',
+    'value'     => 'meeting.',
+    'xtype'     => 'textfield',
+    'namespace' => 'bbbx',
+    'area'      => 'Notification',
+        ), '', true, true);
+$settings[] = $setting;
+
+$setting    = $modx->newObject('modSystemSetting');
+$setting->fromArray(array(
+    'key'       => 'bbbx.email.notify.userPrefix',
+    'value'     => 'user.',
+    'xtype'     => 'textfield',
+    'namespace' => 'bbbx',
+    'area'      => 'Notification',
+        ), '', true, true);
+$settings[] = $setting;
+
+$setting    = $modx->newObject('modSystemSetting');
+$setting->fromArray(array(
+    'key'       => 'bbbx.email.notify.profilePrefix',
+    'value'     => 'profile.',
+    'xtype'     => 'textfield',
+    'namespace' => 'bbbx',
+    'area'      => 'Notification',
+        ), '', true, true);
+$settings[] = $setting;
+
+$setting    = $modx->newObject('modSystemSetting');
+$setting->fromArray(array(
+    'key'       => 'bbbx.email.notify.debug',
+    'value'     => 0,
+    'xtype'     => 'combo-boolean',
+    'namespace' => 'bbbx',
+    'area'      => 'Notification',
+        ), '', true, true);
+$settings[] = $setting;
+
 return $settings;

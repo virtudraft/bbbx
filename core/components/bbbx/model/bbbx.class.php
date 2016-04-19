@@ -1198,4 +1198,103 @@ class BBBx
         return false;
     }
 
+    public function notifyUsergroup($meetingId, $ugId)
+    {
+        $c     = $this->modx->newQuery('modUserGroupMember');
+        $c->where(array(
+            'user_group' => $ugId
+        ));
+        $users = $this->modx->getCollection('modUserGroupMember', $c);
+        if (!$users) {
+            return;
+        }
+        foreach ($users as $user) {
+            $this->notifyUser($meetingId, $user->get('member'), $user->get('user_group'));
+        }
+    }
+
+    public function notifyUser($meetingId, $userId = 0, $usergroup = 0, $email = '')
+    {
+        $meeting = $this->modx->getObject('bbbxMeetings', $meetingId);
+        if (!$meeting) {
+            return;
+        }
+        $meetingArray = $meeting->toArray();
+        if ($userId > 0) {
+            $user = $this->modx->getObject('modUser', $userId);
+            if (!$user) {
+                return;
+            }
+            $userArray    = array(
+                'id'       => $user->get('id'),
+                'username' => $user->get('username'),
+            );
+            $profile      = $user->getOne('Profile');
+            $profileArray = $profile->toArray();
+            $name         = !empty($profileArray['fullname']) ? $profileArray['fullname'] : $userArray['username'];
+        }
+        $fromEmail     = $this->modx->getOption('bbbx.email.notify.from_email', null, 'no-reply@example.com');
+        $fromName      = $this->modx->getOption('bbbx.email.notify.from_name', null, $this->modx->getOption('site_name'));
+        $subject       = $this->modx->getOption('bbbx.email.notify.subject', null, 'Web Conference Schedule');
+        $bodyChunk     = $this->modx->getOption('bbbx.email.notify.body', null, 'email/notify/body');
+        $meetingPrefix = $this->modx->getOption('bbbx.email.notify.meetingPrefix', null, 'meeting.');
+        $userPrefix    = $this->modx->getOption('bbbx.email.notify.userPrefix', null, 'user.');
+        $profilePrefix = $this->modx->getOption('bbbx.email.notify.profilePrefix', null, 'profile.');
+        $emailDebug    = $this->modx->getOption('bbbx.email.notify.debug');
+        $phs           = array_merge(
+                $this->setPlaceholders($meetingArray, $meetingPrefix)
+                , $this->setPlaceholders($userArray, $userPrefix)
+                , $this->setPlaceholders($profileArray, $profilePrefix)
+        );
+
+        $message = $this->parseTpl($bodyChunk, $phs);
+//        $emailDebug = 1;
+        if ($emailDebug) {
+            $this->modx->log(modX::LOG_LEVEL_ERROR, print_r($phs, 1));
+            $this->modx->log(modX::LOG_LEVEL_ERROR, print_r($message, 1));
+            return;
+        }
+
+        $this->modx->getService('mail', 'mail.modPHPMailer');
+        $this->modx->mail->set(modMail::MAIL_BODY, $message);
+        $this->modx->mail->set(modMail::MAIL_FROM, $fromEmail);
+        $this->modx->mail->set(modMail::MAIL_FROM_NAME, $fromName);
+        $this->modx->mail->set(modMail::MAIL_SUBJECT, $subject);
+        $toEmail = !empty($email) ? $email : (isset($profileArray['email']) && !empty($profileArray['email']) ? $profileArray['email'] : '');
+        if (empty($toEmail)) {
+            return;
+        }
+        $this->modx->mail->address('to', $toEmail, $name);
+        $this->modx->mail->address('reply-to', $fromEmail);
+        $this->modx->mail->setHTML(true);
+        if (!$this->modx->mail->send()) {
+            $this->modx->log(modX::LOG_LEVEL_ERROR, 'An error occurred while trying to send the email: '.$this->modx->mail->mailer->ErrorInfo);
+        } else {
+            $c = $this->modx->newQuery('bbbxNotifyUsers');
+            $c->where(array(
+                'meeting_id' => $meetingId
+            ));
+            if (!empty($userId)) {
+                $c->where(array(
+                    'user_id' => $userId
+                ));
+            }
+            if (!empty($email)) {
+                $c->where(array(
+                    'email' => $email
+                ));
+            }
+            $bbbxNotifyUser = $this->modx->getObject('bbbxNotifyUsers', $c);
+            if ($bbbxNotifyUser) {
+                if (!empty($usergroup)) {
+                    $bbbxNotifyUser->set('usergroup_id', $usergroup);
+                }
+                $bbbxNotifyUser->set('is_sent', 1);
+                $bbbxNotifyUser->set('sent_on', time());
+                $bbbxNotifyUser->save();
+            }
+        }
+        $this->modx->mail->reset();
+    }
+
 }

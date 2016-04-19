@@ -184,6 +184,12 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
                 handler: this.startMeeting
             });
         }
+        if (endedOn >= now) {
+            menu.push({
+                text: _('bbbx.notify_users'),
+                handler: this.notifyUsers
+            });
+        }
         if (r.is_created) {
             menu.push({
                 text: _('bbbx.meeting_info')
@@ -201,6 +207,60 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
 
         return menu;
     },
+    notifyUsers: function () {
+        if (!this.pageMask) {
+            this.pageMask = new Ext.LoadMask(Ext.getBody(), {
+                msg: _('bbbx.please_wait')
+            });
+        }
+        this.pageMask.show();
+
+        var r = this.menu.record || {};
+        var notifyWindow = MODx.load({
+            xtype: 'bbbx-window-notify',
+            title: _('bbbx.meeting_notify'),
+            baseParams: {
+                action: 'mgr/meetings/notifications/update'
+            }
+        });
+        notifyWindow.reset();
+        notifyWindow.setValues(r);
+        var ug, us;
+        ug = notifyWindow.fp.getForm().findField('usergroups[]');
+        us = notifyWindow.fp.getForm().findField('users[]');
+
+        MODx.Ajax.request({
+            url: BBBx.config.connectorUrl,
+            params: {
+                action: 'mgr/meetings/notifications/get',
+                meetingID: r.meeting_id,
+                limit: 0
+            },
+            listeners: {
+                'success': {
+                    fn: function (res) {
+                        if (res.success) {
+                            // nested AJAXs need this to postpone the rendering
+                            setTimeout(function(){
+                                // SuperBoxSelect
+                                ug.setValue(res.object.usergroups);
+                                us.setValue(res.object.users);
+                                notifyWindow.show();
+                            }, 100);
+                            this.pageMask.hide();
+                        }
+                    },
+                    scope: this
+                },
+                'failure': {
+                    fn: function (res) {
+                        this.pageMask.hide();
+                    },
+                    scope: this
+                }
+            }
+        });
+    },
     removeMeeting: function () {
         var p = this.menu.record || {};
         p['action'] = 'mgr/meetings/scheduled/remove';
@@ -210,7 +270,12 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
             url: BBBx.config.connectorUrl,
             params: p,
             listeners: {
-                'success': {fn: this.refresh, scope: this}
+                'success': {fn: this.refresh, scope: this},
+                'failure': {
+                    fn: function (res) {
+                    },
+                    scope: this
+                }
             }
         });
     },
@@ -226,6 +291,11 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
             listeners: {
                 'success': {
                     fn: this.refresh,
+                    scope: this
+                },
+                'failure': {
+                    fn: function (res) {
+                    },
                     scope: this
                 }
             }
@@ -257,6 +327,11 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
             listeners: {
                 'success': {
                     fn: this.refresh,
+                    scope: this
+                },
+                'failure': {
+                    fn: function (res) {
+                    },
                     scope: this
                 }
             }
@@ -299,6 +374,11 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
                         }
                     },
                     scope: this
+                },
+                'failure': {
+                    fn: function (res) {
+                    },
+                    scope: this
                 }
             }
         });
@@ -312,7 +392,12 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
             url: BBBx.config.connectorUrl,
             params: p,
             listeners: {
-                'success': {fn: this.refresh, scope: this}
+                'success': {fn: this.refresh, scope: this},
+                'failure': {
+                    fn: function (res) {
+                    },
+                    scope: this
+                }
             }
         });
     },
@@ -328,7 +413,12 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
                 moderatorPW: r.moderator_pw
             },
             listeners: {
-                'success': {fn: this.refresh, scope: this}
+                'success': {fn: this.refresh, scope: this},
+                'failure': {
+                    fn: function (res) {
+                    },
+                    scope: this
+                }
             }
         });
     },
@@ -403,6 +493,12 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
         } else if (record.data.can_create) {
             html += '<a href="javascript:void(0);" class="x-btn x-btn-small bbbx-action-play bbbx-action-btn bbbx-btn-start" data-meetingid="{meeting_id}" data-moderatorpw="{moderator_pw}">' + _('bbbx.meeting_start') + '</a>';
         }
+        var endedOn = new Date(record.data.ended_on).getTime();
+        var now = new Date().getTime();
+        if (endedOn >= now) {
+            html += '<a href="javascript:void(0);" class="x-btn x-btn-small bbbx-action-btn bbbx-btn-notify" data-meetingid="{meeting_id}" data-moderatorpw="{moderator_pw}">' + _('bbbx.notify_users') + '</a>';
+        }
+
         html += '</td></tr>' +
                 '</table>';
         var tpl = new Ext.XTemplate(html, {compiled: true});
@@ -457,6 +553,9 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
             this.menu.record = record;
 
             switch (action) {
+                case 'bbbx-btn-notify':
+                    this.notifyUsers();
+                    break;
                 case 'bbbx-btn-start':
                     this.startMeeting();
                     break;

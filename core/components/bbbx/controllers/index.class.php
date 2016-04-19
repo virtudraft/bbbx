@@ -81,6 +81,7 @@ class BBBxIndexManagerController extends modExtraManagerController
 
     public function loadCustomCssJs()
     {
+        $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/widgets/window.notify.js');
         $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/widgets/combo.contextkey.js');
         $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/widgets/combo.user.js');
         $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/widgets/combo.usergroup.js');
