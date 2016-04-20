@@ -225,9 +225,10 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
         });
         notifyWindow.reset();
         notifyWindow.setValues(r);
-        var ug, us;
+        var ug, us, em;
         ug = notifyWindow.fp.getForm().findField('usergroups[]');
         us = notifyWindow.fp.getForm().findField('users[]');
+        em = notifyWindow.fp.getForm().findField('emails[]');
 
         MODx.Ajax.request({
             url: BBBx.config.connectorUrl,
@@ -245,6 +246,8 @@ Ext.extend(BBBx.grid.ScheduledMeetings, MODx.grid.Grid, {
                                 // SuperBoxSelect
                                 ug.setValue(res.object.usergroups);
                                 us.setValue(res.object.users);
+                                em.setValue(res.object.emails);
+
                                 notifyWindow.show();
                             }, 100);
                             this.pageMask.hide();

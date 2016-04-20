@@ -44,7 +44,7 @@ class MeetingsNotificationsGetProcessor extends modObjectProcessor
         $limit     = intval($this->getProperty('limit'));
         $start     = intval($this->getProperty('start'));
 
-        /*  bbbxNotifyUsergroups */
+        /* bbbxNotifyUsergroups */
         $c        = $this->modx->newQuery('bbbxNotifyUsergroups');
         $c->select(array(
             'bbbxNotifyUsergroups.*'
@@ -68,7 +68,7 @@ class MeetingsNotificationsGetProcessor extends modObjectProcessor
         }
         $usergroups = @implode(',', $list);
 
-        /*  bbbxNotifyUsers */
+        /* bbbxNotifyUsers */
         $c          = $this->modx->newQuery('bbbxNotifyUsers');
         $c->select(array(
             'bbbxNotifyUsers.*'
@@ -94,11 +94,41 @@ class MeetingsNotificationsGetProcessor extends modObjectProcessor
         }
         $users = @implode(',', $list);
 
+        /* emails */
+        $c           = $this->modx->newQuery('bbbxNotifyUsers');
+        $c->select(array(
+            'bbbxNotifyUsers.*'
+        ));
+        $c->leftJoin('bbbxMeetings', 'Meetings', 'Meetings.id = bbbxNotifyUsers.meeting_id');
+        $c->where("Meetings.meeting_id = '$meetingID'");
+        $c->where(array(
+            'user_id:=' => 0,
+            'email:!=' => '',
+        ));
+        $totalEmails = $this->modx->getCount('bbbxNotifyUsers', $c);
+
+        $c->sortby('bbbxNotifyUsers.id', 'asc');
+        if ($limit > 0) {
+            $c->limit($limit, $start);
+        }
+
+        $results = $this->modx->getCollection('bbbxNotifyUsers', $c);
+        $list    = array();
+        foreach ($results as $object) {
+            $objectArray = $this->prepareRow($object);
+            if (!empty($objectArray) && is_array($objectArray)) {
+                $list[] = $objectArray['email'];
+            }
+        }
+        $emails = @implode(',', $list);
+
         return $this->success('', array(
                     'usergroups'       => $usergroups,
                     'users'            => $users,
+                    'emails'           => $emails,
                     'total_usergroups' => $totalUgs,
                     'total_users'      => $totalUsers,
+                    'total_emails'     => $totalEmails,
                     'is_sent'          => $isSent
         ));
     }

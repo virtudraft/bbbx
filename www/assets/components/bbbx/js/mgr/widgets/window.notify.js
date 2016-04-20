@@ -42,6 +42,12 @@ BBBx.window.Notify = function (config) {
                                 name: 'users[]',
                                 hiddenName: 'users[]',
                                 anchor: '100%'
+                            }, {
+                                fieldLabel: _('bbbx.emails'),
+                                xtype: 'bbbx-combo-email',
+                                name: 'emails[]',
+                                hiddenName: 'emails[]',
+                                anchor: '100%'
                             }
                         ]
                     }, {

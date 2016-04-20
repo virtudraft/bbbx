@@ -68,7 +68,8 @@ class MeetingsNotificationsUpdateProcessor extends modProcessor
                 }
                 if (!empty($diff)) {
                     $this->modx->removeCollection('bbbxNotifyUsergroups', array(
-                        'usergroup_id:in' => $diff,
+                        'meeting_id'      => $meetingId,
+                        'usergroup_id:IN' => $diff,
                     ));
                 }
             }
@@ -111,7 +112,8 @@ class MeetingsNotificationsUpdateProcessor extends modProcessor
                 }
                 if (!empty($diff)) {
                     $this->modx->removeCollection('bbbxNotifyUsers', array(
-                        'user_id:in' => $diff,
+                        'meeting_id' => $meetingId,
+                        'user_id:IN' => $diff,
                     ));
                 }
             }
@@ -131,6 +133,54 @@ class MeetingsNotificationsUpdateProcessor extends modProcessor
                 }
                 if ($props['send_now']) {
                     $this->modx->bbbx->notifyUser($meetingId, $userId);
+                }
+            }
+        }
+
+        /**
+         * Emails
+         */
+        if (isset($props['emails']) && !empty($props['emails']) && is_array($props['emails'])) {
+            // diff
+            $exists = $this->modx->getCollection('bbbxNotifyUsers', array(
+                'meeting_id' => $meetingId,
+                'user_id'    => 0,
+            ));
+            if ($exists) {
+                $diff = array();
+                foreach ($exists as $exist) {
+                    $email = $exist->get('email');
+                    if (in_array($email, $props['emails'])) {
+                        continue;
+                    }
+                    $diff[] = $email;
+                }
+                if (!empty($diff)) {
+                    $this->modx->removeCollection('bbbxNotifyUsers', array(
+                        'meeting_id' => $meetingId,
+                        'user_id'    => 0,
+                        'email:IN'   => $diff,
+                    ));
+                }
+            }
+            // update
+            foreach ($props['emails'] as $email) {
+                $notify = $this->modx->getObject('bbbxNotifyUsers', array(
+                    'meeting_id' => $meetingId,
+                    'user_id'    => 0,
+                    'email'      => $email,
+                ));
+                if (!$notify) {
+                    $notify = $this->modx->newObject('bbbxNotifyUsers');
+                    $notify->fromArray(array(
+                        'meeting_id' => $meetingId,
+                        'user_id'    => 0,
+                        'email'      => $email,
+                    ));
+                    $notify->save();
+                }
+                if ($props['send_now']) {
+                    $this->modx->bbbx->notifyUser($meetingId, 0, 0, $email);
                 }
             }
         }

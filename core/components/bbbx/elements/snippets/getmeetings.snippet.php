@@ -34,6 +34,8 @@ $scriptProperties['tplWrapper']    = $modx->getOption('tplWrapper', $scriptPrope
 $scriptProperties['phsPrefix']     = $modx->getOption('phsPrefix', $scriptProperties, 'bbbx.meeting.');
 $scriptProperties['itemSeparator'] = $modx->getOption('itemSeparator', $scriptProperties, "\n");
 $scriptProperties['contextKey']    = $modx->getOption('contextKey', $scriptProperties);
+$scriptProperties['classKey']      = $modx->getOption('classKey', $scriptProperties);
+$scriptProperties['objectId']      = $modx->getOption('objectId', $scriptProperties);
 
 $defaultCorePath = $modx->getOption('core_path').'components/bbbx/';
 $corePath        = $modx->getOption('bbbx.core_path', null, $defaultCorePath);
