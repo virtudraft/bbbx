@@ -40,8 +40,11 @@ if ($modx = & $object->xpdo) {
                 $manager->createObjectContainer('bbbxMeetings');
                 $manager->createObjectContainer('bbbxMeetingsConfigs');
                 $manager->createObjectContainer('bbbxMeetingsContexts');
+                $manager->createObjectContainer('bbbxMeetingsJoins');
                 $manager->createObjectContainer('bbbxMeetingsUsergroups');
                 $manager->createObjectContainer('bbbxMeetingsUsers');
+                $manager->createObjectContainer('bbbxNotifyUsergroups');
+                $manager->createObjectContainer('bbbxNotifyUsers');
             }
             break;
         case xPDOTransport::ACTION_UPGRADE:
