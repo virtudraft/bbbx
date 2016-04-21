@@ -18,6 +18,7 @@ BBBx.window.Notify = function (config) {
                 bodyCssClass: 'panel-desc'
             }
         ],
+        bodyStyle: 'max-height: 500px;',
         fields: [
             {
                 xtype: 'hidden',
@@ -47,7 +48,16 @@ BBBx.window.Notify = function (config) {
                                 xtype: 'bbbx-combo-email',
                                 name: 'emails[]',
                                 hiddenName: 'emails[]',
-                                anchor: '100%'
+                                anchor: '100%',
+                                listeners: {
+                                    'newitem': {
+                                        fn: function (bs, v, f) {
+                                            this.doLayout();
+                                            return true;
+                                        },
+                                        scope: this
+                                    }
+                                },
                             }
                         ]
                     }, {

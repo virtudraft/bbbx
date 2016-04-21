@@ -81,14 +81,17 @@ class BBBxIndexManagerController extends modExtraManagerController
 
     public function loadCustomCssJs()
     {
-        $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/widgets/window.notify.js');
+        $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/widgets/combo.meeting.js');
         $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/widgets/combo.email.js');
         $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/widgets/combo.contextkey.js');
         $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/widgets/combo.user.js');
         $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/widgets/combo.usergroup.js');
         $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/widgets/combo.config.js');
+        $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/widgets/window.join.js');
+        $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/widgets/window.notify.js');
         $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/widgets/window.runningmeeting.js');
         $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/widgets/window.scheduledmeeting.js');
+        $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/widgets/grid.joins.js');
         $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/widgets/grid.configs.js');
         $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/widgets/grid.scheduledmeetings.js');
         $this->addJavascript($this->bbbx->config['jsUrl'].'mgr/widgets/grid.runningmeetings.js');

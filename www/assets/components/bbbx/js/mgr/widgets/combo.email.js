@@ -43,18 +43,14 @@ BBBx.combo.Email = function (config) {
         forceSelection: false,
         stackItems: false,
         msgTarget: 'under',
-        forceFormValue: false,
-        listeners: {
-            'newitem': {
-                fn: function (bs, v, f) {
-                    bs.addNewItem({"email": v});
-                    return true;
-                },
-                scope: this
-            }
-        }
+        forceFormValue: false
     });
     BBBx.combo.Email.superclass.constructor.call(this, config);
+
+    this.on('newitem', function (bs, v, f) {
+        bs.addNewItem({"email": v});
+        return true;
+    }, this);
 };
 Ext.extend(BBBx.combo.Email, Ext.ux.form.SuperBoxSelect);
 Ext.reg('bbbx-combo-email', BBBx.combo.Email);

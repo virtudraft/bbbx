@@ -65,7 +65,7 @@
     </object>
     <object class="bbbxMeetingsJoins" table="meetings_joins" extends="xPDOSimpleObject">
         <field key="meeting_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" index="index" />
-        <field key="class_key" dbtype="varchar" precision="255" phptype="string" null="false" />
+        <field key="classkey" dbtype="varchar" precision="255" phptype="string" null="false" />
         <field key="object_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="false" default="0" />
 
         <aggregate alias="Meetings" class="bbbxMeetings" local="meeting_id" foreign="id" cardinality="one" owner="foreign" />

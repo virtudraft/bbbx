@@ -7,7 +7,7 @@ $xpdo_meta_map['bbbxMeetingsJoins']= array (
   'fields' => 
   array (
     'meeting_id' => NULL,
-    'class_key' => NULL,
+    'classkey' => NULL,
     'object_id' => 0,
   ),
   'fieldMeta' => 
@@ -21,7 +21,7 @@ $xpdo_meta_map['bbbxMeetingsJoins']= array (
       'null' => false,
       'index' => 'index',
     ),
-    'class_key' => 
+    'classkey' => 
     array (
       'dbtype' => 'varchar',
       'precision' => '255',

@@ -60,3 +60,7 @@
     background-image: url(../icons/emotion_mah_playlist.png) !important;
     background-repeat: no-repeat;
 }
+
+.x-combo-list-item {
+    min-height: 20px;
+}

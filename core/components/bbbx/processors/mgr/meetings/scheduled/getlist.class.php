@@ -45,6 +45,23 @@ class MeetingsScheduledGetListProcessor extends modObjectGetListProcessor
     }
 
     /**
+     * Can be used to insert a row before iteration
+     * @param array $list
+     * @return array
+     */
+    public function beforeIteration(array $list)
+    {
+        $combo = $this->getProperty('combo', false);
+        if ($combo) {
+            $list[] = array(
+                'id'   => 0,
+                'name' => '',
+            );
+        }
+        return $list;
+    }
+
+    /**
      * Prepare the row for iteration
      * @param xPDOObject $object
      * @return array
@@ -52,6 +69,11 @@ class MeetingsScheduledGetListProcessor extends modObjectGetListProcessor
     public function prepareRow(xPDOObject $object)
     {
         $objectArray = $object->toArray();
+        $combo       = $this->getProperty('combo', false);
+        if ($combo) {
+            return $objectArray;
+        }
+
         if (!empty($objectArray['started_on'])) {
             $objectArray['started_date'] = date('m/d/Y', $objectArray['started_on']);
             $objectArray['started_time'] = date('H:i', $objectArray['started_on']);

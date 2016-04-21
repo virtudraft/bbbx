@@ -49,7 +49,8 @@ BBBx.panel.Home = function (config) {
                     {
                         title: _('bbbx.meetings_scheduled'),
                         defaults: {autoHeight: true},
-                        items: [{
+                        items: [
+                            {
                                 html: '<p>' + _('bbbx.meetings_scheduled_desc') + '</p>',
                                 border: false,
                                 bodyCssClass: 'panel-desc'
@@ -64,11 +65,13 @@ BBBx.panel.Home = function (config) {
                                         cls: 'main-wrapper',
                                         preventRender: true
                                     }]
-                            }]
+                            }
+                        ]
                     }, {
                         title: _('bbbx.meetings_running'),
                         defaults: {autoHeight: true},
-                        items: [{
+                        items: [
+                            {
                                 html: '<p>' + _('bbbx.meetings_running_desc') + '</p>',
                                 border: false,
                                 bodyCssClass: 'panel-desc'
@@ -76,11 +79,13 @@ BBBx.panel.Home = function (config) {
                                 xtype: 'bbbx-grid-runningmeetings',
                                 cls: 'main-wrapper',
                                 preventRender: true
-                            }]
+                            }
+                        ]
                     }, {
                         title: _('bbbx.recordings'),
                         defaults: {autoHeight: true},
-                        items: [{
+                        items: [
+                            {
                                 html: '<p>' + _('bbbx.recordings_desc') + '</p>',
                                 border: false,
                                 bodyCssClass: 'panel-desc'
@@ -88,11 +93,13 @@ BBBx.panel.Home = function (config) {
                                 xtype: 'bbbx-grid-recordings',
                                 cls: 'main-wrapper',
                                 preventRender: true
-                            }]
+                            }
+                        ]
                     }, {
                         title: _('bbbx.configurations'),
                         defaults: {autoHeight: true},
-                        items: [{
+                        items: [
+                            {
                                 xtype: 'modx-tabs',
                                 id: 'bbbx-configurations-tabs',
                                 preventRender: true,
@@ -112,10 +119,28 @@ BBBx.panel.Home = function (config) {
                                         ]
                                     }
                                 ]
-//                            }, {
-//                                xtype: 'bbbx-panel-configs',
-//                                cls: 'main-wrapper',
-//                                preventRender: true
+                            }
+                        ]
+                    }, {
+                        title: _('bbbx.class_joins'),
+                        defaults: {autoHeight: true},
+                        items: [
+                            {
+                                html: '<p>' + _('bbbx.class_joins_desc') + '</p>',
+                                border: false,
+                                bodyCssClass: 'panel-desc'
+                            }, {
+                                xtype: 'modx-tabs',
+                                id: 'bbbx-joins-tabs',
+                                preventRender: true,
+                                items: [
+                                    {
+                                        title: _('bbbx.linked'),
+                                        xtype: 'bbbx-grid-joins',
+                                        cls: 'main-wrapper',
+                                        preventRender: true
+                                    }
+                                ]
                             }
                         ]
                     }

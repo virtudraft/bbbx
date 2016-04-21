@@ -22,44 +22,38 @@
  * @package bbbx
  * @subpackage processor
  */
-class ConfigsGetListProcessor extends modObjectGetListProcessor
+class JoinsGetListProcessor extends modObjectGetListProcessor
 {
 
-    public $classKey             = 'bbbxConfigs';
+    public $classKey             = 'bbbxMeetingsJoins';
     public $languageTopics       = array('bbbx:cmp');
     public $defaultSortField     = 'id';
     public $defaultSortDirection = 'ASC';
-    public $objectType           = 'bbbx.configs';
+    public $objectType           = 'bbbx.JoinsGetList';
 
     public function prepareQueryBeforeCount(xPDOQuery $c)
     {
         $query = $this->getProperty('query', false);
         if ($query) {
+            $c->leftJoin('bbbxMeetings', 'Meetings', 'Meetings.id = bbbxMeetingsJoins.meeting_id');
             $c->where(array(
-                'name:LIKE'           => "%$query%",
-                'OR:description:LIKE' => "%$query%",
+                'Meetings.name:LIKE'           => "%$query%",
+                'OR:Meetings.description:LIKE' => "%$query%",
             ));
         }
         return $c;
     }
 
-    /**
-     * Can be used to insert a row before iteration
-     * @param array $list
-     * @return array
-     */
-    public function beforeIteration(array $list)
-    {
-        $combo = $this->getProperty('combo', false);
-        if ($combo) {
-            $list[] = array(
-                'id'   => '',
-                'name' => '&nbsp;'
-            );
+    public function prepareRow(xPDOObject $object) {
+        $objectArray = $object->toArray();
+        $objectArray['meeting_name'] = '';
+        $meeting = $this->modx->getObject('bbbxMeetings', $objectArray['meeting_id']);
+        if ($meeting) {
+            $objectArray['meeting_name'] = $meeting->get('name');
         }
-        return $list;
-    }
 
+        return $objectArray;
+    }
 }
 
-return 'ConfigsGetListProcessor';
+return 'JoinsGetListProcessor';
