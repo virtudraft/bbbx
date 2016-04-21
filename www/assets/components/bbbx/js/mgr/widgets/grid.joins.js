@@ -126,12 +126,13 @@ Ext.extend(BBBx.grid.Joins, MODx.grid.Grid, {
             url: BBBx.config.connectorUrl,
             params: p,
             listeners: {
-                'success': {
+                success: {
                     fn: function () {
                         this.refresh();
                     },
                     scope: this
-                }
+                },
+                failure: function() {}
             }
         });
     },
@@ -139,7 +140,10 @@ Ext.extend(BBBx.grid.Joins, MODx.grid.Grid, {
         var win = MODx.load({
             xtype: 'bbbx-window-join',
             listeners: {
-                success: this.refresh,
+                success: {
+                    fn: function(){this.refresh()},
+                    scope: this
+                },
                 failure: function() {}
             }
         });
