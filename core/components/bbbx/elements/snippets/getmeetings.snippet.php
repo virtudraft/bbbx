@@ -55,6 +55,17 @@ if (!empty($scriptProperties['contextKey'])) {
         'MeetingsContexts.context_key' => $scriptProperties['contextKey']
     ));
 }
+if (!empty($scriptProperties['classKey'])) {
+    $c->leftJoin('bbbxMeetingsJoins', 'MeetingsJoins', 'MeetingsJoins.meeting_id = bbbxMeetings.id');
+    $c->where(array(
+        'MeetingsJoins.classkey' => $scriptProperties['classKey']
+    ));
+    if (!empty($scriptProperties['objectId'])) {
+        $c->where(array(
+            'MeetingsJoins.object_id' => $scriptProperties['objectId']
+        ));
+    }
+}
 if (empty($scriptProperties['allDates'])) {
     $time = time();
     $c->where(array(

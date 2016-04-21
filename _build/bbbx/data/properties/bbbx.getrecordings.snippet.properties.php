@@ -43,7 +43,7 @@ if (!function_exists("fixJson")) {
 }
 
 ob_start();
-include dirname(__FILE__) . '/default.bbbx.getrecordings.snippet.properties.js';
+include dirname(__FILE__) . '/default.bbbx.getrecordings.snippet.properties.json';
 $json = ob_get_contents();
 ob_end_clean();
 

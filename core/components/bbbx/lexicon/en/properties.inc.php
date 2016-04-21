@@ -17,3 +17,5 @@ $_lang['prop_getRecordings_tplItem_desc'] = 'Chunk\'s name for item/row. Default
 $_lang['prop_getRecordings_tplWrapper_desc'] = 'Chunk\'s name for wrapper. Default: "recording/wrapper" (to parse {core_path}components/bbbx/elements/chunks/recording/wrapper.chunk.tpl)';
 $_lang['prop_getRecordings_phsPrefix_desc'] = 'Placeholder\'s prefix. Default: "bbbx.recording."';
 $_lang['prop_authUser_desc'] = 'Check user\'s authetification. Default: empty';
+$_lang['prop_classKey_desc'] = 'Get meetings only for this defined class key. Default: empty';
+$_lang['prop_objectId_desc'] = 'If class key is defined, get meetings only for this class key\'s ID. Default: empty';

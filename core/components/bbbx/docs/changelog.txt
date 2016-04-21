@@ -1,5 +1,5 @@
 Changelog for BBBx.
 
-BBBx 1.0.0.beta1
+BBBx 1.0.0.beta1 (April 21, 2016)
 ====================================
 - Initial release
