@@ -35,6 +35,11 @@ if (!function_exists("fixJson")) {
                 'options' => empty($v['options']) ? '' : $v['options'],
                 'value' => $v['value'],
                 'lexicon' => $v['lexicon'],
+                'overridden' => $v['overridden'],
+                'desc_trans' => $v['desc_trans'],
+                'area' => $v['area'],
+                'area_trans' => $v['area_trans'],
+                'menu' => $v['menu'],
             );
         }
         return $fixed;
