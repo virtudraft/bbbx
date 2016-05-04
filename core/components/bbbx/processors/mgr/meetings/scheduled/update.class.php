@@ -61,13 +61,23 @@ class ScheduledMeetingsUpdateProcessor extends modObjectUpdateProcessor
         // try to end existing meeting first
         $this->modx->bbbx->endMeeting($this->object->get('meeting_id'), $this->object->get('moderator_pw'));
 
-        if (!empty($props['started_date']) && !empty($props['started_time'])) {
+        if (!empty($props['started_date'])) {
+            if (empty($props['started_time'])) {
+                $props['started_time'] = '00:00';
+            }
             $date                = DateTime::createFromFormat('m/d/Y H:i', $props['started_date'].' '.$props['started_time']);
             $props['started_on'] = $date->format('U');
+        } else {
+            $props['started_on'] = '';
         }
-        if (!empty($props['ended_date']) && !empty($props['ended_time'])) {
+        if (!empty($props['ended_date'])) {
+            if (empty($props['ended_time'])) {
+                $props['ended_time'] = '00:00';
+            }
             $date              = DateTime::createFromFormat('m/d/Y H:i', $props['ended_date'].' '.$props['ended_time']);
             $props['ended_on'] = $date->format('U');
+        } else {
+            $props['ended_on'] = '';
         }
         $props['created_on'] = time();
         $props['created_by'] = $this->modx->user->get('id');

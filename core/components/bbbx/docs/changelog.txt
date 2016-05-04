@@ -2,6 +2,7 @@ Changelog for BBBx.
 
 BBBx dev
 ====================================
+- fixed dates on updating scheduled meeting
 - fixed diff arrays on updating notification
 - fixed empty placeholders in notification email
 
