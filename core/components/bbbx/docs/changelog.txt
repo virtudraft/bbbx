@@ -2,6 +2,7 @@ Changelog for BBBx.
 
 BBBx dev
 ====================================
+- fixed diff arrays on updating notification
 - fixed empty placeholders in notification email
 
 BBBx 1.0.0.beta1 (April 21, 2016)
