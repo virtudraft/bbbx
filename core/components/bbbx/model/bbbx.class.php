@@ -1246,6 +1246,11 @@ class BBBx
         if ($bbbxNotifyUser && $bbbxNotifyUser->get('is_sent') === 1) {
             return;
         }
+        $userArray = array(
+            'id'       => '',
+            'username' => '',
+        );
+        $profileArray = $this->modx->getFields('modUserProfile');
         if ($userId > 0) {
             $user = $this->modx->getObject('modUser', $userId);
             if (!$user) {
