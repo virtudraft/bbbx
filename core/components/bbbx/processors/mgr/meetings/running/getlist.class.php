@@ -51,6 +51,10 @@ class MeetingsRunningGetListProcessor extends modObjectProcessor
     public function process()
     {
         $data = $this->getData();
+        $isError  = $this->modx->bbbx->getError();
+        if (!empty($isError)) {
+            return $this->failure($isError);
+        }
         $list = $this->iterate($data);
         return $this->outputArray($list, $data['total']);
     }
@@ -108,10 +112,6 @@ class MeetingsRunningGetListProcessor extends modObjectProcessor
         $start = intval($this->getProperty('start'));
 
         $meetings = $this->modx->bbbx->getMeetings($limit, $start);
-        $isError  = $this->modx->bbbx->getError();
-        if (!empty($isError)) {
-            return $isError;
-        }
         if (empty($meetings)) {
             $meetings = array();
         }
