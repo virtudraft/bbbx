@@ -1,6 +1,6 @@
 Changelog for BBBx.
 
-BBBx dev
+BBBx 1.0.0.beta2 (May 17, 2016)
 ====================================
 - fixed dates on updating scheduled meeting
 - fixed diff arrays on updating notification

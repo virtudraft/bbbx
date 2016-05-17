@@ -28,7 +28,7 @@ BBBx.grid.ScheduledMeetings = function (config) {
                 dataIndex: 'meeting_id',
                 sortable: true,
                 width: 100,
-                hidden: true,
+                hidden: true
             }, {
                 header: _('name'),
                 dataIndex: 'name',
